@@ -1,7 +1,22 @@
-import { programTimeline } from "@/data/dashboardData";
-import { CalendarDays } from "lucide-react";
+import { useState } from "react";
+import { programTimeline, milestones } from "@/data/dashboardData";
+import { CalendarDays, ChevronDown, Flag, Calendar, CircleCheckBig } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const milestoneIconMap = {
+  deadline: Flag,
+  event: Calendar,
+  checkpoint: CircleCheckBig,
+};
+
+const milestoneColorMap = {
+  deadline: "text-status-red bg-status-red/10",
+  event: "text-status-blue bg-status-blue/10",
+  checkpoint: "text-status-green bg-status-green/10",
+};
 
 const ProgramTimeline = () => {
+  const [expanded, setExpanded] = useState(false);
   const { startDate, endDate, today, totalDays } = programTimeline;
   const elapsed = Math.floor(
     (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
@@ -11,8 +26,13 @@ const ProgramTimeline = () => {
   const formatDate = (d: Date) =>
     d.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" });
 
+  const isPast = (d: Date) => d <= today;
+
   return (
-    <div className="rounded-lg border bg-card p-5">
+    <div
+      className="cursor-pointer rounded-lg border bg-card p-5 transition-shadow hover:shadow-md"
+      onClick={() => setExpanded(!expanded)}
+    >
       <div className="mb-3 flex items-center gap-2">
         <CalendarDays className="h-5 w-5 text-primary" />
         <h2 className="text-lg font-semibold text-card-foreground">
@@ -21,6 +41,12 @@ const ProgramTimeline = () => {
         <span className="ml-auto rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
           Day {elapsed} of {totalDays} — {progress}% Journey
         </span>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 text-muted-foreground transition-transform duration-200",
+            expanded && "rotate-180"
+          )}
+        />
       </div>
 
       {/* Progress track */}
@@ -31,6 +57,29 @@ const ProgramTimeline = () => {
             style={{ width: `${progress}%` }}
           />
         </div>
+
+        {/* Milestone dots on track */}
+        {milestones.map((m, i) => {
+          const pos = Math.round(
+            ((m.date.getTime() - startDate.getTime()) /
+              (endDate.getTime() - startDate.getTime())) *
+              100
+          );
+          return (
+            <div
+              key={i}
+              className="absolute top-0.5"
+              style={{ left: `${pos}%`, transform: "translateX(-50%)" }}
+            >
+              <div
+                className={cn(
+                  "h-2 w-2 rounded-full border border-card",
+                  isPast(m.date) ? "bg-primary" : "bg-muted-foreground/40"
+                )}
+              />
+            </div>
+          );
+        })}
 
         {/* Today marker */}
         <div
@@ -48,6 +97,48 @@ const ProgramTimeline = () => {
       <div className="mt-4 flex justify-between text-xs text-muted-foreground">
         <span>{formatDate(startDate)}</span>
         <span>{formatDate(endDate)}</span>
+      </div>
+
+      {/* Expanded milestones list */}
+      <div
+        className={cn(
+          "grid transition-all duration-300 ease-in-out",
+          expanded ? "mt-4 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="grid gap-2 sm:grid-cols-2">
+            {milestones.map((m, i) => {
+              const Icon = milestoneIconMap[m.type];
+              const colorClass = milestoneColorMap[m.type];
+              const past = isPast(m.date);
+              return (
+                <div
+                  key={i}
+                  className={cn(
+                    "flex items-center gap-3 rounded-md border px-3 py-2.5",
+                    past ? "bg-secondary/50" : "bg-card"
+                  )}
+                >
+                  <div className={cn("flex h-7 w-7 shrink-0 items-center justify-center rounded-md", colorClass)}>
+                    <Icon className="h-3.5 w-3.5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className={cn("truncate text-sm font-medium", past ? "text-muted-foreground" : "text-card-foreground")}>
+                      {m.label}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatDate(m.date)}
+                    </p>
+                  </div>
+                  {past && (
+                    <CircleCheckBig className="h-4 w-4 shrink-0 text-status-green" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

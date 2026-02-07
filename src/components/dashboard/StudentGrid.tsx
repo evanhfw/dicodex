@@ -1,12 +1,12 @@
-import { students, getStatusColor } from "@/data/dashboardData";
+import { students, assignments, getStatusColor } from "@/data/dashboardData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LineChart, Line, ResponsiveContainer } from "recharts";
-import { Users } from "lucide-react";
+import { Users, Check, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const statusDotMap: Record<string, string> = {
   "status-red": "bg-status-red",
@@ -15,11 +15,11 @@ const statusDotMap: Record<string, string> = {
   "status-blue": "bg-status-blue",
 };
 
-const strokeColorMap: Record<string, string> = {
-  "status-red": "hsl(var(--status-red))",
-  "status-yellow": "hsl(var(--status-yellow))",
-  "status-green": "hsl(var(--status-green))",
-  "status-blue": "hsl(var(--status-blue))",
+const statusBorderMap: Record<string, string> = {
+  "status-red": "border-status-red/30",
+  "status-yellow": "border-status-yellow/30",
+  "status-green": "border-status-green/30",
+  "status-blue": "border-status-blue/30",
 };
 
 const StudentGrid = () => {
@@ -38,35 +38,76 @@ const StudentGrid = () => {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {students.map((student) => {
             const colorToken = getStatusColor(student.status);
-            const sparkData = student.weeklyProgress.map((v, i) => ({
-              i,
-              v,
-            }));
+            const completedCount = student.assignmentsSubmitted.length;
+            const totalAssignments = assignments.length;
+            const completionPct = Math.round(
+              (completedCount / totalAssignments) * 100
+            );
 
             return (
               <Tooltip key={student.id}>
                 <TooltipTrigger asChild>
-                  <div className="cursor-default rounded-lg border bg-card p-3 transition-shadow hover:shadow-md">
-                    <div className="mb-2 flex items-center gap-2">
+                  <div
+                    className={cn(
+                      "cursor-default rounded-lg border-2 bg-card p-3 transition-shadow hover:shadow-md",
+                      statusBorderMap[colorToken]
+                    )}
+                  >
+                    {/* Name + status dot */}
+                    <div className="mb-2.5 flex items-center gap-2">
                       <span
-                        className={`inline-block h-2.5 w-2.5 rounded-full ${statusDotMap[colorToken]}`}
+                        className={`inline-block h-2.5 w-2.5 shrink-0 rounded-full ${statusDotMap[colorToken]}`}
                       />
                       <span className="truncate text-sm font-medium text-card-foreground">
                         {student.name}
                       </span>
                     </div>
-                    <div className="h-8">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={sparkData}>
-                          <Line
-                            type="monotone"
-                            dataKey="v"
-                            stroke={strokeColorMap[colorToken]}
-                            strokeWidth={1.5}
-                            dot={false}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
+
+                    {/* Assignment completion dots */}
+                    <div className="mb-2 flex items-center gap-1.5">
+                      {assignments.map((a) => {
+                        const submitted = student.assignmentsSubmitted.includes(a.id);
+                        return (
+                          <div
+                            key={a.id}
+                            className={cn(
+                              "flex h-5 w-5 items-center justify-center rounded",
+                              submitted
+                                ? "bg-status-green/15 text-status-green"
+                                : "bg-status-red/15 text-status-red"
+                            )}
+                          >
+                            {submitted ? (
+                              <Check className="h-3 w-3" />
+                            ) : (
+                              <X className="h-3 w-3" />
+                            )}
+                          </div>
+                        );
+                      })}
+                      <span className="ml-auto text-[11px] font-semibold text-muted-foreground">
+                        {completedCount}/{totalAssignments}
+                      </span>
+                    </div>
+
+                    {/* Attendance bar */}
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
+                        <div
+                          className={cn(
+                            "h-full rounded-full transition-all",
+                            student.attendanceRate >= 85
+                              ? "bg-status-green"
+                              : student.attendanceRate >= 70
+                              ? "bg-status-yellow"
+                              : "bg-status-red"
+                          )}
+                          style={{ width: `${student.attendanceRate}%` }}
+                        />
+                      </div>
+                      <span className="text-[11px] font-medium text-muted-foreground">
+                        {student.attendanceRate}%
+                      </span>
                     </div>
                   </div>
                 </TooltipTrigger>
@@ -75,8 +116,7 @@ const StudentGrid = () => {
                   <p>Status: {student.status}</p>
                   <p>Attendance: {student.attendanceRate}%</p>
                   <p>
-                    Assignments: {student.assignmentsSubmitted.length}/4
-                    submitted
+                    Assignments: {completedCount}/{totalAssignments} submitted ({completionPct}%)
                   </p>
                 </TooltipContent>
               </Tooltip>
