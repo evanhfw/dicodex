@@ -1,12 +1,35 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import ProgramTimeline from "@/components/dashboard/ProgramTimeline";
+import KpiCards from "@/components/dashboard/KpiCards";
+import CriticalList from "@/components/dashboard/CriticalList";
+import AttendanceChart from "@/components/dashboard/AttendanceChart";
+import StudentGrid from "@/components/dashboard/StudentGrid";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      {/* Top bar */}
+      <header className="border-b bg-card px-6 py-4">
+        <h1 className="text-xl font-bold text-card-foreground">
+          <span className="text-primary">Coding Camp</span> — Cohort Dashboard
+        </h1>
+      </header>
+
+      <main className="mx-auto max-w-7xl space-y-6 p-6">
+        {/* 1. Program Timeline */}
+        <ProgramTimeline />
+
+        {/* 2. KPI Summary */}
+        <KpiCards />
+
+        {/* 3–4. Critical List + Attendance Chart */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <CriticalList />
+          <AttendanceChart />
+        </div>
+
+        {/* 5. Student Grid */}
+        <StudentGrid />
+      </main>
     </div>
   );
 };
