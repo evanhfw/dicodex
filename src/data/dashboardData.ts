@@ -120,6 +120,19 @@ export const getStatusCounts = () => {
   return counts;
 };
 
+export const getStudentsByStatus = (status: StudentStatus) => {
+  return students
+    .filter((s) => s.status === status)
+    .map((s) => ({
+      id: s.id,
+      name: s.name,
+      status: s.status,
+      attendanceRate: s.attendanceRate,
+      assignmentsSubmitted: s.assignmentsSubmitted.length,
+      totalAssignments: assignments.length,
+    }));
+};
+
 export const getUnsubmittedCounts = () => {
   return assignments.map((assignment) => {
     const pending = students.filter(

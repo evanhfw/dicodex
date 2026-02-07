@@ -2,7 +2,6 @@ import ProgramTimeline from "@/components/dashboard/ProgramTimeline";
 import KpiCards from "@/components/dashboard/KpiCards";
 import CriticalList from "@/components/dashboard/CriticalList";
 import AttendanceChart from "@/components/dashboard/AttendanceChart";
-import StudentGrid from "@/components/dashboard/StudentGrid";
 
 const Index = () => {
   return (
@@ -26,9 +25,6 @@ const Index = () => {
           <CriticalList />
           <AttendanceChart />
         </div>
-
-        {/* 5. Student Grid */}
-        <StudentGrid />
       </main>
     </div>
   );
