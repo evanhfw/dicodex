@@ -65,11 +65,43 @@ export const weeklyAttendance: WeeklyAttendance[] = [
 ];
 
 // Program timeline
+export interface Milestone {
+  date: Date;
+  label: string;
+  type: "deadline" | "event" | "checkpoint";
+}
+
 export const programTimeline = {
   startDate: new Date("2026-01-05"),
   endDate: new Date("2026-04-05"),
   today: new Date("2026-02-07"),
   totalDays: 90,
+};
+
+export const milestones: Milestone[] = [
+  { date: new Date("2026-01-05"), label: "Orientation & Kickoff", type: "event" },
+  { date: new Date("2026-01-19"), label: "Module 1 Deadline", type: "deadline" },
+  { date: new Date("2026-02-02"), label: "Module 2 Deadline", type: "deadline" },
+  { date: new Date("2026-02-14"), label: "Mid-Program Review", type: "checkpoint" },
+  { date: new Date("2026-02-23"), label: "Module 3 Deadline", type: "deadline" },
+  { date: new Date("2026-03-09"), label: "Module 4 Deadline", type: "deadline" },
+  { date: new Date("2026-03-23"), label: "Final Project Kickoff", type: "event" },
+  { date: new Date("2026-04-05"), label: "Demo Day & Graduation", type: "event" },
+];
+
+// Get students who haven't submitted a specific assignment with their progress
+export const getStudentsForAssignment = (assignmentId: string) => {
+  return students
+    .filter((s) => !s.assignmentsSubmitted.includes(assignmentId))
+    .map((s) => ({
+      id: s.id,
+      name: s.name,
+      status: s.status,
+      progress: Math.round(
+        (s.assignmentsSubmitted.length / assignments.length) * 100
+      ),
+      attendanceRate: s.attendanceRate,
+    }));
 };
 
 // Computed helpers
