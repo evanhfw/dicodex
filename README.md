@@ -1,73 +1,178 @@
-# Welcome to your Lovable project
+# Protype Dashboard
 
-## Project info
+A React dashboard application for tracking cohort/student progress in a coding camp.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Features
 
-## How can I edit this code?
+- Student progress tracking with status indicators
+- KPI cards for quick metrics overview
+- Cohort management dashboard
+- Responsive design with modern UI
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Vite** - Fast build tool and dev server
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Accessible UI components
+- **React Query** - Data fetching and caching
+- **React Router v6** - Client-side routing
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ 
+- npm 9+
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+We recommend using [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) to manage Node.js versions.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+```bash
+# Clone the repository
+git clone https://github.com/evanhfw/protype-dashboard.git
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Navigate to project directory
+cd protype-dashboard
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server (runs on port 8080)
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Available Scripts
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run build:dev` | Development build (unminified) |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
+| `npm run test` | Run tests |
+| `npm run test:watch` | Run tests in watch mode |
 
-**Use GitHub Codespaces**
+## Contributing
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+We welcome contributions from the community! Here's how you can help:
 
-## What technologies are used for this project?
+### Ways to Contribute
 
-This project is built with:
+- Report bugs and issues
+- Suggest new features or improvements
+- Submit pull requests
+- Improve documentation
+- Share feedback
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Development Workflow
 
-## How can I deploy this project?
+1. **Fork the repository** - Click the "Fork" button on GitHub
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+2. **Clone your fork**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/protype-dashboard.git
+   cd protype-dashboard
+   ```
 
-## Can I connect a custom domain to my Lovable project?
+3. **Create a feature branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
 
-Yes, you can!
+4. **Make your changes** - Follow our code style guidelines in [AGENTS.md](./AGENTS.md)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+5. **Run checks before committing**
+   ```bash
+   npm run lint
+   npm run test
+   npm run build
+   ```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+6. **Commit your changes**
+   ```bash
+   git commit -m "feat: add your feature description"
+   ```
+
+7. **Push to your fork**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+8. **Open a Pull Request** - Go to the original repository and click "New Pull Request"
+
+### Commit Message Guidelines
+
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation changes
+- `style:` - Code style changes (formatting, etc.)
+- `refactor:` - Code refactoring
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks
+
+## Reporting Issues & Feedback
+
+### Found a Bug?
+
+1. **Search existing issues** - Check if the bug has already been reported
+2. **Create a new issue** - If not found, [open a new issue](https://github.com/YOUR_USERNAME/protype-dashboard/issues/new)
+3. **Include details**:
+   - Clear description of the bug
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Screenshots (if applicable)
+   - Browser and OS information
+
+### Have a Feature Request?
+
+1. [Open a new issue](https://github.com/YOUR_USERNAME/protype-dashboard/issues/new)
+2. Use the title format: `[Feature Request] Your feature title`
+3. Describe:
+   - What problem does this solve?
+   - How should it work?
+   - Any alternatives you've considered
+
+### General Feedback
+
+We appreciate all feedback! You can:
+- Open a [GitHub Discussion](https://github.com/YOUR_USERNAME/protype-dashboard/discussions) for questions and ideas
+- Comment on existing issues to share your thoughts
+
+## Project Structure
+
+```
+src/
+  components/
+    ui/           # shadcn/ui primitives (Button, Card, etc.)
+    dashboard/    # Dashboard-specific components
+  data/           # Data models and mock data
+  lib/            # Utilities (cn helper)
+  pages/          # Route page components
+  test/           # Test setup and test files
+  App.tsx         # Root component with providers
+  main.tsx        # Entry point
+```
+
+## Code of Conduct
+
+Please be respectful and constructive in all interactions. We are committed to providing a welcoming and inclusive environment for everyone.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## Acknowledgements
+
+- [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
+- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
+- All our contributors and supporters
+
+---
+
+**Questions?** Feel free to [open an issue](https://github.com/YOUR_USERNAME/protype-dashboard/issues) or start a [discussion](https://github.com/YOUR_USERNAME/protype-dashboard/discussions).
