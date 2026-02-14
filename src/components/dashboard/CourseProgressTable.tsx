@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { ParsedStudent, getCourseStats } from "@/data/parsedData";
+import { ParsedStudent, getCourseStats, getStudentsByCourse } from "@/data/parsedData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, TrendingUp, CheckCircle, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, TrendingUp, CheckCircle, Clock, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CourseProgressTableProps {
@@ -14,6 +15,8 @@ type SortDirection = "asc" | "desc";
 const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
   const [sortField, setSortField] = useState<SortField>("completionRate");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
+  const [studentSortDirection, setStudentSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const courseStats = useMemo(() => getCourseStats(students), [students]);
 
@@ -58,6 +61,14 @@ const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
 
     return sorted;
   }, [courseStats, sortField, sortDirection]);
+
+  const enrolledStudents = useMemo(() => {
+    if (!expandedCourse) return [];
+    const studentsData = getStudentsByCourse(students, expandedCourse);
+    return studentSortDirection === 'desc' 
+      ? studentsData.sort((a, b) => b.courseProgress - a.courseProgress)
+      : studentsData.sort((a, b) => a.courseProgress - b.courseProgress);
+  }, [students, expandedCourse, studentSortDirection]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -112,79 +123,178 @@ const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
               </tr>
             </thead>
             <tbody>
-              {sortedCourses.map((course, index) => (
-                <tr
-                  key={index}
-                  className="border-b last:border-b-0 transition-colors hover:bg-muted/50"
-                >
-                  <td className="py-3 pr-4">
-                    <p className="text-sm font-medium text-card-foreground">
-                      {course.name}
-                    </p>
-                  </td>
-                  <td className="py-3 text-center">
-                    <span className="text-sm text-muted-foreground">
-                      {course.totalEnrolled}
-                    </span>
-                  </td>
-                  <td className="py-3">
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
+              {sortedCourses.map((course, index) => {
+                const isExpanded = expandedCourse === course.name;
+                
+                return (
+                  <>
+                    <tr
+                      key={index}
+                      className={cn(
+                        "border-b last:border-b-0 transition-colors cursor-pointer",
+                        isExpanded ? "bg-muted/30" : "hover:bg-muted/50"
+                      )}
+                      onClick={() => setExpandedCourse(isExpanded ? null : course.name)}
+                    >
+                      <td className="py-3 pr-4">
+                        <div className="flex items-center gap-2">
+                          <ChevronDown 
+                            className={cn(
+                              "h-4 w-4 text-muted-foreground transition-transform duration-200 shrink-0",
+                              isExpanded && "rotate-180"
+                            )}
+                          />
+                          <p className="text-sm font-medium text-card-foreground">
+                            {course.name}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="py-3 text-center">
+                        <span className="text-sm text-muted-foreground">
+                          {course.totalEnrolled}
+                        </span>
+                      </td>
+                      <td className="py-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
+                            <div
+                              className={cn(
+                                "h-full rounded-full transition-all",
+                                course.completionRate >= 70
+                                  ? "bg-status-green"
+                                  : course.completionRate >= 40
+                                  ? "bg-status-yellow"
+                                  : "bg-status-red"
+                              )}
+                              style={{ width: `${course.completionRate}%` }}
+                            />
+                          </div>
+                          <span className="w-10 text-right text-xs font-medium text-muted-foreground">
+                            {course.completionRate}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
+                            <div
+                              className={cn(
+                                "h-full rounded-full transition-all",
+                                course.averageProgress >= 70
+                                  ? "bg-status-green"
+                                  : course.averageProgress >= 40
+                                  ? "bg-status-yellow"
+                                  : "bg-status-red"
+                              )}
+                              style={{ width: `${course.averageProgress}%` }}
+                            />
+                          </div>
+                          <span className="w-10 text-right text-xs font-medium text-muted-foreground">
+                            {course.averageProgress}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="flex items-center gap-1 text-xs text-status-green">
+                            <CheckCircle className="h-3 w-3" />
+                            <span>{course.completed}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-status-yellow">
+                            <TrendingUp className="h-3 w-3" />
+                            <span>{course.inProgress}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-status-red">
+                            <Clock className="h-3 w-3" />
+                            <span>{course.notStarted}</span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    {/* Expandable student detail section */}
+                    <tr key={`${index}-expanded`}>
+                      <td colSpan={5} className="p-0">
                         <div
                           className={cn(
-                            "h-full rounded-full transition-all",
-                            course.completionRate >= 70
-                              ? "bg-status-green"
-                              : course.completionRate >= 40
-                              ? "bg-status-yellow"
-                              : "bg-status-red"
+                            "grid transition-all duration-300 ease-in-out",
+                            isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                           )}
-                          style={{ width: `${course.completionRate}%` }}
-                        />
-                      </div>
-                      <span className="w-10 text-right text-xs font-medium text-muted-foreground">
-                        {course.completionRate}%
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-3">
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
-                        <div
-                          className={cn(
-                            "h-full rounded-full transition-all",
-                            course.averageProgress >= 70
-                              ? "bg-status-green"
-                              : course.averageProgress >= 40
-                              ? "bg-status-yellow"
-                              : "bg-status-red"
-                          )}
-                          style={{ width: `${course.averageProgress}%` }}
-                        />
-                      </div>
-                      <span className="w-10 text-right text-xs font-medium text-muted-foreground">
-                        {course.averageProgress}%
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-3">
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="flex items-center gap-1 text-xs text-status-green">
-                        <CheckCircle className="h-3 w-3" />
-                        <span>{course.completed}</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-status-yellow">
-                        <TrendingUp className="h-3 w-3" />
-                        <span>{course.inProgress}</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-status-red">
-                        <Clock className="h-3 w-3" />
-                        <span>{course.notStarted}</span>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        >
+                          <div className="overflow-hidden">
+                            {isExpanded && (
+                              <div className="border-t-2 border-muted bg-muted/20 p-4">
+                                <div className="mb-3 flex items-center justify-between">
+                                  <h4 className="text-sm font-semibold text-card-foreground">
+                                    Students Enrolled ({enrolledStudents.length})
+                                  </h4>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setStudentSortDirection(studentSortDirection === 'desc' ? 'asc' : 'desc');
+                                    }}
+                                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                                  >
+                                    Sort by Progress
+                                    <span className="font-semibold">{studentSortDirection === 'desc' ? '↓' : '↑'}</span>
+                                  </button>
+                                </div>
+                                
+                                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                                  {enrolledStudents.map((studentData, idx) => {
+                                    const statusColors = {
+                                      "Completed": "bg-status-green/15 text-status-green border-status-green/30",
+                                      "In Progress": "bg-status-yellow/15 text-status-yellow border-status-yellow/30",
+                                      "Not Started": "bg-status-red/15 text-status-red border-status-red/30",
+                                    };
+                                    
+                                    return (
+                                      <div
+                                        key={idx}
+                                        className="flex items-center justify-between rounded-md border bg-card p-2.5"
+                                      >
+                                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                                          <span className="text-sm font-medium text-card-foreground truncate">
+                                            {studentData.studentName}
+                                          </span>
+                                          <Badge 
+                                            variant="outline" 
+                                            className={cn("shrink-0 text-xs", statusColors[studentData.courseStatus])}
+                                          >
+                                            {studentData.courseStatus}
+                                          </Badge>
+                                        </div>
+                                        <div className="flex items-center gap-2 shrink-0">
+                                          <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
+                                            <div
+                                              className={cn(
+                                                "h-full rounded-full transition-all",
+                                                studentData.courseProgress >= 70
+                                                  ? "bg-status-green"
+                                                  : studentData.courseProgress >= 40
+                                                  ? "bg-status-yellow"
+                                                  : "bg-status-red"
+                                              )}
+                                              style={{ width: `${studentData.courseProgress}%` }}
+                                            />
+                                          </div>
+                                          <span className="w-10 text-right text-xs font-medium text-muted-foreground">
+                                            {studentData.courseProgress}%
+                                          </span>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </>
+                );
+              })}
             </tbody>
           </table>
         </div>
