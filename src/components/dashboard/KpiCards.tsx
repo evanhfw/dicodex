@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getStatusCounts, getStudentsByStatus, StudentStatus } from "@/data/dashboardData";
+import { ParsedStudent, ParsedStudentStatus, getStatusCounts, getStudentsByStatus, calculateAverageProgress } from "@/data/parsedData";
 import { AlertTriangle, TrendingDown, CheckCircle, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -10,6 +10,10 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+
+interface KpiCardsProps {
+  students: ParsedStudent[];
+}
 
 const kpiConfig = [
   {
@@ -50,14 +54,14 @@ const kpiConfig = [
   },
 ];
 
-const KpiCards = () => {
-  const counts = getStatusCounts();
-  const [selectedStatus, setSelectedStatus] = useState<StudentStatus | null>(null);
+const KpiCards = ({ students }: KpiCardsProps) => {
+  const counts = getStatusCounts(students);
+  const [selectedStatus, setSelectedStatus] = useState<ParsedStudentStatus | null>(null);
 
   const selectedConfig = selectedStatus
     ? kpiConfig.find((c) => c.key === selectedStatus)
     : null;
-  const selectedStudents = selectedStatus ? getStudentsByStatus(selectedStatus) : [];
+  const selectedStudents = selectedStatus ? getStudentsByStatus(students, selectedStatus) : [];
 
   return (
     <>
@@ -99,39 +103,44 @@ const KpiCards = () => {
           </DialogHeader>
 
           <div className="max-h-[50vh] space-y-3 overflow-y-auto pr-2">
-            {selectedStudents.map((student) => (
-              <div
-                key={student.id}
-                className={cn(
-                  "rounded-lg border-2 bg-card p-3",
-                  selectedConfig?.borderClass
-                )}
-              >
-                <p className="font-medium text-card-foreground">{student.name}</p>
-                <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1.5">
-                    <span>Attendance:</span>
-                    <div className="h-1.5 w-16 overflow-hidden rounded-full bg-secondary">
-                      <div
-                        className={cn(
-                          "h-full rounded-full",
-                          student.attendanceRate >= 85
-                            ? "bg-status-green"
-                            : student.attendanceRate >= 70
-                            ? "bg-status-yellow"
-                            : "bg-status-red"
-                        )}
-                        style={{ width: `${student.attendanceRate}%` }}
-                      />
+            {selectedStudents.map((student, index) => {
+              const avgProgress = calculateAverageProgress(student.courses);
+              const completedCourses = student.courses.filter(c => c.status === "Completed").length;
+              
+              return (
+                <div
+                  key={index}
+                  className={cn(
+                    "rounded-lg border-2 bg-card p-3",
+                    selectedConfig?.borderClass
+                  )}
+                >
+                  <p className="font-medium text-card-foreground">{student.name}</p>
+                  <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <span>Avg Progress:</span>
+                      <div className="h-1.5 w-16 overflow-hidden rounded-full bg-secondary">
+                        <div
+                          className={cn(
+                            "h-full rounded-full",
+                            avgProgress >= 80
+                              ? "bg-status-green"
+                              : avgProgress >= 50
+                              ? "bg-status-yellow"
+                              : "bg-status-red"
+                          )}
+                          style={{ width: `${avgProgress}%` }}
+                        />
+                      </div>
+                      <span className="font-medium">{avgProgress}%</span>
                     </div>
-                    <span className="font-medium">{student.attendanceRate}%</span>
-                  </div>
-                  <div>
-                    Assignments: <span className="font-medium">{student.assignmentsSubmitted}/{student.totalAssignments}</span>
+                    <div>
+                      Completed: <span className="font-medium">{completedCourses}/{student.courses.length}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {selectedStudents.length === 0 && (
               <p className="py-4 text-center text-sm text-muted-foreground">
