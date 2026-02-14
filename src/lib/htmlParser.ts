@@ -149,9 +149,16 @@ export const parseStudentHTML = (htmlString: string): ParseResult => {
                   courseStatus = 'In Progress';
                 }
 
+                // Fix progress: "Not Started" courses should have 0% progress
+                // Platform default is 2% for enrolled but not started courses
+                let finalProgress = percentage;
+                if (courseStatus === 'Not Started') {
+                  finalProgress = '0%';
+                }
+
                 courses.push({
                   name: courseName,
-                  progress: percentage,
+                  progress: finalProgress,
                   status: courseStatus,
                 });
               }
