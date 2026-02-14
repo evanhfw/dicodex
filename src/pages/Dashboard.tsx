@@ -13,19 +13,6 @@ const Dashboard = () => {
   const { studentData, clearStudentData, hasData, isLoading } = useStudentData();
   const navigate = useNavigate();
 
-  // #region agent log
-  useEffect(() => {
-    console.log('[DEBUG H4] Dashboard rendered:', {
-      hasData: hasData(),
-      isLoading,
-      studentDataExists: !!studentData,
-      totalStudents: studentData?.totalStudents,
-      firstStudent: studentData?.students?.[0]
-    });
-    fetch('http://127.0.0.1:7244/ingest/12c4cefe-f243-4b77-8bbc-000e13cdd64b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Dashboard.tsx:15',message:'Dashboard rendered',data:{hasData:hasData(),isLoading,studentDataExists:!!studentData,totalStudents:studentData?.totalStudents},timestamp:Date.now(),runId:'dashboard',hypothesisId:'H4'})}).catch(()=>{});
-  }, [studentData, hasData, isLoading]);
-  // #endregion
-
   // Redirect to upload page if no data
   useEffect(() => {
     if (!isLoading && !hasData()) {

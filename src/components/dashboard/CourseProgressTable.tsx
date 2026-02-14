@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { ParsedStudent, getCourseStats } from "@/data/parsedData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, TrendingUp, CheckCircle, Clock } from "lucide-react";
@@ -16,12 +16,6 @@ const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
   const courseStats = useMemo(() => getCourseStats(students), [students]);
-
-  // #region agent log
-  useEffect(() => {
-    fetch('http://127.0.0.1:7244/ingest/12c4cefe-f243-4b77-8bbc-000e13cdd64b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'CourseProgressTable.tsx:19',message:'CourseProgressTable rendered',data:{studentsCount:students.length,courseStatsCount:courseStats.length,firstCourseName:courseStats[0]?.name},timestamp:Date.now(),runId:'dashboard',hypothesisId:'H5'})}).catch(()=>{});
-  }, [students, courseStats]);
-  // #endregion
 
   const sortedCourses = useMemo(() => {
     const sorted = [...courseStats];
