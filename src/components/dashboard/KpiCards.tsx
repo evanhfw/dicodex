@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ParsedStudent, ParsedStudentStatus, getStatusCounts, getStudentsByStatus, calculateAverageProgress } from "@/data/parsedData";
 import { AlertTriangle, TrendingDown, CheckCircle, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -57,6 +57,18 @@ const kpiConfig = [
 const KpiCards = ({ students }: KpiCardsProps) => {
   const counts = getStatusCounts(students);
   const [selectedStatus, setSelectedStatus] = useState<ParsedStudentStatus | null>(null);
+
+  // #region agent log
+  useEffect(() => {
+    console.log('[DEBUG H5] KpiCards rendered:', {
+      studentsCount: students.length,
+      counts,
+      firstStudent: students[0],
+      firstCourses: students[0]?.courses
+    });
+    fetch('http://127.0.0.1:7244/ingest/12c4cefe-f243-4b77-8bbc-000e13cdd64b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KpiCards.tsx:56',message:'KpiCards rendered',data:{studentsCount:students.length,counts,firstStudentStatus:students[0]?.status,firstStudentCoursesCount:students[0]?.courses?.length},timestamp:Date.now(),runId:'dashboard',hypothesisId:'H5'})}).catch(()=>{});
+  }, [students, counts]);
+  // #endregion
 
   const selectedConfig = selectedStatus
     ? kpiConfig.find((c) => c.key === selectedStatus)
