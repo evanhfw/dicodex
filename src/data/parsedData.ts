@@ -139,3 +139,30 @@ export const getStudentsByStatus = (
 ) => {
   return students.filter(s => s.status === status);
 };
+
+// Helper function to get students enrolled in a specific course with their progress
+export const getStudentsByCourse = (
+  students: ParsedStudent[], 
+  courseName: string
+) => {
+  return students
+    .map(student => {
+      const course = student.courses.find(c => c.name === courseName);
+      if (!course) return null;
+      
+      return {
+        studentName: student.name,
+        studentStatus: student.status,
+        courseProgress: parseFloat(course.progress.replace('%', '')),
+        courseStatus: course.status,
+        course: course,
+      };
+    })
+    .filter(Boolean) as Array<{
+      studentName: string;
+      studentStatus: ParsedStudentStatus | null;
+      courseProgress: number;
+      courseStatus: CourseStatus;
+      course: Course;
+    }>;
+};

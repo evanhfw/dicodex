@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface KpiCardsProps {
@@ -57,6 +58,7 @@ const kpiConfig = [
 const KpiCards = ({ students }: KpiCardsProps) => {
   const counts = getStatusCounts(students);
   const [selectedStatus, setSelectedStatus] = useState<ParsedStudentStatus | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<ParsedStudent | null>(null);
 
   const selectedConfig = selectedStatus
     ? kpiConfig.find((c) => c.key === selectedStatus)
@@ -111,9 +113,10 @@ const KpiCards = ({ students }: KpiCardsProps) => {
                 <div
                   key={index}
                   className={cn(
-                    "rounded-lg border-2 bg-card p-3",
+                    "cursor-pointer rounded-lg border-2 bg-card p-3 transition-colors hover:bg-muted/30",
                     selectedConfig?.borderClass
                   )}
+                  onClick={() => setSelectedStudent(student)}
                 >
                   <p className="font-medium text-card-foreground">{student.name}</p>
                   <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
@@ -147,6 +150,70 @@ const KpiCards = ({ students }: KpiCardsProps) => {
                 No students in this category
               </p>
             )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Student Course Detail Dialog */}
+      <Dialog open={selectedStudent !== null} onOpenChange={(open) => !open && setSelectedStudent(null)}>
+        <DialogContent className="max-h-[80vh] overflow-hidden sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{selectedStudent?.name} - Course Progress</DialogTitle>
+            <DialogDescription>
+              {selectedStudent && (() => {
+                const completedCount = selectedStudent.courses.filter(c => c.status === "Completed").length;
+                const avgProgress = calculateAverageProgress(selectedStudent.courses);
+                return `${completedCount}/${selectedStudent.courses.length} courses completed • ${avgProgress}% average progress`;
+              })()}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="max-h-[50vh] space-y-2 overflow-y-auto pr-2">
+            {selectedStudent?.courses.map((course, index) => {
+              const progress = parseFloat(course.progress.replace('%', ''));
+              const statusColors = {
+                "Completed": "bg-status-green/15 text-status-green border-status-green/30",
+                "In Progress": "bg-status-yellow/15 text-status-yellow border-status-yellow/30",
+                "Not Started": "bg-status-red/15 text-status-red border-status-red/30",
+              };
+              
+              return (
+                <div
+                  key={index}
+                  className="rounded-lg border bg-card p-3"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-medium text-card-foreground line-clamp-2">
+                      {course.name}
+                    </p>
+                    <Badge 
+                      variant="outline" 
+                      className={cn("shrink-0 text-xs", statusColors[course.status])}
+                    >
+                      {course.status}
+                    </Badge>
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-secondary">
+                      <div
+                        className={cn(
+                          "h-full rounded-full transition-all",
+                          progress >= 70
+                            ? "bg-status-green"
+                            : progress >= 40
+                            ? "bg-status-yellow"
+                            : "bg-status-red"
+                        )}
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {course.progress}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </DialogContent>
       </Dialog>
