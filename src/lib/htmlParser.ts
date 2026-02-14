@@ -20,9 +20,13 @@ export const parseStudentHTML = (htmlString: string): ParseResult => {
       };
     }
 
+    // Normalize HTML: Replace all consecutive whitespace with single space
+    // This fixes status detection when text has line breaks (e.g., "In\nProgress", "Need\nSpecial\nAttention")
+    const normalizedHtml = htmlString.replace(/\s+/g, ' ').trim();
+
     // Parse HTML using DOMParser
     const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlString, 'text/html');
+    const doc = parser.parseFromString(normalizedHtml, 'text/html');
 
     // Check for parsing errors
     const parserError = doc.querySelector('parsererror');
@@ -145,9 +149,16 @@ export const parseStudentHTML = (htmlString: string): ParseResult => {
                   courseStatus = 'In Progress';
                 }
 
+                // Fix progress: "Not Started" courses should have 0% progress
+                // Platform default is 2% for enrolled but not started courses
+                let finalProgress = percentage;
+                if (courseStatus === 'Not Started') {
+                  finalProgress = '0%';
+                }
+
                 courses.push({
                   name: courseName,
-                  progress: percentage,
+                  progress: finalProgress,
                   status: courseStatus,
                 });
               }
