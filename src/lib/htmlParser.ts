@@ -20,9 +20,13 @@ export const parseStudentHTML = (htmlString: string): ParseResult => {
       };
     }
 
+    // Normalize HTML: Replace all consecutive whitespace with single space
+    // This fixes status detection when text has line breaks (e.g., "In\nProgress", "Need\nSpecial\nAttention")
+    const normalizedHtml = htmlString.replace(/\s+/g, ' ').trim();
+
     // Parse HTML using DOMParser
     const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlString, 'text/html');
+    const doc = parser.parseFromString(normalizedHtml, 'text/html');
 
     // Check for parsing errors
     const parserError = doc.querySelector('parsererror');
