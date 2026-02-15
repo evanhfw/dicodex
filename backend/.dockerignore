@@ -1,0 +1,17 @@
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+.git
+*.log
+.pytest_cache
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+.DS_Store
+output/*.json
