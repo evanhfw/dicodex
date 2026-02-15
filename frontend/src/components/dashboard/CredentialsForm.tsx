@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Shield } from 'lucide-react';
+import { Loader2, Shield, CheckCircle2 } from 'lucide-react';
 
 interface CredentialsFormProps {
   onScrapeSuccess?: () => void;
@@ -14,6 +15,8 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [statusMessage, setStatusMessage] = useState('');
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,6 +60,10 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
       // Clear password for security
       setPassword('');
 
+      // Initialize progress
+      setProgress(5);
+      setStatusMessage('Initializing scraper...');
+
       // Poll for completion (will handle success callback)
       pollScraperStatus();
     } catch (error) {
@@ -79,34 +86,64 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
         const response = await fetch(`${API_URL}/api/scrape/status`);
         const status = await response.json();
 
+        // Update progress based on time elapsed
+        // Estimated 2-3 minutes for completion
+        const estimatedProgress = Math.min(10 + (attempts * 1.5), 95);
+        
+        if (status.running) {
+          setProgress(estimatedProgress);
+          
+          // Update status messages based on progress
+          if (estimatedProgress < 20) {
+            setStatusMessage('Logging in to Dicoding...');
+          } else if (estimatedProgress < 40) {
+            setStatusMessage('Loading student list...');
+          } else if (estimatedProgress < 60) {
+            setStatusMessage('Extracting student data...');
+          } else if (estimatedProgress < 80) {
+            setStatusMessage('Processing course progress...');
+          } else {
+            setStatusMessage('Finalizing data collection...');
+          }
+        }
+
         if (!status.running && status.last_result) {
           clearInterval(poll);
-          setIsLoading(false);
+          setProgress(100);
+          setStatusMessage('Complete!');
           
-          if (status.last_result.success) {
-            toast({
-              title: 'Scraping complete!',
-              description: `Successfully scraped ${status.last_result.students} students. Redirecting to dashboard...`,
-            });
+          setTimeout(() => {
+            setIsLoading(false);
             
-            // Call success callback and redirect to dashboard
-            onScrapeSuccess?.();
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1500);
-          } else {
-            toast({
-              title: 'Scraping failed',
-              description: status.last_result.error || 'Unknown error',
-              variant: 'destructive'
-            });
-          }
+            if (status.last_result.success) {
+              toast({
+                title: 'Scraping complete!',
+                description: `Successfully scraped ${status.last_result.students} students. Redirecting to dashboard...`,
+              });
+              
+              // Call success callback and redirect to dashboard
+              onScrapeSuccess?.();
+              setTimeout(() => {
+                window.location.href = '/dashboard';
+              }, 1000);
+            } else {
+              toast({
+                title: 'Scraping failed',
+                description: status.last_result.error || 'Unknown error',
+                variant: 'destructive'
+              });
+              setProgress(0);
+              setStatusMessage('');
+            }
+          }, 500);
         }
 
         attempts++;
         if (attempts >= maxAttempts) {
           clearInterval(poll);
           setIsLoading(false);
+          setProgress(0);
+          setStatusMessage('');
           toast({
             title: 'Timeout',
             description: 'Scraping is taking longer than expected. Please check status manually.',
@@ -158,6 +195,32 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
               required
             />
           </div>
+
+          {/* Progress indicator when scraping */}
+          {isLoading && (
+            <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
+              <div className="flex items-center justify-between text-sm">
+                <span className="flex items-center gap-2 font-medium">
+                  {progress === 100 ? (
+                    <>
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span className="text-green-700">{statusMessage}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>{statusMessage}</span>
+                    </>
+                  )}
+                </span>
+                <span className="text-muted-foreground">{Math.round(progress)}%</span>
+              </div>
+              <Progress value={progress} className="h-2" />
+              <p className="text-xs text-muted-foreground text-center">
+                This may take 2-5 minutes. Please don't close this page.
+              </p>
+            </div>
+          )}
 
           <div className="bg-muted/50 p-3 rounded-md text-sm text-muted-foreground">
             <p className="flex items-center gap-2">
