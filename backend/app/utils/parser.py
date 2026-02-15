@@ -14,8 +14,11 @@ class DataTransformer:
         status_map = {
             "Need Special Attention": "Special Attention",
             "Special Attention": "Special Attention",
+            "Lagging Behind": "Lagging",
             "Lagging": "Lagging",
+            "On Ideal Schedule": "Ideal",
             "Ideal": "Ideal",
+            "Ahead of Schedule": "Ahead",
             "Ahead": "Ahead",
             "On Track": "Ideal",
         }
