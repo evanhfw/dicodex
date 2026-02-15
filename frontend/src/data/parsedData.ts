@@ -18,6 +18,7 @@ export interface ParsedStudent {
   name: string;
   status: ParsedStudentStatus | null;
   courses: Course[];
+  imageUrl?: string;
 }
 
 export interface StudentData {
