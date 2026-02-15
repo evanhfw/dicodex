@@ -379,7 +379,8 @@ class ScraperService:
     
     def _extract_mentor_from_dom(self, driver) -> dict:
         """Extract mentor information from DOM"""
-        return driver.execute_script(
+        # Get data from JavaScript then reorder to match diCodex output
+        data = driver.execute_script(
             r"""
             const text = (el) => (el?.textContent || "").replace(/\s+/g, " ").trim();
             const nav = Array.from(document.querySelectorAll("a.nav-link"))
@@ -394,6 +395,14 @@ class ScraperService:
             };
             """
         )
+        # Reorder fields to match diCodex output: group, mentor_code, name, nav_items, support_email
+        return {
+            "group": data.get("group", ""),
+            "mentor_code": data.get("mentor_code", ""),
+            "name": data.get("name", ""),
+            "nav_items": data.get("nav_items", []),
+            "support_email": data.get("support_email", ""),
+        }
     
     def _click_all_buttons_by_keyword(self, driver, keyword: str, max_clicks: int = 500) -> int:
         """Click all buttons containing a keyword"""
