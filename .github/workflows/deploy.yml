@@ -4,6 +4,19 @@ on:
   push:
     branches: [ "main" ]
 
+# ============================================
+# Required GitHub Secrets:
+# ============================================
+# DOCKER_USERNAME       - Docker Hub username
+# DOCKER_PASSWORD       - Docker Hub password/token
+# HOST                  - VPS IP address or hostname
+# USERNAME              - VPS SSH username
+# VPS_PASSWORD          - VPS SSH password
+# HOST_PORT             - Frontend port (default: 8080)
+# VITE_API_URL          - Backend API URL (e.g., http://your-vps-ip:3000)
+# DEPLOY_PATH           - Path on VPS where app will be deployed (e.g., /home/user/cohort-dashboard)
+# ============================================
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -18,15 +31,25 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 3. Build & Push Image
-      - name: Build and push
+      # 3. Build & Push Frontend Image
+      - name: Build and push frontend
         uses: docker/build-push-action@v6.18.0
         with:
-          context: .
+          context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/cohort-dashboard:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/cohort-dashboard-frontend:latest
 
-      # 4. SSH ke VPS untuk update container
+      # 4. Build & Push Backend Image
+      - name: Build and push backend
+        uses: docker/build-push-action@v6.18.0
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cohort-dashboard-backend:latest
+
+      # 5. Deploy to VPS using docker-compose
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -35,11 +58,31 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/cohort-dashboard:latest
-            docker stop cohort-dashboard || true
-            docker rm cohort-dashboard || true
-            docker run -d \
-              --name cohort-dashboard \
-              -p ${{ secrets.HOST_PORT }}:80 \
-              --restart unless-stopped \
-              ${{ secrets.DOCKER_USERNAME }}/cohort-dashboard:latest
+            # Create app directory if not exists
+            mkdir -p ${{ secrets.DEPLOY_PATH }}
+            cd ${{ secrets.DEPLOY_PATH }}
+            
+            # Create .env file with secrets
+            cat > .env << EOF
+            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            HOST_PORT=${{ secrets.HOST_PORT }}
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
+            EOF
+            
+            # Download docker-compose.prod.yml
+            curl -o docker-compose.prod.yml https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.prod.yml
+            
+            # Pull latest images
+            docker-compose -f docker-compose.prod.yml pull
+            
+            # Stop and remove old containers
+            docker-compose -f docker-compose.prod.yml down
+            
+            # Start new containers
+            docker-compose -f docker-compose.prod.yml up -d
+            
+            # Clean up old images
+            docker image prune -f
+            
+            # Show running containers
+            docker ps
