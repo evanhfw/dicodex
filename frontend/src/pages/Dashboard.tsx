@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ProgramTimeline from "@/components/dashboard/ProgramTimeline";
 import KpiCards from "@/components/dashboard/KpiCards";
-import CriticalList from "@/components/dashboard/CriticalList";
+import AllStudentsView from "@/components/dashboard/AllStudentsView";
 import CourseProgressTable from "@/components/dashboard/CourseProgressTable";
 
 const Dashboard = () => {
@@ -95,8 +95,8 @@ const Dashboard = () => {
         {/* 3. Course Progress Table */}
         <CourseProgressTable students={studentData.students} />
 
-        {/* 4. Critical List */}
-        <CriticalList students={studentData.students} />
+        {/* 4. All Students View */}
+        <AllStudentsView students={studentData.students} />
       </main>
     </div>
   );
