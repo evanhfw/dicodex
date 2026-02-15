@@ -57,17 +57,14 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
       // Clear password for security
       setPassword('');
 
-      // Poll for completion
+      // Poll for completion (will handle success callback)
       pollScraperStatus();
-
-      onScrapeSuccess?.();
     } catch (error) {
       toast({
         title: 'Error',
         description: error instanceof Error ? error.message : 'Failed to start scraping',
         variant: 'destructive'
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -84,15 +81,18 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
 
         if (!status.running && status.last_result) {
           clearInterval(poll);
+          setIsLoading(false);
           
           if (status.last_result.success) {
             toast({
               title: 'Scraping complete!',
-              description: `Successfully scraped ${status.last_result.students} students`,
+              description: `Successfully scraped ${status.last_result.students} students. Redirecting to dashboard...`,
             });
-            // Refresh page to show new data
+            
+            // Call success callback and redirect to dashboard
+            onScrapeSuccess?.();
             setTimeout(() => {
-              window.location.reload();
+              window.location.href = '/';
             }, 1500);
           } else {
             toast({
@@ -106,6 +106,7 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
         attempts++;
         if (attempts >= maxAttempts) {
           clearInterval(poll);
+          setIsLoading(false);
           toast({
             title: 'Timeout',
             description: 'Scraping is taking longer than expected. Please check status manually.',
