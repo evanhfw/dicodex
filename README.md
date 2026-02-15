@@ -330,6 +330,81 @@ The backend provides the following REST API endpoints:
 
 Interactive API documentation available at: `http://localhost:3000/docs`
 
+## CI/CD Deployment
+
+This project includes automated deployment to VPS using GitHub Actions. On every push to the `main` branch, the workflow will:
+
+1. Build frontend and backend Docker images
+2. Push images to Docker Hub
+3. Deploy to VPS using docker-compose
+
+### Setup GitHub Secrets
+
+To enable automated deployment, configure the following secrets in your GitHub repository (`Settings` → `Secrets and variables` → `Actions` → `New repository secret`):
+
+| Secret | Description | Example Value |
+|--------|-------------|---------------|
+| `DOCKER_USERNAME` | Docker Hub username | `yourusername` |
+| `DOCKER_PASSWORD` | Docker Hub password or access token | `dckr_pat_xxxxx` |
+| `HOST` | VPS IP address or hostname | `123.45.67.89` |
+| `USERNAME` | VPS SSH username | `root` or `ubuntu` |
+| `VPS_PASSWORD` | VPS SSH password | `your-secure-password` |
+| `HOST_PORT` | Port for frontend (default: 8080) | `8080` |
+| `VITE_API_URL` | Backend API URL for frontend | `http://123.45.67.89:3000` |
+| `DEPLOY_PATH` | Deployment directory on VPS | `/home/user/cohort-dashboard` |
+
+**Notes:**
+- Get Docker Hub access token from: https://hub.docker.com/settings/security
+- Dicoding credentials should be entered by users in the web interface (not stored in secrets)
+- Make sure `DEPLOY_PATH` directory is writable by SSH user
+
+### VPS Requirements
+
+Your VPS must have:
+- Docker 20.10+ installed
+- Docker Compose 2.0+ installed
+- SSH access enabled
+- Ports 8080, 3000, 4444, 7900 available (or configure different ports)
+
+### Manual Deployment
+
+To deploy manually to your VPS:
+
+```bash
+# 1. SSH into your VPS
+ssh user@your-vps-ip
+
+# 2. Create deployment directory
+mkdir -p /path/to/app
+cd /path/to/app
+
+# 3. Clone the repository
+git clone https://github.com/yourusername/protype-dashboard.git .
+
+# 4. Create .env file with production values
+cat > .env << EOF
+DOCKER_USERNAME=yourusername
+HOST_PORT=8080
+VITE_API_URL=http://your-vps-ip:3000
+EOF
+
+# 5. Pull images and start services
+docker-compose -f docker-compose.prod.yml pull
+docker-compose -f docker-compose.prod.yml up -d
+
+# 6. Check status
+docker-compose -f docker-compose.prod.yml ps
+docker-compose -f docker-compose.prod.yml logs -f
+```
+
+### Production URLs
+
+After deployment, access your application at:
+- **Frontend**: `http://YOUR_VPS_IP:8080`
+- **Backend API**: `http://YOUR_VPS_IP:3000`
+- **API Docs**: `http://YOUR_VPS_IP:3000/docs`
+- **Selenium VNC** (debugging): `http://YOUR_VPS_IP:7900`
+
 ## Project Structure
 
 ```
