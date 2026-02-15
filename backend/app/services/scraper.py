@@ -274,17 +274,42 @@ class ScraperService:
                 f"//input[contains(translate(@placeholder, '{text_normalizer}', '{text_lower}'), 'student') "
                 f"and contains(translate(@placeholder, '{text_normalizer}', '{text_lower}'), 'id')]",
             ),
+            (
+                By.XPATH,
+                f"//input[contains(translate(@aria-label, '{text_normalizer}', '{text_lower}'), 'student') "
+                f"and contains(translate(@aria-label, '{text_normalizer}', '{text_lower}'), 'id')]",
+            ),
+            (
+                By.XPATH,
+                f"//div[contains(translate(normalize-space(.), '{text_normalizer}', '{text_lower}'), \"student's name or id\")]",
+            ),
         ]
         select_all_locators = [
             (
                 By.XPATH,
                 f"//button[contains(translate(normalize-space(.), '{text_normalizer}', '{text_lower}'), 'select all')]",
             ),
+            (
+                By.XPATH,
+                f"//label[contains(translate(normalize-space(.), '{text_normalizer}', '{text_lower}'), 'select all')]",
+            ),
+            (
+                By.XPATH,
+                f"//span[contains(translate(normalize-space(.), '{text_normalizer}', '{text_lower}'), 'select all')]",
+            ),
         ]
         expand_all_locators = [
             (
                 By.XPATH,
                 f"//button[contains(translate(normalize-space(.), '{text_normalizer}', '{text_lower}'), 'expand all')]",
+            ),
+            (
+                By.XPATH,
+                f"//span[contains(translate(normalize-space(.), '{text_normalizer}', '{text_lower}'), 'expand all')]",
+            ),
+            (
+                By.XPATH,
+                f"//*[@role='button' and contains(translate(normalize-space(.), '{text_normalizer}', '{text_lower}'), 'expand all')]",
             ),
         ]
         
@@ -396,16 +421,43 @@ class ScraperService:
     
     def _parse_student(self, block_html: str) -> dict:
         """Parse student data from HTML block"""
-        # Simplified version - adapt full logic from diCodex if needed
         profile = {
             "name": self._one(r'<h3 class="text-3xl font-semibold">([^<]+)</h3>', block_html),
+            "profile_link": self._one(r'<h1><a href="([^"]+)"', block_html),
+            "photo_url": self._one(r'<img alt="[^"]+" src="([^"]+firebasestorage[^"]+)"', block_html),
             "status_badge": self._one(r'<div class="inline-block text-xs font-medium[^>]*><p>([^<]+)</p></div>', block_html),
             "university": self._one(
                 r'<p class="text-sm text-gray-700">University</p></div><p class="font-normal text-black pl-4">([^<]+)</p>',
                 block_html,
             ),
+            "major": self._one(
+                r'<p class="text-sm text-gray-700">Major</p></div><p class="font-normal text-black pl-4">([^<]+)</p>',
+                block_html,
+            ),
+            "facilitator": self._one(
+                r'<p class="text-sm text-gray-700">Facilitator</p></div><p class="font-normal text-black pl-4 break-words">([^<]+)</p>',
+                block_html,
+            ),
+            "lecturer": self._one(
+                r'<p class="text-sm text-gray-700">Lecturer</p></div><p class="font-normal text-black pl-4(?: break-words)?">([^<]+)</p>',
+                block_html,
+            ),
         }
-        
+
+        # Extract attendances
+        attendance_section = self._one(r'<section class="attendances w-full">(.*?)</section>', block_html)
+        attendances = [
+            {"event": event, "status": status}
+            for event, status in self._many(
+                r'data-event-name="([^"]+)".*?data-element="item-status-label">([^<]+)<',
+                attendance_section,
+            )
+        ]
+        attendance_last_updated = self._one(
+            r'data-element="attendance-last-update">Last updated: ([^<]+)<',
+            attendance_section,
+        )
+
         # Extract courses
         course_section = self._one(
             r'(data-element="course-progress-title".*?</div></div></div></section>)',
@@ -422,25 +474,237 @@ class ScraperService:
                 course_section,
             )
         ]
-        
+        course_last_updated = self._one(
+            r'data-element="course-progress-last-update">Last updated: ([^<]+)<',
+            course_section,
+        )
+
+        # Extract assignments
+        assignment_section = self._one(r'<section class="assignments w-full">(.*?)</section>', block_html)
+        assignments = [
+            {"assignment": name, "status": status}
+            for name, status in self._many(
+                r'data-assign-name="([^"]+)".*?data-element="item-status-label">([^<]+)<',
+                assignment_section,
+            )
+        ]
+        assignment_last_updated = self._one(
+            r'data-element="assignment-last-update">Last updated: ([^<]+)<',
+            assignment_section,
+        )
+        assignment_fallback = self._one(r'data-element="assignment-none">\s*([^<]+)\s*<', assignment_section)
+
+        # Extract daily check-ins (initial parse, full pagination done later)
+        daily_section = self._one(r'<section class="daily-checkins w-full">(.*?)</section>', block_html)
+        daily_checkins = [
+            {
+                "mood": mood,
+                "date": date,
+                "reflection": reflection,
+            }
+            for mood, date, reflection in self._many(
+                r'alt="([A-Za-z]+) mood".*?<p class="text-sm text-gray-500">([^<]+)</p>.*?<p class="text-sm text-gray-700">([^<]*)</p>',
+                daily_section,
+            )
+        ]
+
         return {
             "profile": profile,
             "progress": {
+                "attendances": {
+                    "last_updated": attendance_last_updated,
+                    "items": attendances,
+                },
                 "course_progress": {
+                    "last_updated": course_last_updated,
                     "items": courses,
+                },
+                "assignments": {
+                    "last_updated": assignment_last_updated,
+                    "items": assignments,
+                    "fallback_text_if_empty": assignment_fallback,
+                },
+                "daily_checkins": {
+                    "items": daily_checkins,
                 },
             },
         }
     
     def _extract_daily_checkins_all_pages(self, driver, student_index: int) -> list:
         """Extract daily check-ins with pagination"""
-        # Simplified - implement full pagination logic if needed
-        return []
+        items = []
+        seen = set()
+        stale_rounds = 0
+
+        for _ in range(MAX_PAGINATION_STEPS):
+            sections = driver.find_elements(By.CSS_SELECTOR, "section.daily-checkins")
+            if student_index >= len(sections):
+                break
+            section = sections[student_index]
+
+            entries = driver.execute_script(
+                r"""
+                const section = arguments[0];
+                const text = (el) => (el?.textContent || "").replace(/\s+/g, " ").trim();
+                const cards = Array.from(section.querySelectorAll("div.border-b.p-6"));
+                return cards.map((card) => {
+                  const mood = text(card.querySelector("p.text-lg"));
+                  const date = text(card.querySelector("p.text-sm.text-gray-500"));
+                  const reflectionHeading = Array.from(card.querySelectorAll("p.text-md.font-semibold"))
+                    .find((el) => /reflection/i.test(text(el)));
+                  let reflection = "";
+                  if (reflectionHeading) {
+                    reflection = text(reflectionHeading.parentElement?.querySelector("p.text-sm.text-gray-700"));
+                  }
+
+                  const goalsHeading = Array.from(card.querySelectorAll("p.text-md.font-semibold"))
+                    .find((el) => /goals/i.test(text(el)));
+                  let goals = [];
+                  if (goalsHeading) {
+                    const goalsRoot = goalsHeading.parentElement;
+                    const groups = Array.from(goalsRoot.querySelectorAll("div.mb-3, div.last\\:mb-0"));
+                    if (groups.length === 0) {
+                      const fallbackItems = Array.from(goalsRoot.querySelectorAll("li")).map((el) => text(el)).filter(Boolean);
+                      if (fallbackItems.length > 0) {
+                        goals.push({ title: "", items: fallbackItems });
+                      }
+                    } else {
+                      goals = groups.map((group) => ({
+                        title: text(group.querySelector("p.text-sm.font-semibold")),
+                        items: Array.from(group.querySelectorAll("li")).map((el) => text(el)).filter(Boolean),
+                      }));
+                    }
+                  }
+
+                  return { mood, date, reflection, goals };
+                });
+                """,
+                section,
+            )
+
+            before = len(seen)
+            for entry in entries:
+                key = json.dumps(
+                    {
+                        "mood": self._normalize_space(entry.get("mood", "")),
+                        "date": self._normalize_space(entry.get("date", "")),
+                        "reflection": self._normalize_space(entry.get("reflection", "")),
+                        "goals": entry.get("goals", []),
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                )
+                if key in seen:
+                    continue
+                seen.add(key)
+                items.append(json.loads(key))
+
+            if len(seen) == before:
+                stale_rounds += 1
+            else:
+                stale_rounds = 0
+
+            next_buttons = section.find_elements(
+                By.XPATH,
+                ".//button[normalize-space()='Next' or .//span[normalize-space()='Next']]",
+            )
+            if not next_buttons:
+                break
+            next_button = next_buttons[0]
+            disabled = next_button.get_attribute("disabled") is not None or (not next_button.is_enabled())
+            if disabled or stale_rounds >= 2:
+                break
+
+            self._click_element(driver, next_button)
+            time.sleep(0.35)
+
+        return items
     
     def _extract_point_histories_all_pages(self, driver, student_index: int) -> dict:
         """Extract point histories with pagination"""
-        # Simplified - implement full pagination logic if needed
+        last_updated = ""
+        total_point = ""
+        items = []
+        seen = set()
+        none_text = ""
+        stale_rounds = 0
+
+        for _ in range(MAX_PAGINATION_STEPS):
+            sections = driver.find_elements(By.CSS_SELECTOR, "section.point-histories")
+            if student_index >= len(sections):
+                break
+            section = sections[student_index]
+
+            payload = driver.execute_script(
+                r"""
+                const section = arguments[0];
+                const text = (el) => (el?.textContent || "").replace(/\s+/g, " ").trim();
+
+                const lastUpdatedRaw = text(section.querySelector("[data-element='point-histories-last-update']"));
+                const totalBlock = Array.from(section.querySelectorAll("div.flex.justify-between.items-center.border-b.p-6"))
+                  .find((el) => /total point/i.test(text(el)));
+                const totalPoint = totalBlock ? text(totalBlock.querySelector("p.text-lg, p.text-xl")) : "";
+                const noneText = text(section.querySelector("[data-element='point-histories-none']"));
+
+                const rows = Array.from(section.querySelectorAll("div.space-y-0 > div"))
+                  .map((row) => {
+                    const values = Array.from(row.querySelectorAll("p,span")).map((el) => text(el)).filter(Boolean);
+                    const rawText = text(row);
+                    return { values, raw_text: rawText };
+                  })
+                  .filter((row) => row.raw_text && !/you have no point histories data/i.test(row.raw_text));
+
+                return {
+                  last_updated: lastUpdatedRaw.replace(/^Last updated:\s*/i, ""),
+                  total_point: totalPoint,
+                  none_text: noneText,
+                  rows
+                };
+                """,
+                section,
+            )
+
+            last_updated = self._normalize_space(payload.get("last_updated", "") or last_updated)
+            total_point = self._normalize_space(payload.get("total_point", "") or total_point)
+            none_text = self._normalize_space(payload.get("none_text", "") or none_text)
+
+            before = len(seen)
+            for row in payload.get("rows", []):
+                key = json.dumps(
+                    {
+                        "raw_text": self._normalize_space(row.get("raw_text", "")),
+                        "values": [self._normalize_space(v) for v in row.get("values", [])],
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                )
+                if key in seen:
+                    continue
+                seen.add(key)
+                items.append(json.loads(key))
+
+            if len(seen) == before:
+                stale_rounds += 1
+            else:
+                stale_rounds = 0
+
+            next_buttons = section.find_elements(
+                By.XPATH,
+                ".//button[normalize-space()='Next' or .//span[normalize-space()='Next']]",
+            )
+            if not next_buttons:
+                break
+            next_button = next_buttons[0]
+            disabled = next_button.get_attribute("disabled") is not None or (not next_button.is_enabled())
+            if disabled or stale_rounds >= 2:
+                break
+
+            self._click_element(driver, next_button)
+            time.sleep(0.35)
+
         return {
-            "items": [],
-            "total_point": "0"
+            "last_updated": last_updated,
+            "total_point": total_point,
+            "items": items,
+            "fallback_text_if_empty": none_text,
         }
