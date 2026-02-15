@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
+import { useStudentData } from '@/contexts/StudentDataContext';
 import { Loader2, Shield, CheckCircle2 } from 'lucide-react';
 
 interface CredentialsFormProps {
@@ -18,6 +20,8 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
   const [progress, setProgress] = useState(0);
   const [statusMessage, setStatusMessage] = useState('');
   const { toast } = useToast();
+  const { setStudentData } = useStudentData();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,16 +120,8 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
             setIsLoading(false);
             
             if (status.last_result.success) {
-              toast({
-                title: 'Scraping complete!',
-                description: `Successfully scraped ${status.last_result.students} students. Redirecting to dashboard...`,
-              });
-              
-              // Call success callback and redirect to dashboard
-              onScrapeSuccess?.();
-              setTimeout(() => {
-                window.location.href = '/dashboard';
-              }, 1000);
+              // Fetch the scraped data from backend and save to context
+              fetchAndSaveData(status.last_result.file, status.last_result.students);
             } else {
               toast({
                 title: 'Scraping failed',
@@ -154,6 +150,49 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
         console.error('Polling error:', error);
       }
     }, 5000); // Poll every 5 seconds
+  };
+
+  const fetchAndSaveData = async (filename: string, studentCount: number) => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      
+      // Fetch the latest scraped data (backend already transforms to frontend format)
+      const response = await fetch(`${API_URL}/api/students`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch student data');
+      }
+
+      const data = await response.json();
+      
+      // Backend already returns data in correct format
+      const parsedStudents = data.students || [];
+
+      // Save to context (which auto-saves to localStorage)
+      setStudentData(parsedStudents);
+
+      toast({
+        title: 'Scraping complete!',
+        description: `Successfully scraped ${studentCount} students. Redirecting to dashboard...`,
+      });
+
+      // Call success callback
+      onScrapeSuccess?.();
+
+      // Now redirect to dashboard with data in context
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1000);
+    } catch (error) {
+      setIsLoading(false);
+      setProgress(0);
+      setStatusMessage('');
+      
+      toast({
+        title: 'Error loading data',
+        description: error instanceof Error ? error.message : 'Failed to load scraped data',
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
