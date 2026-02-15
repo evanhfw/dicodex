@@ -24,13 +24,11 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment files
+# Environment files (only root .env, keep .env.example)
 .env
 .env.local
 .env.*.local
 !.env.example
-!.env.development
-!.env.production
 
 # Test coverage
 coverage/
@@ -74,7 +72,6 @@ htmlcov/
 
 # uv
 .uv/
-uv.lock
 
 # Scraped data (keep structure, ignore data files)
 backend/output/*.json

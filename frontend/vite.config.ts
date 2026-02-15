@@ -18,4 +18,6 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Load .env from root directory (parent of frontend/)
+  envDir: path.resolve(__dirname, ".."),
 }));

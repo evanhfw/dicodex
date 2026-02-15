@@ -105,11 +105,13 @@ cd backend
 # Install dependencies
 uv sync
 
-# Configure environment
+# Configure environment (from root directory)
+cd ..
 cp .env.example .env
 # Edit .env with your credentials
 
 # Run backend
+cd backend
 uv run uvicorn app.main:app --reload --port 3000
 # API runs on http://localhost:3000
 # Docs at http://localhost:3000/docs
@@ -151,20 +153,39 @@ Benefits:
 
 ### Alternative: Environment Variables (Optional)
 
-If you want to use hardcoded credentials (for automated/scheduled scraping), create a `.env` file:
+If you want to use hardcoded credentials (for automated/scheduled scraping), create a `.env` file **in the root directory**:
+
+```bash
+# Copy the template
+cp .env.example .env
+# Edit with your credentials
+```
+
+The `.env` file should contain:
 
 ```env
+# ===================================
+# Backend Environment Variables
+# ===================================
 # Dicoding Credentials (OPTIONAL - can enter in UI instead)
 DICODING_EMAIL=your-email@student.devacademy.id
 DICODING_PASSWORD=your-password
 
-# API Configuration (auto-configured in Docker)
-VITE_API_URL=http://localhost:3000
+# Backend Services Configuration
 SELENIUM_URL=http://selenium:4444
 CODINGCAMP_URL=https://codingcamp.dicoding.com
+
+# ===================================
+# Frontend Environment Variables
+# (Only VITE_* prefix is exposed to browser)
+# ===================================
+VITE_API_URL=http://localhost:3000
 ```
 
-**Important:** Never commit `.env` file with real credentials to Git!
+**Important:** 
+- Never commit `.env` file with real credentials to Git!
+- All environment variables are in **one file** at the project root
+- Frontend can only access variables with `VITE_*` prefix (secure by design)
 
 ### How Credentials Work
 
@@ -344,6 +365,7 @@ protype-dashboard/
 │
 ├── docker-compose.yml      # Production Docker config
 ├── docker-compose.dev.yml  # Development Docker config
+├── .env                    # Environment variables (git-ignored)
 ├── .env.example            # Environment variables template
 └── README.md               # This file
 ```

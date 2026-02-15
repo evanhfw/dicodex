@@ -14,10 +14,11 @@ services:
       - ./frontend/src:/app/src
       - ./frontend/public:/app/public
       - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
       # Don't mount node_modules
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:3000
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:3000}
     depends_on:
       - backend
 
@@ -32,7 +33,6 @@ services:
     volumes:
       - ./backend/app:/app/app
       - ./backend/pyproject.toml:/app/pyproject.toml
-      - ./backend/.env:/app/.env
       - scraped_data:/app/output
       # Don't mount .venv
       - /app/.venv

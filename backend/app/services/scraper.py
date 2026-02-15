@@ -18,8 +18,9 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from root directory
+# In Docker, env vars are injected directly, so this is mainly for local dev
+load_dotenv(dotenv_path=Path(__file__).parent.parent.parent.parent / ".env")
 
 # Configuration
 CODINGCAMP_URL = os.getenv("CODINGCAMP_URL", "https://codingcamp.dicoding.com")
