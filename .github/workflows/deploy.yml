@@ -41,6 +41,8 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/cohort-dashboard-frontend:latest
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
 
       # 4. Build & Push Backend Image
       - name: Build and push backend
@@ -70,7 +72,6 @@ jobs:
             HOST_PORT=${{ secrets.HOST_PORT }}
             BACKEND_PORT=${{ secrets.BACKEND_PORT }}
             SELENIUM_PORT=${{ secrets.SELENIUM_PORT }}
-            VITE_API_URL=${{ secrets.VITE_API_URL }}
             EOF
             
             # Download docker-compose.prod.yml
