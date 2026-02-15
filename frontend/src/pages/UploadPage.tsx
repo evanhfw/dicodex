@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useStudentData } from '@/contexts/StudentDataContext';
 import { parseStudentHTML, readFileAsText, validateFileSize } from '@/lib/htmlParser';
+import { CredentialsForm } from '@/components/dashboard/CredentialsForm';
 
 const UploadPage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -142,19 +143,34 @@ const UploadPage = () => {
       <main className="mx-auto max-w-4xl p-6">
         <Card>
           <CardHeader>
-            <CardTitle>Upload Student Data</CardTitle>
+            <CardTitle>Get Student Data</CardTitle>
             <CardDescription>
-              Upload an HTML file or paste HTML content to import student progress data
+              Auto-scrape from Dicoding, upload an HTML file, or paste HTML content
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="upload" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+            <Tabs defaultValue="credentials" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="credentials">Auto Scrape</TabsTrigger>
                 <TabsTrigger value="upload">Upload File</TabsTrigger>
                 <TabsTrigger value="paste">Paste HTML</TabsTrigger>
               </TabsList>
 
-              {/* Tab 1: Upload File */}
+              {/* Tab 1: Auto Scrape with Credentials */}
+              <TabsContent value="credentials" className="space-y-4">
+                <CredentialsForm 
+                  onScrapeSuccess={() => {
+                    // Redirect to dashboard after scraping starts
+                    toast({
+                      title: 'Redirecting...',
+                      description: 'You will be redirected to the dashboard',
+                    });
+                    setTimeout(() => navigate('/dashboard'), 1000);
+                  }}
+                />
+              </TabsContent>
+
+              {/* Tab 3: Upload File */}
               <TabsContent value="upload" className="space-y-4">
                 <div
                   className={`relative rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
@@ -208,7 +224,7 @@ const UploadPage = () => {
                 </div>
               </TabsContent>
 
-              {/* Tab 2: Paste HTML */}
+              {/* Tab 4: Paste HTML */}
               <TabsContent value="paste" className="space-y-4">
                 <div className="space-y-2">
                   <Textarea
@@ -254,12 +270,25 @@ const UploadPage = () => {
             <CardTitle className="text-base">Instructions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <ol className="list-decimal space-y-2 pl-5">
-              <li>Upload an HTML file containing student progress data or paste the HTML content</li>
-              <li>The HTML should contain student information with names, status, and course progress</li>
-              <li>Click "Parse & View Dashboard" to process the data</li>
-              <li>You will be automatically redirected to the dashboard with the imported data</li>
-            </ol>
+            <div className="space-y-3">
+              <div>
+                <h4 className="font-medium text-foreground mb-2">Option 1: Auto Scrape (Recommended)</h4>
+                <ol className="list-decimal space-y-1 pl-5">
+                  <li>Enter your Dicoding email and password</li>
+                  <li>Click "Start Scraping" to automatically fetch the latest data</li>
+                  <li>Wait 2-5 minutes for the scraping to complete</li>
+                  <li>You will be automatically redirected to the dashboard</li>
+                </ol>
+              </div>
+              <div>
+                <h4 className="font-medium text-foreground mb-2">Option 2: Manual Upload</h4>
+                <ol className="list-decimal space-y-1 pl-5">
+                  <li>Upload an HTML file or paste HTML content from the Dicoding Coding Camp page</li>
+                  <li>Click "Parse & View Dashboard" to process the data</li>
+                  <li>You will be automatically redirected to the dashboard</li>
+                </ol>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </main>

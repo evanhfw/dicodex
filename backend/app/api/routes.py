@@ -2,10 +2,18 @@
 API Routes for Student Dashboard
 """
 from fastapi import APIRouter, HTTPException, BackgroundTasks
-from typing import Dict, Any
+from typing import Dict, Any, Optional
+from pydantic import BaseModel, EmailStr
 from app.services.scraper import ScraperService
 from app.utils.file_handler import FileHandler
 from app.utils.parser import DataTransformer
+
+
+class ScrapeRequest(BaseModel):
+    """Request model for scraping with credentials"""
+    email: EmailStr
+    password: str
+
 
 router = APIRouter()
 scraper_service = ScraperService()
@@ -40,9 +48,18 @@ async def get_students() -> Dict[str, Any]:
 
 
 @router.post("/scrape")
-async def trigger_scrape(background_tasks: BackgroundTasks) -> Dict[str, str]:
+async def trigger_scrape(
+    credentials: ScrapeRequest,
+    background_tasks: BackgroundTasks
+) -> Dict[str, str]:
     """
-    Trigger a new scraping job
+    Trigger a new scraping job with user-provided credentials
+    
+    Args:
+        credentials: User's Dicoding email and password
+    
+    Returns:
+        Status message indicating scraping has started
     
     Runs the scraper in the background and returns immediately
     """
@@ -52,8 +69,12 @@ async def trigger_scrape(background_tasks: BackgroundTasks) -> Dict[str, str]:
             detail="Scraper is already running. Please wait for it to complete."
         )
     
-    # Run scraper in background
-    background_tasks.add_task(scraper_service.run_scraper)
+    # Run scraper in background with provided credentials
+    background_tasks.add_task(
+        scraper_service.run_scraper,
+        email=credentials.email,
+        password=credentials.password
+    )
     
     return {
         "status": "started",

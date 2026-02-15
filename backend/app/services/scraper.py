@@ -41,6 +41,8 @@ class ScraperService:
         self._last_run: Optional[str] = None
         self._last_error: Optional[str] = None
         self._last_result: Optional[Dict[str, Any]] = None
+        self._scraper_email: Optional[str] = None
+        self._scraper_password: Optional[str] = None
     
     def is_running(self) -> bool:
         """Check if scraper is currently running"""
@@ -55,10 +57,24 @@ class ScraperService:
             "last_result": self._last_result
         }
     
-    def run_scraper(self) -> Dict[str, Any]:
-        """Run the scraping process"""
+    def run_scraper(self, email: Optional[str] = None, password: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Run the scraping process
+        
+        Args:
+            email: Dicoding email (optional, falls back to env var)
+            password: Dicoding password (optional, falls back to env var)
+        """
         self._is_running = True
         self._last_error = None
+        
+        # Use provided credentials or fallback to env vars
+        self._scraper_email = email or os.getenv("DICODING_EMAIL", "")
+        self._scraper_password = password or os.getenv("DICODING_PASSWORD", "")
+        
+        if not self._scraper_email or not self._scraper_password:
+            self._is_running = False
+            raise ValueError("Email and password are required")
         
         try:
             driver = self._build_driver()
@@ -207,8 +223,8 @@ class ScraperService:
     def _login_with_email_password(self, driver, wait):
         wait.until(ec.visibility_of_element_located((By.CSS_SELECTOR, "input[type='password']")))
         
-        if not EMAIL or not PASSWORD:
-            raise ValueError("EMAIL/PASSWORD empty. Set DICODING_EMAIL and DICODING_PASSWORD environment variables.")
+        if not self._scraper_email or not self._scraper_password:
+            raise ValueError("EMAIL/PASSWORD empty. Credentials must be provided.")
         
         email_input = self._find_first_visible(
             driver,
@@ -242,9 +258,9 @@ class ScraperService:
             raise NoSuchElementException("Login form components not found")
         
         email_input.clear()
-        email_input.send_keys(EMAIL)
+        email_input.send_keys(self._scraper_email)
         password_input.clear()
-        password_input.send_keys(PASSWORD)
+        password_input.send_keys(self._scraper_password)
         self._click_element(driver, submit_button)
     
     def _expand_all_student_data(self, driver):

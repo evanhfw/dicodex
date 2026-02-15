@@ -9,8 +9,11 @@ A full-stack dashboard application for tracking cohort/student progress in a cod
 - Cohort management dashboard
 - Responsive design with modern UI
 - **Automated scraping** from Dicoding Coding Camp (real-time data)
+- **Dynamic credential input** - Enter credentials in the UI (no .env configuration needed)
+- **Multi-user support** - Each user can scrape with their own credentials
 - RESTful API for data access
 - Docker containerization for easy deployment
+- Real-time scraping progress with automatic polling
 
 ## Tech Stack
 
@@ -58,10 +61,6 @@ The easiest way to run the entire application:
 git clone https://github.com/evanhfw/protype-dashboard.git
 cd protype-dashboard
 
-# Copy and configure environment variables
-cp .env.example .env
-# Edit .env and add your Dicoding credentials
-
 # Start all services (frontend, backend, selenium)
 docker-compose -f docker-compose.dev.yml up
 
@@ -71,6 +70,8 @@ docker-compose -f docker-compose.dev.yml up
 # API Docs: http://localhost:3000/docs
 # Selenium VNC (debug): http://localhost:7900 (password: secret)
 ```
+
+**Note**: No .env configuration needed! You can enter your Dicoding credentials directly in the web interface.
 
 ### Docker Commands
 
@@ -136,12 +137,24 @@ uv run uvicorn app.main:app --reload --port 3000
 | `uv run uvicorn app.main:app --reload` | Start dev server with hot-reload |
 | `uv run uvicorn app.main:app` | Start production server |
 
-## Environment Variables
+## Credentials & Environment Variables
 
-Create a `.env` file in the root directory (copy from `.env.example`):
+### Dynamic Credentials (Recommended)
+
+**No configuration needed!** Simply enter your Dicoding credentials in the web interface when you want to scrape data.
+
+Benefits:
+- ✅ No .env file configuration required
+- ✅ Multiple users can use their own credentials
+- ✅ Credentials not stored anywhere
+- ✅ Works immediately after starting containers
+
+### Alternative: Environment Variables (Optional)
+
+If you want to use hardcoded credentials (for automated/scheduled scraping), create a `.env` file:
 
 ```env
-# Dicoding Credentials (required for scraping)
+# Dicoding Credentials (OPTIONAL - can enter in UI instead)
 DICODING_EMAIL=your-email@student.devacademy.id
 DICODING_PASSWORD=your-password
 
@@ -153,13 +166,45 @@ CODINGCAMP_URL=https://codingcamp.dicoding.com
 
 **Important:** Never commit `.env` file with real credentials to Git!
 
+### How Credentials Work
+
+1. **UI Input (Preferred)**: Enter credentials in web form → Sent to API → Used for scraping → Discarded
+2. **ENV Fallback**: If no credentials provided in UI, backend falls back to .env file
+3. **Priority**: UI credentials always override .env credentials
+
 ## How It Works
 
-1. **Data Collection**: The backend scraper service logs into Dicoding Coding Camp using Selenium and collects student progress data
-2. **Data Storage**: Scraped data is saved as JSON files in the `backend/output/` directory (persisted via Docker volume)
-3. **Data Transformation**: The backend API transforms diCodex scraper format to frontend-friendly format
-4. **Data Display**: The React frontend fetches and displays the data with interactive visualizations
-5. **Real-time Updates**: Users can trigger new scrapes via the UI to get fresh data
+### Using the Application
+
+1. **Start the application**: Run `docker-compose -f docker-compose.dev.yml up`
+2. **Open the web interface**: Navigate to http://localhost:8080
+3. **Choose data source**:
+   - **Option 1 (Recommended)**: Enter your Dicoding credentials in the "Auto Scrape" tab and click "Start Scraping"
+   - **Option 2**: Upload HTML file or paste HTML content manually
+4. **Wait for scraping**: If using auto-scrape, wait 2-5 minutes for data collection
+5. **View dashboard**: Data appears automatically with student progress visualizations
+
+### Technical Flow
+
+1. **Credential Input**: User enters Dicoding email and password in the frontend form
+2. **API Request**: Frontend sends credentials to backend API (`POST /api/scrape`)
+3. **Background Scraping**: Backend starts Selenium automation in background:
+   - Connects to Selenium standalone container
+   - Logs into Dicoding with provided credentials
+   - Navigates and expands all student data
+   - Extracts comprehensive progress information
+4. **Data Storage**: Scraped data saved as timestamped JSON in `backend/output/` (Docker volume)
+5. **Status Polling**: Frontend polls scraper status every 5 seconds
+6. **Data Transformation**: Backend API transforms data to frontend-friendly format
+7. **Auto-refresh**: When complete, page refreshes to display new data
+
+### Security Features
+
+- **No credential storage**: Credentials are NOT stored anywhere (frontend or backend)
+- **Session-less**: Each scrape requires re-entering credentials
+- **Password clearing**: Password field cleared immediately after submission
+- **API validation**: Email format validated via Pydantic
+- **Multi-user support**: Each user's data saved separately with timestamps
 
 ## Contributing
 
