@@ -14,7 +14,7 @@ services:
     image: ${DOCKER_USERNAME}/cohort-dashboard-backend:latest
     container_name: student-dashboard-backend
     ports:
-      - "3000:3000"
+      - "${BACKEND_PORT:-3000}:3000"
     environment:
       - SELENIUM_URL=http://selenium:4444
       - DICODING_EMAIL=${DICODING_EMAIL}
@@ -30,8 +30,8 @@ services:
     image: selenium/standalone-chrome:latest
     container_name: student-dashboard-selenium
     ports:
-      - "4444:4444"
-      - "7900:7900"  # VNC server for debugging
+      - "${SELENIUM_PORT:-4444}:4444"
+      - "${SELENIUM_VNC_PORT:-7900}:7900"  # VNC server for debugging
     shm_size: 2gb
     environment:
       - SE_NODE_MAX_SESSIONS=5
