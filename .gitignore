@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
 dist
 dist-ssr
@@ -25,7 +26,11 @@ dist-ssr
 
 # Environment files
 .env
-.env.*
+.env.local
+.env.*.local
+!.env.example
+!.env.development
+!.env.production
 
 # Test coverage
 coverage/
@@ -35,3 +40,54 @@ coverage/
 
 # Windows
 Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+htmlcov/
+.hypothesis/
+
+# uv
+.uv/
+uv.lock
+
+# Scraped data (keep structure, ignore data files)
+backend/output/*.json
+!backend/output/.gitkeep
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# diCodex (integrated into backend)
+diCodex/
+
+# Old temporary files
+*.html
+!frontend/index.html
+!frontend/public/*.html

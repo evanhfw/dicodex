@@ -1,6 +1,6 @@
 # Protype Dashboard
 
-A React dashboard application for tracking cohort/student progress in a coding camp.
+A full-stack dashboard application for tracking cohort/student progress in a coding camp with automated data scraping from Dicoding Coding Camp.
 
 ## Features
 
@@ -8,9 +8,13 @@ A React dashboard application for tracking cohort/student progress in a coding c
 - KPI cards for quick metrics overview
 - Cohort management dashboard
 - Responsive design with modern UI
+- **Automated scraping** from Dicoding Coding Camp (real-time data)
+- RESTful API for data access
+- Docker containerization for easy deployment
 
 ## Tech Stack
 
+### Frontend
 - **Vite** - Fast build tool and dev server
 - **React 18** - UI library
 - **TypeScript** - Type safety
@@ -19,33 +23,102 @@ A React dashboard application for tracking cohort/student progress in a coding c
 - **React Query** - Data fetching and caching
 - **React Router v6** - Client-side routing
 
+### Backend
+- **Python 3.14** - Programming language
+- **FastAPI** - Modern Python web framework
+- **uv** - Ultra-fast Python package manager
+- **Selenium** - Browser automation for scraping
+- **Docker** - Containerization
+
+### Infrastructure
+- **Docker Compose** - Multi-container orchestration
+- **Nginx** - Web server for frontend
+- **Selenium Standalone Chrome** - Headless browser
+
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ 
+**Option 1: Docker (Recommended)**
+- Docker 20.10+
+- Docker Compose 2.0+
+
+**Option 2: Local Development**
+- Node.js 18+
 - npm 9+
+- Python 3.14+
+- uv package manager
 
-We recommend using [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) to manage Node.js versions.
+### Quick Start with Docker 🐳
 
-### Installation
+The easiest way to run the entire application:
 
 ```bash
 # Clone the repository
 git clone https://github.com/evanhfw/protype-dashboard.git
-
-# Navigate to project directory
 cd protype-dashboard
 
-# Install dependencies
-npm install
+# Copy and configure environment variables
+cp .env.example .env
+# Edit .env and add your Dicoding credentials
 
-# Start development server (runs on port 8080)
-npm run dev
+# Start all services (frontend, backend, selenium)
+docker-compose -f docker-compose.dev.yml up
+
+# Access the application
+# Frontend: http://localhost:8080
+# Backend API: http://localhost:3000
+# API Docs: http://localhost:3000/docs
+# Selenium VNC (debug): http://localhost:7900 (password: secret)
 ```
 
-### Available Scripts
+### Docker Commands
 
+| Command | Description |
+|---------|-------------|
+| `docker-compose -f docker-compose.dev.yml up` | Start development mode (with hot-reload) |
+| `docker-compose up -d` | Start production mode (detached) |
+| `docker-compose up --build` | Rebuild and start containers |
+| `docker-compose down` | Stop all containers |
+| `docker-compose down -v` | Stop and remove volumes (reset data) |
+| `docker-compose logs -f backend` | View backend logs |
+| `docker-compose ps` | List running containers |
+
+### Local Development (Without Docker)
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev
+# Runs on http://localhost:8080
+```
+
+**Backend:**
+```bash
+cd backend
+
+# Install uv if not installed
+# curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install dependencies
+uv sync
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your credentials
+
+# Run backend
+uv run uvicorn app.main:app --reload --port 3000
+# API runs on http://localhost:3000
+# Docs at http://localhost:3000/docs
+```
+
+**Note:** For local backend, you need Selenium running separately or a local chromedriver.
+
+### Available Scripts (Local Development)
+
+**Frontend (`frontend/` directory):**
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Start development server |
@@ -55,6 +128,38 @@ npm run dev
 | `npm run lint` | Run ESLint |
 | `npm run test` | Run tests |
 | `npm run test:watch` | Run tests in watch mode |
+
+**Backend (`backend/` directory):**
+| Command | Description |
+|---------|-------------|
+| `uv sync` | Install dependencies |
+| `uv run uvicorn app.main:app --reload` | Start dev server with hot-reload |
+| `uv run uvicorn app.main:app` | Start production server |
+
+## Environment Variables
+
+Create a `.env` file in the root directory (copy from `.env.example`):
+
+```env
+# Dicoding Credentials (required for scraping)
+DICODING_EMAIL=your-email@student.devacademy.id
+DICODING_PASSWORD=your-password
+
+# API Configuration (auto-configured in Docker)
+VITE_API_URL=http://localhost:3000
+SELENIUM_URL=http://selenium:4444
+CODINGCAMP_URL=https://codingcamp.dicoding.com
+```
+
+**Important:** Never commit `.env` file with real credentials to Git!
+
+## How It Works
+
+1. **Data Collection**: The backend scraper service logs into Dicoding Coding Camp using Selenium and collects student progress data
+2. **Data Storage**: Scraped data is saved as JSON files in the `backend/output/` directory (persisted via Docker volume)
+3. **Data Transformation**: The backend API transforms diCodex scraper format to frontend-friendly format
+4. **Data Display**: The React frontend fetches and displays the data with interactive visualizations
+5. **Real-time Updates**: Users can trigger new scrapes via the UI to get fresh data
 
 ## Contributing
 
@@ -144,19 +249,58 @@ We appreciate all feedback! You can:
 - Open a [GitHub Discussion](https://github.com/YOUR_USERNAME/protype-dashboard/discussions) for questions and ideas
 - Comment on existing issues to share your thoughts
 
+## API Endpoints
+
+The backend provides the following REST API endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Health check |
+| `/api/students` | GET | Get latest student data |
+| `/api/scrape` | POST | Trigger new scraping job (background task) |
+| `/api/scrape/status` | GET | Get scraper status and last run info |
+| `/api/files` | GET | List all scraped data files |
+| `/api/files/{filename}` | GET | Get data from specific file |
+
+Interactive API documentation available at: `http://localhost:3000/docs`
+
 ## Project Structure
 
 ```
-src/
-  components/
-    ui/           # shadcn/ui primitives (Button, Card, etc.)
-    dashboard/    # Dashboard-specific components
-  data/           # Data models and mock data
-  lib/            # Utilities (cn helper)
-  pages/          # Route page components
-  test/           # Test setup and test files
-  App.tsx         # Root component with providers
-  main.tsx        # Entry point
+protype-dashboard/
+├── frontend/                # React frontend application
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/         # shadcn/ui primitives
+│   │   │   └── dashboard/  # Dashboard components
+│   │   ├── data/           # Data models and utilities
+│   │   ├── lib/            # Utilities (cn helper)
+│   │   ├── pages/          # Route page components
+│   │   ├── contexts/       # React contexts
+│   │   ├── App.tsx         # Root component
+│   │   └── main.tsx        # Entry point
+│   ├── public/             # Static assets
+│   ├── Dockerfile          # Frontend container config
+│   └── package.json        # Frontend dependencies
+│
+├── backend/                # Python FastAPI backend
+│   ├── app/
+│   │   ├── main.py         # FastAPI application
+│   │   ├── api/
+│   │   │   └── routes.py   # API endpoints
+│   │   ├── services/
+│   │   │   └── scraper.py  # Dicoding scraper service
+│   │   └── utils/
+│   │       ├── parser.py   # Data transformer
+│   │       └── file_handler.py  # File operations
+│   ├── output/             # Scraped JSON data storage
+│   ├── Dockerfile          # Backend container config
+│   └── pyproject.toml      # Python dependencies (uv)
+│
+├── docker-compose.yml      # Production Docker config
+├── docker-compose.dev.yml  # Development Docker config
+├── .env.example            # Environment variables template
+└── README.md               # This file
 ```
 
 ## Code of Conduct

@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: student-dashboard-frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: student-dashboard-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - SELENIUM_URL=http://selenium:4444
+      - DICODING_EMAIL=${DICODING_EMAIL}
+      - DICODING_PASSWORD=${DICODING_PASSWORD}
+      - CODINGCAMP_URL=https://codingcamp.dicoding.com
+    volumes:
+      - scraped_data:/app/output
+    depends_on:
+      - selenium
+    restart: unless-stopped
+
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: student-dashboard-selenium
+    ports:
+      - "4444:4444"
+      - "7900:7900"  # VNC server for debugging
+    shm_size: 2gb
+    environment:
+      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_SESSION_TIMEOUT=300
+    restart: unless-stopped
+
+volumes:
+  scraped_data:
+    name: student_dashboard_data
