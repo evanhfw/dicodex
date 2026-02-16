@@ -1,10 +1,14 @@
 """
 API Routes for Student Dashboard
+All endpoints are protected by API Key authentication (when API_KEY is configured).
+Job management is backed by ARQ + Redis.
 """
-from fastapi import APIRouter, HTTPException, BackgroundTasks
-from typing import Dict, Any, Optional
+from fastapi import APIRouter, Depends, HTTPException, Request
+from typing import Dict, Any
 from pydantic import BaseModel, EmailStr
-from app.services.scraper import ScraperService
+from arq.jobs import Job, JobStatus
+
+from app.api.auth import require_api_key
 from app.utils.file_handler import FileHandler
 from app.utils.parser import DataTransformer
 
@@ -15,31 +19,28 @@ class ScrapeRequest(BaseModel):
     password: str
 
 
-router = APIRouter()
-scraper_service = ScraperService()
+router = APIRouter(dependencies=[Depends(require_api_key)])
 file_handler = FileHandler()
 transformer = DataTransformer()
+
 
 @router.get("/students")
 async def get_students() -> Dict[str, Any]:
     """
     Get the latest student data
-    
+
     Returns transformed student data from the most recent scrape
     """
     try:
-        # Get latest JSON file
         latest_data = await file_handler.get_latest_data()
-        
+
         if not latest_data:
             raise HTTPException(
                 status_code=404,
                 detail="No student data found. Please run scraper first."
             )
-        
-        # Transform to frontend format
+
         transformed = transformer.transform_dicodex_to_dashboard(latest_data)
-        
         return transformed
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -50,54 +51,101 @@ async def get_students() -> Dict[str, Any]:
 @router.post("/scrape")
 async def trigger_scrape(
     credentials: ScrapeRequest,
-    background_tasks: BackgroundTasks
-) -> Dict[str, str]:
+    request: Request,
+) -> Dict[str, Any]:
     """
-    Trigger a new scraping job with user-provided credentials
-    
-    Args:
-        credentials: User's Dicoding email and password
-    
-    Returns:
-        Status message indicating scraping has started
-    
-    Runs the scraper in the background and returns immediately
+    Trigger a new scraping job with user-provided credentials.
+
+    The job is enqueued in Redis via ARQ. Returns a job_id for polling.
+    ARQ worker handles concurrency (max 5) and queueing automatically.
     """
-    if scraper_service.is_running():
+    arq_pool = request.app.state.arq_pool
+
+    job = await arq_pool.enqueue_job(
+        "scrape_task",
+        credentials.email,
+        credentials.password,
+    )
+
+    if job is None:
         raise HTTPException(
             status_code=409,
-            detail="Scraper is already running. Please wait for it to complete."
+            detail="A job with the same parameters is already queued or running.",
         )
-    
-    # Run scraper in background with provided credentials
-    background_tasks.add_task(
-        scraper_service.run_scraper,
-        email=credentials.email,
-        password=credentials.password
-    )
-    
+
     return {
-        "status": "started",
-        "message": "Scraping started in background. Check /api/scrape/status for progress."
+        "status": "queued",
+        "job_id": job.job_id,
+        "message": f"Scraping job queued. Check /api/scrape/status/{job.job_id} for progress.",
     }
 
 
 @router.get("/scrape/status")
-async def get_scrape_status() -> Dict[str, Any]:
+async def get_scrape_status(request: Request) -> Dict[str, Any]:
     """
-    Get the current status of the scraper
-    
-    Returns information about whether scraper is running and last run time
+    Get aggregated scraper status (backward compatible).
+
+    Returns basic info about the ARQ worker queue.
     """
-    status = scraper_service.get_status()
-    return status
+    arq_pool = request.app.state.arq_pool
+
+    # Get queue info from Redis
+    queued_jobs = await arq_pool.queued_jobs()
+
+    return {
+        "queued_count": len(queued_jobs) if queued_jobs else 0,
+        "jobs": [
+            {"job_id": j.job_id, "function": j.function, "enqueue_time": str(j.enqueue_time)}
+            for j in (queued_jobs or [])[:20]
+        ],
+    }
+
+
+@router.get("/scrape/status/{job_id}")
+async def get_job_status(job_id: str, request: Request) -> Dict[str, Any]:
+    """
+    Get the status of a specific scraping job.
+
+    Possible statuses: queued, in_progress, complete, not_found, deferred
+    """
+    arq_pool = request.app.state.arq_pool
+    job = Job(job_id=job_id, redis=arq_pool)
+    status = await job.status()
+
+    response: Dict[str, Any] = {
+        "job_id": job_id,
+        "status": status.value,
+    }
+
+    # Map ARQ status to our "running" boolean for frontend compatibility
+    if status == JobStatus.queued:
+        response["running"] = True
+        response["message"] = "Job is queued, waiting for available worker slot."
+    elif status == JobStatus.in_progress:
+        response["running"] = True
+        response["message"] = "Scraping in progress..."
+    elif status == JobStatus.complete:
+        response["running"] = False
+        info = await job.info()
+        if info and info.result is not None:
+            response["result"] = info.result
+        elif info and info.result is None:
+            response["result"] = {"success": False, "error": "Job completed with no result"}
+    elif status == JobStatus.not_found:
+        response["running"] = False
+        response["result"] = None
+        response["message"] = "Job not found or expired."
+    else:
+        response["running"] = False
+
+    return response
 
 
 @router.get("/files")
 async def list_files() -> Dict[str, Any]:
     """
     List all available scraped data files
-    
+
     Returns a list of JSON files with metadata (size, timestamps)
     """
     try:
@@ -111,19 +159,17 @@ async def list_files() -> Dict[str, Any]:
 async def get_file_by_name(filename: str) -> Dict[str, Any]:
     """
     Get data from a specific file
-    
+
     Args:
         filename: Name of the JSON file (e.g., "CAC-19_20260215T074815Z.json")
     """
     try:
         data = await file_handler.get_file_by_name(filename)
-        
+
         if not data:
             raise HTTPException(status_code=404, detail=f"File not found: {filename}")
-        
-        # Transform to frontend format
+
         transformed = transformer.transform_dicodex_to_dashboard(data)
-        
         return transformed
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail=f"File not found: {filename}")

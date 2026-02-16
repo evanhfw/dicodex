@@ -17,6 +17,7 @@ services:
       - /app/node_modules
     environment:
       - VITE_API_URL=${VITE_API_URL:-http://localhost:3000}
+      - VITE_API_KEY=${VITE_API_KEY}
     depends_on:
       - backend
 
@@ -39,8 +40,41 @@ services:
       - DICODING_EMAIL=${DICODING_EMAIL}
       - DICODING_PASSWORD=${DICODING_PASSWORD}
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
+      - API_KEY=${API_KEY}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - REDIS_URL=redis://redis:6379
     depends_on:
       - selenium
+      - redis
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: student-dashboard-worker-dev
+    command: uv run python -m app.run_worker
+    volumes:
+      - ./backend/app:/app/app
+      - ./backend/pyproject.toml:/app/pyproject.toml
+      - scraped_data:/app/output
+      - /app/.venv
+    environment:
+      - SELENIUM_URL=http://selenium:4444
+      - DICODING_EMAIL=${DICODING_EMAIL}
+      - DICODING_PASSWORD=${DICODING_PASSWORD}
+      - CODINGCAMP_URL=https://codingcamp.dicoding.com
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - selenium
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: student-dashboard-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
   selenium:
     image: selenium/standalone-chrome:latest
@@ -56,3 +90,5 @@ services:
 volumes:
   scraped_data:
     name: student_dashboard_data_dev
+  redis_data:
+    name: student_dashboard_redis_dev

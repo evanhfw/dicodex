@@ -9,4 +9,5 @@ dependencies = [
     "selenium>=4.40.0",
     "python-dotenv>=1.0.0",
     "pydantic[email]>=2.12.5",
+    "arq>=0.26.0",
 ]

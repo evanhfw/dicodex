@@ -18,10 +18,38 @@ services:
       - DICODING_EMAIL=${DICODING_EMAIL}
       - DICODING_PASSWORD=${DICODING_PASSWORD}
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
+      - API_KEY=${API_KEY}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - REDIS_URL=redis://redis:6379
     volumes:
       - scraped_data:/app/output
     depends_on:
       - selenium
+      - redis
+    restart: unless-stopped
+
+  worker:
+    image: ${DOCKER_USERNAME}/cohort-dashboard-backend:latest
+    container_name: student-dashboard-worker
+    command: uv run python -m app.run_worker
+    environment:
+      - SELENIUM_URL=http://selenium:4444
+      - DICODING_EMAIL=${DICODING_EMAIL}
+      - DICODING_PASSWORD=${DICODING_PASSWORD}
+      - CODINGCAMP_URL=https://codingcamp.dicoding.com
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - scraped_data:/app/output
+    depends_on:
+      - selenium
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: student-dashboard-redis
+    volumes:
+      - redis_data:/data
     restart: unless-stopped
 
   selenium:
@@ -39,3 +67,5 @@ services:
 volumes:
   scraped_data:
     name: student_dashboard_data_prod
+  redis_data:
+    name: student_dashboard_redis_prod
