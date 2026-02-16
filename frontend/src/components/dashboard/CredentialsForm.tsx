@@ -13,6 +13,18 @@ interface CredentialsFormProps {
   onScrapeSuccess?: () => void;
 }
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_KEY = import.meta.env.VITE_API_KEY || '';
+
+/** Build headers with optional API Key */
+function apiHeaders(extra: Record<string, string> = {}): Record<string, string> {
+  const headers: Record<string, string> = { ...extra };
+  if (API_KEY) {
+    headers['X-API-Key'] = API_KEY;
+  }
+  return headers;
+}
+
 export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,14 +50,10 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
     setIsLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      
       // Trigger scraping with credentials
       const response = await fetch(`${API_URL}/api/scrape`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ email, password }),
       });
 
@@ -55,6 +63,7 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
       }
 
       const result = await response.json();
+      const jobId = result.job_id;
 
       toast({
         title: 'Scraping started!',
@@ -68,8 +77,8 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
       setProgress(5);
       setStatusMessage('Initializing scraper...');
 
-      // Poll for completion (will handle success callback)
-      pollScraperStatus();
+      // Poll for completion using job_id
+      pollScraperStatus(jobId);
     } catch (error) {
       toast({
         title: 'Error',
@@ -80,14 +89,15 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
     }
   };
 
-  const pollScraperStatus = async () => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const pollScraperStatus = async (jobId: string) => {
     const maxAttempts = 60; // 5 minutes max
     let attempts = 0;
 
     const poll = setInterval(async () => {
       try {
-        const response = await fetch(`${API_URL}/api/scrape/status`);
+        const response = await fetch(`${API_URL}/api/scrape/status/${jobId}`, {
+          headers: apiHeaders(),
+        });
         const status = await response.json();
 
         // Update progress based on time elapsed
@@ -97,8 +107,10 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
         if (status.running) {
           setProgress(estimatedProgress);
           
-          // Update status messages based on progress
-          if (estimatedProgress < 20) {
+          // Update status messages based on ARQ status and progress
+          if (status.status === 'queued') {
+            setStatusMessage('Waiting in queue...');
+          } else if (estimatedProgress < 20) {
             setStatusMessage('Logging in to Dicoding...');
           } else if (estimatedProgress < 40) {
             setStatusMessage('Loading student list...');
@@ -111,7 +123,7 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
           }
         }
 
-        if (!status.running && status.last_result) {
+        if (!status.running && status.result) {
           clearInterval(poll);
           setProgress(100);
           setStatusMessage('Complete!');
@@ -119,13 +131,13 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
           setTimeout(() => {
             setIsLoading(false);
             
-            if (status.last_result.success) {
+            if (status.result.success) {
               // Fetch the scraped data from backend and save to context
-              fetchAndSaveData(status.last_result.file, status.last_result.students);
+              fetchAndSaveData(status.result.file, status.result.students);
             } else {
               toast({
                 title: 'Scraping failed',
-                description: status.last_result.error || 'Unknown error',
+                description: status.result.error || 'Unknown error',
                 variant: 'destructive'
               });
               setProgress(0);
@@ -154,10 +166,10 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
 
   const fetchAndSaveData = async (filename: string, studentCount: number) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      
       // Fetch the latest scraped data (backend already transforms to frontend format)
-      const response = await fetch(`${API_URL}/api/students`);
+      const response = await fetch(`${API_URL}/api/students`, {
+        headers: apiHeaders(),
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch student data');
       }

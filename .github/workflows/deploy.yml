@@ -16,6 +16,9 @@ on:
 # BACKEND_PORT          - Backend API port (default: 3000)
 # SELENIUM_PORT         - Selenium server port (default: 4444)
 # VITE_API_URL          - Backend API URL (e.g., http://your-vps-ip:3000)
+# API_KEY               - API key for backend authentication
+# VITE_API_KEY          - API key passed to frontend at build time (must match API_KEY)
+# CORS_ORIGINS          - Allowed CORS origins (comma-separated, e.g., http://your-domain:8080)
 # DEPLOY_PATH           - Path on VPS where app will be deployed (e.g., /home/user/cohort-dashboard)
 # ============================================
 
@@ -43,6 +46,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/cohort-dashboard-frontend:latest
           build-args: |
             VITE_API_URL=${{ secrets.VITE_API_URL }}
+            VITE_API_KEY=${{ secrets.VITE_API_KEY }}
 
       # 4. Build & Push Backend Image
       - name: Build and push backend
@@ -72,6 +76,8 @@ jobs:
             HOST_PORT=${{ secrets.HOST_PORT }}
             BACKEND_PORT=${{ secrets.BACKEND_PORT }}
             SELENIUM_PORT=${{ secrets.SELENIUM_PORT }}
+            API_KEY=${{ secrets.API_KEY }}
+            CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}
             EOF
             
             # Download docker-compose.prod.yml
