@@ -495,8 +495,22 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                         return d.getTime();
                                       }
                                     ]}
-                                    tickFormatter={(time) => new Date(time).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                                    tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                                    tickFormatter={(time) => {
+                                      const date = new Date(time);
+                                      const today = new Date();
+                                      today.setHours(0,0,0,0);
+                                      
+                                      const yesterday = new Date(today);
+                                      yesterday.setDate(yesterday.getDate() - 1);
+
+                                      // Reset time components for comparison
+                                      const dTime = new Date(date).setHours(0,0,0,0);
+                                      
+                                      if (dTime === today.getTime()) return "Today";
+                                      if (dTime === yesterday.getTime()) return "Yesterday";
+                                      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                                    }}
+                                    tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
                                     axisLine={false}
                                     tickLine={false}
                                     interval={0}
