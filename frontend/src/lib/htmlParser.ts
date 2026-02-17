@@ -180,6 +180,12 @@ export const parseStudentHTML = (htmlString: string): ParseResult => {
         status: mapStatus(status),
         courses,
         imageUrl,
+        profile: {
+          university: '',
+          major: '',
+          photoUrl: imageUrl || '',
+          profileLink: '',
+        },
       });
     });
 

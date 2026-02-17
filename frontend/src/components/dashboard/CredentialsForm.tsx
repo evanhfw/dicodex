@@ -100,26 +100,31 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
         });
         const status = await response.json();
 
-        // Update progress based on time elapsed
-        // Estimated 2-3 minutes for completion
-        const estimatedProgress = Math.min(10 + (attempts * 1.5), 95);
-        
         if (status.running) {
-          setProgress(estimatedProgress);
-          
-          // Update status messages based on ARQ status and progress
-          if (status.status === 'queued') {
-            setStatusMessage('Waiting in queue...');
-          } else if (estimatedProgress < 20) {
-            setStatusMessage('Logging in to Dicoding...');
-          } else if (estimatedProgress < 40) {
-            setStatusMessage('Loading student list...');
-          } else if (estimatedProgress < 60) {
-            setStatusMessage('Extracting student data...');
-          } else if (estimatedProgress < 80) {
-            setStatusMessage('Processing course progress...');
+          if (status.queue_position) {
+            setProgress(0);
+            setStatusMessage(`Waiting in queue (Position: ${status.queue_position})...`);
+          } else if (status.progress) {
+            setProgress(status.progress.percent);
+            setStatusMessage(status.progress.message);
           } else {
-            setStatusMessage('Finalizing data collection...');
+            // Fallback estimation logic
+            const estimatedProgress = Math.min(10 + (attempts * 1.5), 95);
+            setProgress(estimatedProgress);
+            
+            if (status.status === 'queued') {
+              setStatusMessage('Waiting in queue...');
+            } else if (estimatedProgress < 20) {
+               setStatusMessage('Logging in to Dicoding...');
+            } else if (estimatedProgress < 40) {
+               setStatusMessage('Loading student list...');
+            } else if (estimatedProgress < 60) {
+               setStatusMessage('Extracting student data...');
+            } else if (estimatedProgress < 80) {
+               setStatusMessage('Processing course progress...');
+            } else {
+               setStatusMessage('Finalizing data collection...');
+            }
           }
         }
 
@@ -176,11 +181,45 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
 
       const data = await response.json();
       
-      // Backend already returns data in correct format
-      const parsedStudents = data.students || [];
+      // Backend returns data with snake_case profile fields, map to camelCase
+      const parsedStudents = (data.students || []).map((s: any) => ({
+        name: s.name,
+        status: s.status,
+        courses: s.courses || [],
+        assignments: (s.assignments || s.progress?.assignments?.items || []).map((a: any) => ({
+          name: a.name || a.assignment || '',
+          status: a.status === 'Completed' ? 'Completed' as const : 'Uncompleted' as const,
+        })),
+        dailyCheckins: (s.daily_checkins || []).map((ci: any) => ({
+          date: ci.date,
+          mood: ci.mood,
+          goals: ci.goals,
+          reflection: ci.reflection
+        })),
+        pointHistories: (s.point_histories || []).map((ph: any) => ({
+          date: ph.date,
+          description: ph.description,
+          points: ph.points
+        })),
+        imageUrl: s.profile?.photo_url || s.imageUrl || '',
+        profile: s.profile ? {
+          university: s.profile.university || '',
+          major: s.profile.major || '',
+          photoUrl: s.profile.photo_url || '',
+          profileLink: s.profile.profile_link || '',
+        } : undefined,
+      }));
+
+      // Extract mentor info if available (backend nests it under metadata.mentor)
+      const rawMentor = data.metadata?.mentor || data.mentor;
+      const mentorInfo = rawMentor ? {
+        group: rawMentor.group || '',
+        mentorCode: rawMentor.mentor_code || '',
+        name: rawMentor.name || '',
+      } : undefined;
 
       // Save to context (which auto-saves to localStorage)
-      setStudentData(parsedStudents);
+      setStudentData(parsedStudents, mentorInfo);
 
       toast({
         title: 'Scraping complete!',
