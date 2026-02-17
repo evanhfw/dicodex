@@ -92,3 +92,6 @@ diCodex/
 *.html
 !frontend/index.html
 !frontend/public/*.html
+
+# Scraped JSON exports (root level)
+CAC-*.json
