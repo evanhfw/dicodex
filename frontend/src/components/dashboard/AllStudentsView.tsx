@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Users, Search, ChevronDown } from "lucide-react";
+import { Users, Search, ChevronDown, GraduationCap, BookOpen, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AllStudentsViewProps {
@@ -40,6 +40,21 @@ const getStatusLabel = (status: ParsedStudentStatus | null): string => {
   return status;
 };
 
+const getStatusBadgeStyles = (status: ParsedStudentStatus | null) => {
+  switch (status) {
+    case "Special Attention":
+      return "bg-status-red/15 text-status-red border-status-red/30";
+    case "Lagging":
+      return "bg-status-yellow/15 text-status-yellow border-status-yellow/30";
+    case "Ideal":
+      return "bg-status-green/15 text-status-green border-status-green/30";
+    case "Ahead":
+      return "bg-status-blue/15 text-status-blue border-status-blue/30";
+    default:
+      return "bg-muted text-muted-foreground border-border";
+  }
+};
+
 const AllStudentsView = ({ students }: AllStudentsViewProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"All" | ParsedStudentStatus>("All");
@@ -58,7 +73,9 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter((student) =>
-        student.name.toLowerCase().includes(query)
+        student.name.toLowerCase().includes(query) ||
+        student.profile?.university?.toLowerCase().includes(query) ||
+        student.profile?.major?.toLowerCase().includes(query)
       );
     }
 
@@ -112,7 +129,7 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by name, university, or major..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
@@ -165,6 +182,7 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
               const completedCourses = student.courses.filter((c) => c.status === "Completed").length;
               const statusColor = getStatusColor(student.status);
               const statusBgColor = statusDotMap[statusColor] || "bg-muted";
+              const photoUrl = student.profile?.photoUrl || student.imageUrl;
 
               return (
                 <div key={`${student.name}-${index}`}>
@@ -181,7 +199,7 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <Avatar className="h-8 w-8 shrink-0">
-                        <AvatarImage src={student.imageUrl} alt={student.name} />
+                        <AvatarImage src={photoUrl} alt={student.name} />
                         <AvatarFallback className="text-xs">
                           {getInitials(student.name)}
                         </AvatarFallback>
@@ -207,6 +225,12 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                           )}
                         </div>
                         <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                          {student.profile?.university && (
+                            <>
+                              <span className="truncate max-w-[200px]">{student.profile.university}</span>
+                              <span className="text-muted-foreground">•</span>
+                            </>
+                          )}
                           <span>
                             {completedCourses}/{student.courses.length} courses
                           </span>
@@ -223,7 +247,7 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                     />
                   </div>
 
-                  {/* Expanded course list */}
+                  {/* Expanded detail section */}
                   <div
                     className={cn(
                       "grid transition-all duration-300 ease-in-out",
@@ -232,48 +256,121 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                   >
                     <div className="overflow-hidden">
                       <div className={cn(
-                        "ml-2 mt-1 space-y-1 border-l-2 pl-3",
+                        "ml-2 mt-1 space-y-3 border-l-2 pl-3",
                         student.status === "Special Attention" && "border-status-red/20",
                         student.status === "Lagging" && "border-status-yellow/20",
                         student.status === "Ideal" && "border-status-green/20",
                         student.status === "Ahead" && "border-status-blue/20",
                         !student.status && "border-border"
                       )}>
-                        <div className="mb-2 px-3 py-1 text-xs text-muted-foreground">
-                          {completedCourses} of {student.courses.length} courses completed
-                        </div>
-                        {student.courses.map((course, courseIndex) => (
-                          <div key={courseIndex} className="rounded-md px-3 py-2">
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="flex-1 min-w-0">
-                                <p className="text-xs font-medium text-card-foreground truncate">
-                                  {course.name}
-                                </p>
-                                <p className="text-xs text-muted-foreground mt-0.5">
-                                  {course.status}
-                                </p>
-                              </div>
-                              <div className="flex items-center gap-2 shrink-0">
-                                <div className="h-1.5 w-16 overflow-hidden rounded-full bg-secondary">
-                                  <div
+                        {/* Profile Card */}
+                        <div className="rounded-lg border bg-card p-4 mt-2">
+                          <div className="flex items-start gap-4">
+                            <Avatar className="h-16 w-16 shrink-0 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
+                              <AvatarImage src={photoUrl} alt={student.name} className="object-cover" />
+                              <AvatarFallback className="text-lg font-semibold">
+                                {getInitials(student.name)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0 space-y-2">
+                              <div>
+                                <h3 className="text-base font-semibold text-card-foreground">
+                                  {student.name}
+                                </h3>
+                                {student.status && (
+                                  <span
                                     className={cn(
-                                      "h-full rounded-full transition-all",
-                                      course.status === "Completed"
-                                        ? "bg-status-green"
-                                        : course.status === "In Progress"
-                                        ? "bg-status-yellow"
-                                        : "bg-status-red"
+                                      "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold mt-1",
+                                      getStatusBadgeStyles(student.status)
                                     )}
-                                    style={{ width: course.progress }}
-                                  />
-                                </div>
-                                <span className="w-10 text-right text-xs font-medium text-muted-foreground">
-                                  {course.progress}
-                                </span>
+                                  >
+                                    <span className={cn("h-2 w-2 rounded-full", statusBgColor)} />
+                                    {getStatusLabel(student.status)}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="space-y-1">
+                                {student.profile?.university && (
+                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <GraduationCap className="h-3.5 w-3.5 shrink-0" />
+                                    <span className="truncate">{student.profile.university}</span>
+                                  </div>
+                                )}
+                                {student.profile?.major && (
+                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <BookOpen className="h-3.5 w-3.5 shrink-0" />
+                                    <span className="truncate">{student.profile.major}</span>
+                                  </div>
+                                )}
+                                {student.profile?.profileLink && (
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                                    <a
+                                      href={`https://www.dicoding.com${student.profile.profileLink}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-primary hover:underline truncate"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      Dicoding Profile
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            {/* Progress summary */}
+                            <div className="hidden sm:flex flex-col items-end gap-1 shrink-0">
+                              <div className="text-2xl font-bold text-card-foreground">
+                                {avgProgress}%
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                avg progress
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {completedCourses}/{student.courses.length} completed
                               </div>
                             </div>
                           </div>
-                        ))}
+                        </div>
+
+                        {/* Course Progress List */}
+                        <div className="pb-2">
+                          <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground">
+                            Course Progress
+                          </div>
+                          {student.courses.map((course, courseIndex) => (
+                            <div key={courseIndex} className="rounded-md px-3 py-2">
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-medium text-card-foreground truncate">
+                                    {course.name}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground mt-0.5">
+                                    {course.status}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  <div className="h-1.5 w-16 overflow-hidden rounded-full bg-secondary">
+                                    <div
+                                      className={cn(
+                                        "h-full rounded-full transition-all",
+                                        course.status === "Completed"
+                                          ? "bg-status-green"
+                                          : course.status === "In Progress"
+                                          ? "bg-status-yellow"
+                                          : "bg-status-red"
+                                      )}
+                                      style={{ width: course.progress }}
+                                    />
+                                  </div>
+                                  <span className="w-10 text-right text-xs font-medium text-muted-foreground">
+                                    {course.progress}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
