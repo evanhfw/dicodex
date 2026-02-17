@@ -8,6 +8,13 @@ export type ParsedStudentStatus =
 
 export type CourseStatus = "Completed" | "In Progress" | "Not Started";
 
+export type AssignmentStatus = "Completed" | "Uncompleted";
+
+export interface Assignment {
+  name: string;
+  status: AssignmentStatus;
+}
+
 export interface Course {
   name: string;
   progress: string; // e.g., "39%"
@@ -25,6 +32,7 @@ export interface ParsedStudent {
   name: string;
   status: ParsedStudentStatus | null;
   courses: Course[];
+  assignments?: Assignment[];
   imageUrl?: string;
   profile?: StudentProfile;
 }
@@ -181,4 +189,41 @@ export const getStudentsByCourse = (
       courseStatus: CourseStatus;
       course: Course;
     }>;
+};
+
+// Helper function to get assignment statistics across all students
+export const getAssignmentStats = (students: ParsedStudent[]) => {
+  const assignmentMap = new Map<string, {
+    totalStudents: number;
+    completed: number;
+    uncompleted: number;
+  }>();
+
+  students.forEach(student => {
+    (student.assignments || []).forEach(assignment => {
+      if (!assignmentMap.has(assignment.name)) {
+        assignmentMap.set(assignment.name, {
+          totalStudents: 0,
+          completed: 0,
+          uncompleted: 0,
+        });
+      }
+
+      const stats = assignmentMap.get(assignment.name)!;
+      stats.totalStudents++;
+      if (assignment.status === 'Completed') {
+        stats.completed++;
+      } else {
+        stats.uncompleted++;
+      }
+    });
+  });
+
+  return Array.from(assignmentMap.entries()).map(([name, stats]) => ({
+    name,
+    ...stats,
+    completionRate: stats.totalStudents > 0
+      ? Math.round((stats.completed / stats.totalStudents) * 100)
+      : 0,
+  }));
 };

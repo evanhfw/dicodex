@@ -36,8 +36,13 @@ const getInitials = (name: string): string => {
 };
 
 const getStatusLabel = (status: ParsedStudentStatus | null): string => {
-  if (!status) return "Unknown";
-  return status;
+  switch (status) {
+    case "Special Attention": return "Need Special Attention";
+    case "Lagging": return "Lagging Behind";
+    case "Ideal": return "On Ideal Schedule";
+    case "Ahead": return "Ahead of Schedule";
+    default: return "Unknown";
+  }
 };
 
 const getStatusBadgeStyles = (status: ParsedStudentStatus | null) => {
@@ -205,46 +210,63 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-medium text-card-foreground truncate">
-                            {student.name}
-                          </span>
-                          {student.status && (
-                            <span
-                              className={cn(
-                                "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium",
-                                student.status === "Special Attention" && "bg-status-red/15 text-status-red",
-                                student.status === "Lagging" && "bg-status-yellow/15 text-status-yellow",
-                                student.status === "Ideal" && "bg-status-green/15 text-status-green",
-                                student.status === "Ahead" && "bg-status-blue/15 text-status-blue"
-                              )}
-                            >
-                              <span className={cn("h-1.5 w-1.5 rounded-full", statusBgColor)} />
-                              {getStatusLabel(student.status)}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                          {student.profile?.university && (
-                            <>
-                              <span className="truncate max-w-[200px]">{student.profile.university}</span>
-                              <span className="text-muted-foreground">•</span>
-                            </>
-                          )}
-                          <span>
-                            {completedCourses}/{student.courses.length} courses
-                          </span>
-                          <span className="text-muted-foreground">•</span>
-                          <span>{avgProgress}% avg</span>
-                        </div>
+                        <span className="text-sm font-medium text-card-foreground truncate block">
+                          {student.name}
+                        </span>
+                        {student.profile?.university && (
+                          <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                            {student.profile.university}
+                          </p>
+                        )}
                       </div>
                     </div>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 text-muted-foreground transition-transform duration-200 shrink-0",
-                        isExpanded && "rotate-180"
+                    <div className="flex items-center gap-2.5 shrink-0">
+                      {/* Status badge */}
+                      {student.status && (
+                        <span
+                          className={cn(
+                            "hidden sm:inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap",
+                            student.status === "Special Attention" && "bg-status-red/15 text-status-red",
+                            student.status === "Lagging" && "bg-status-yellow/15 text-status-yellow",
+                            student.status === "Ideal" && "bg-status-green/15 text-status-green",
+                            student.status === "Ahead" && "bg-status-blue/15 text-status-blue"
+                          )}
+                        >
+                          <span className={cn("h-1.5 w-1.5 rounded-full", statusBgColor)} />
+                          {getStatusLabel(student.status)}
+                        </span>
                       )}
-                    />
+                      {/* Compact progress indicator */}
+                      <div className="hidden md:flex items-center gap-2">
+                        <div className="flex flex-col items-end gap-0.5">
+                          <div className="flex items-center gap-1.5">
+                            <div className="h-1.5 w-14 overflow-hidden rounded-full bg-secondary">
+                              <div
+                                className={cn(
+                                  "h-full rounded-full transition-all",
+                                  avgProgress >= 70 ? "bg-status-green"
+                                    : avgProgress >= 40 ? "bg-status-yellow"
+                                    : "bg-status-red"
+                                )}
+                                style={{ width: `${avgProgress}%` }}
+                              />
+                            </div>
+                            <span className="text-[11px] font-medium text-muted-foreground w-8 text-right">
+                              {avgProgress}%
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground">
+                            {completedCourses}/{student.courses.length} courses
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 text-muted-foreground transition-transform duration-200 shrink-0",
+                          isExpanded && "rotate-180"
+                        )}
+                      />
+                    </div>
                   </div>
 
                   {/* Expanded detail section */}
@@ -369,6 +391,35 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                             </div>
                           ))}
                         </div>
+
+                        {/* Assignments Checklist */}
+                        {student.assignments && student.assignments.length > 0 && (
+                          <div className="pb-2">
+                            <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground">
+                              Assignments ({student.assignments.filter(a => a.status === "Completed").length}/{student.assignments.length} completed)
+                            </div>
+                            {student.assignments.map((assignment, aIdx) => (
+                              <div key={aIdx} className="flex items-center gap-2 rounded-md px-3 py-1.5">
+                                <span className={cn(
+                                  "flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px]",
+                                  assignment.status === "Completed"
+                                    ? "bg-status-green/15 text-status-green"
+                                    : "bg-status-red/15 text-status-red"
+                                )}>
+                                  {assignment.status === "Completed" ? "✓" : "✗"}
+                                </span>
+                                <p className={cn(
+                                  "text-xs truncate",
+                                  assignment.status === "Completed"
+                                    ? "text-muted-foreground"
+                                    : "text-card-foreground font-medium"
+                                )}>
+                                  {assignment.name}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
