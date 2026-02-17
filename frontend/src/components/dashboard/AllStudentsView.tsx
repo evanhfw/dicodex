@@ -369,6 +369,35 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                             </div>
                           ))}
                         </div>
+
+                        {/* Assignments Checklist */}
+                        {student.assignments && student.assignments.length > 0 && (
+                          <div className="pb-2">
+                            <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground">
+                              Assignments ({student.assignments.filter(a => a.status === "Completed").length}/{student.assignments.length} completed)
+                            </div>
+                            {student.assignments.map((assignment, aIdx) => (
+                              <div key={aIdx} className="flex items-center gap-2 rounded-md px-3 py-1.5">
+                                <span className={cn(
+                                  "flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px]",
+                                  assignment.status === "Completed"
+                                    ? "bg-status-green/15 text-status-green"
+                                    : "bg-status-red/15 text-status-red"
+                                )}>
+                                  {assignment.status === "Completed" ? "✓" : "✗"}
+                                </span>
+                                <p className={cn(
+                                  "text-xs truncate",
+                                  assignment.status === "Completed"
+                                    ? "text-muted-foreground"
+                                    : "text-card-foreground font-medium"
+                                )}>
+                                  {assignment.name}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
