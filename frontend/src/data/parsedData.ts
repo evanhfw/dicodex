@@ -14,11 +14,19 @@ export interface Course {
   status: CourseStatus;
 }
 
+export interface StudentProfile {
+  university: string;
+  major: string;
+  photoUrl: string;
+  profileLink: string;
+}
+
 export interface ParsedStudent {
   name: string;
   status: ParsedStudentStatus | null;
   courses: Course[];
   imageUrl?: string;
+  profile?: StudentProfile;
 }
 
 export interface StudentData {

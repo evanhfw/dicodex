@@ -176,8 +176,19 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
 
       const data = await response.json();
       
-      // Backend already returns data in correct format
-      const parsedStudents = data.students || [];
+      // Backend returns data with snake_case profile fields, map to camelCase
+      const parsedStudents = (data.students || []).map((s: any) => ({
+        name: s.name,
+        status: s.status,
+        courses: s.courses || [],
+        imageUrl: s.profile?.photo_url || s.imageUrl || '',
+        profile: s.profile ? {
+          university: s.profile.university || '',
+          major: s.profile.major || '',
+          photoUrl: s.profile.photo_url || '',
+          profileLink: s.profile.profile_link || '',
+        } : undefined,
+      }));
 
       // Save to context (which auto-saves to localStorage)
       setStudentData(parsedStudents);
