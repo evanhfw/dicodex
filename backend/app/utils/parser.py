@@ -60,11 +60,49 @@ class DataTransformer:
                     "status": self.map_course_status(course.get("status", "Not Started"))
                 })
             
+            # Transform assignments
+            assignments_data = progress.get("assignments", {})
+            assignments = []
+            for assignment in assignments_data.get("items", []):
+                assignments.append({
+                    "name": assignment.get("assignment", ""),
+                    "status": assignment.get("status", "Uncompleted"),
+                })
+            
+            # Transform daily checkins
+            daily_checkins_data = progress.get("daily_checkins", {})
+            daily_checkins = []
+            for checkin in daily_checkins_data.get("items", []):
+                daily_checkins.append({
+                    "date": checkin.get("date", ""),
+                    "mood": checkin.get("mood", "neutral"),
+                    "goals": checkin.get("goals", []),
+                    "reflection": checkin.get("reflection", ""),
+                })
+
+            # Transform point histories
+            point_histories_data = progress.get("point_histories", {})
+            point_histories = []
+            for point in point_histories_data.get("items", []):
+                try:
+                    points_val = int(point.get("points", 0))
+                except (ValueError, TypeError):
+                    points_val = 0
+                    
+                point_histories.append({
+                    "date": point.get("date", ""),
+                    "description": point.get("description", ""),
+                    "points": points_val,
+                })
+            
             # Build student object
             student = {
                 "name": profile.get("name", ""),
                 "status": self.map_status(profile.get("status_badge", "")),
                 "courses": courses,
+                "assignments": assignments,
+                "daily_checkins": daily_checkins,
+                "point_histories": point_histories,
                 # Optional: include additional data if needed
                 "profile": {
                     "university": profile.get("university", ""),

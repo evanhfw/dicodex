@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useStudentData } from '@/contexts/StudentDataContext';
 import { parseStudentHTML, readFileAsText, validateFileSize } from '@/lib/htmlParser';
+import { ParsedStudent, MentorInfo, mapStatus } from '@/data/parsedData';
 import { CredentialsForm } from '@/components/dashboard/CredentialsForm';
 
 const UploadPage = () => {
@@ -22,10 +23,10 @@ const UploadPage = () => {
 
   const handleFileSelect = (file: File) => {
     // Validate file type
-    if (!file.name.endsWith('.html')) {
+    if (!file.name.endsWith('.html') && !file.name.endsWith('.json')) {
       toast({
         title: 'Invalid file type',
-        description: 'Please upload an HTML file (.html)',
+        description: 'Please upload an HTML (.html) or JSON (.json) file',
         variant: 'destructive',
       });
       return;
@@ -75,50 +76,125 @@ const UploadPage = () => {
     setIsLoading(true);
 
     try {
-      let htmlContent = '';
+      let content = '';
 
-      // Get HTML content from file or textarea
+      // Get content from file or textarea
       if (selectedFile) {
-        htmlContent = await readFileAsText(selectedFile);
+        content = await readFileAsText(selectedFile);
       } else if (pastedHtml) {
-        htmlContent = pastedHtml;
+        content = pastedHtml;
       } else {
         toast({
           title: 'No input',
-          description: 'Please upload a file or paste HTML content',
+          description: 'Please upload a file or paste content',
           variant: 'destructive',
         });
         setIsLoading(false);
         return;
       }
 
-      // Parse the HTML
-      const result = parseStudentHTML(htmlContent);
+      // Detect JSON vs HTML
+      const isJsonFile = selectedFile?.name.endsWith('.json');
+      const isJsonContent = !selectedFile && content.trim().startsWith('{');
 
-      if (result.success && result.students) {
-        // Save to context
-        setStudentData(result.students);
+      if (isJsonFile || isJsonContent) {
+        // Parse as JSON
+        const data = JSON.parse(content);
+        const students: ParsedStudent[] = (data.students || []).map((s: any) => {
+          const profile = s.profile || {};
+          const progress = s.progress || {};
+          const courseItems = progress.course_progress?.items || [];
+          const assignmentItems = progress.assignments?.items || [];
 
-        // Show success message
-        toast({
-          title: 'Success!',
-          description: `Successfully parsed data for ${result.students.length} students`,
+          return {
+            name: profile.name || s.name || '',
+            status: mapStatus(profile.status_badge || s.status || null),
+            courses: courseItems.map((c: any) => ({
+              name: c.course || '',
+              progress: c.progress_percent || '0%',
+              status: c.status === 'Completed' ? 'Completed' as const
+                : c.status === 'In Progress' ? 'In Progress' as const
+                : 'Not Started' as const,
+            })),
+            assignments: assignmentItems.map((a: any) => ({
+              name: a.assignment || a.name || '',
+              status: a.status === 'Completed' ? 'Completed' as const : 'Uncompleted' as const,
+            })),
+            dailyCheckins: (progress.daily_checkins?.items || []).map((ci: any) => ({
+              date: ci.date || '',
+              mood: ci.mood || 'neutral',
+              goals: (ci.goals || []).map((g: any) => ({
+                title: g.title || '',
+                items: g.items || [],
+              })),
+              reflection: ci.reflection || '',
+            })),
+            pointHistories: (progress.point_histories?.items || []).map((ph: any) => ({
+              date: ph.date || '',
+              description: ph.description || '',
+              points: ph.points || 0,
+            })),
+            imageUrl: profile.photo_url || '',
+            profile: {
+              university: profile.university || '',
+              major: profile.major || '',
+              photoUrl: profile.photo_url || '',
+              profileLink: profile.profile_link || '',
+            },
+          };
         });
 
-        // Navigate to dashboard
+        if (students.length === 0) {
+          toast({
+            title: 'No students found',
+            description: 'The JSON file does not contain valid student data',
+            variant: 'destructive',
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        // Extract mentor info
+        const rawMentor = data.mentor;
+        const mentorInfo: MentorInfo | undefined = rawMentor ? {
+          group: rawMentor.group || '',
+          mentorCode: rawMentor.mentor_code || '',
+          name: rawMentor.name || '',
+        } : undefined;
+
+        setStudentData(students, mentorInfo);
+
+        toast({
+          title: 'Success!',
+          description: `Parsed ${students.length} students from JSON`,
+        });
+
         setTimeout(() => {
           navigate('/dashboard');
         }, 500);
       } else {
-        // Show error message
-        toast({
-          title: 'Parsing failed',
-          description: result.error || 'Failed to parse HTML',
-          variant: 'destructive',
-        });
+        // Parse as HTML (legacy flow)
+        const result = parseStudentHTML(content);
+
+        if (result.success && result.students) {
+          setStudentData(result.students);
+          toast({
+            title: 'Success!',
+            description: `Successfully parsed data for ${result.students.length} students`,
+          });
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 500);
+        } else {
+          toast({
+            title: 'Parsing failed',
+            description: result.error || 'Failed to parse HTML',
+            variant: 'destructive',
+          });
+        }
       }
     } catch (error) {
-      console.error('Error parsing HTML:', error);
+      console.error('Error parsing:', error);
       toast({
         title: 'Error',
         description: error instanceof Error ? error.message : 'An unexpected error occurred',
@@ -185,7 +261,7 @@ const UploadPage = () => {
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept=".html"
+                    accept=".html,.json"
                     onChange={handleFileChange}
                     className="hidden"
                   />
@@ -194,7 +270,7 @@ const UploadPage = () => {
                     <Upload className="h-10 w-10 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">
-                        Drag and drop your HTML file here, or{' '}
+                        Drag and drop your HTML or JSON file here, or{' '}
                         <button
                           type="button"
                           onClick={() => fileInputRef.current?.click()}
@@ -203,7 +279,7 @@ const UploadPage = () => {
                           browse
                         </button>
                       </p>
-                      <p className="text-xs text-muted-foreground">Maximum file size: 10MB</p>
+                      <p className="text-xs text-muted-foreground">Supports .html and .json files (max 10MB)</p>
                     </div>
                   </div>
 

@@ -7,16 +7,21 @@ on:
 # ============================================
 # Required GitHub Secrets:
 # ============================================
-# DOCKER_USERNAME       - Docker Hub username
-# DOCKER_PASSWORD       - Docker Hub password/token
-# HOST                  - VPS IP address or hostname
-# USERNAME              - VPS SSH username
-# VPS_PASSWORD          - VPS SSH password
-# HOST_PORT             - Frontend port (default: 8080)
-# SELENIUM_PORT         - Selenium server port (default: 4444)
-# API_KEY               - API key for backend authentication
-# VITE_API_KEY          - API key passed to frontend at build time (must match API_KEY)
-# DEPLOY_PATH           - Path on VPS where app will be deployed (e.g., /home/user/cohort-dashboard)
+# DOCKER_USERNAME           - Docker Hub username
+# DOCKER_PASSWORD           - Docker Hub password/token
+# HOST                      - VPS IP address or hostname
+# USERNAME                  - VPS SSH username
+# VPS_PASSWORD              - VPS SSH password
+# HOST_PORT                 - Frontend port (default: 8080)
+# SELENIUM_PORT             - Selenium server port (default: 4444)
+# API_KEY                   - API key for backend authentication
+# VITE_API_KEY              - API key passed to frontend at build time (must match API_KEY)
+# DEPLOY_PATH               - Path on VPS where app will be deployed
+# GF_SECURITY_ADMIN_PASSWORD - Grafana admin password
+# GF_SERVER_ROOT_URL         - Grafana root URL (e.g. https://yourdomain.com/grafana/)
+# DISCORD_MONITOR_WEBHOOK_URL - Webhook for periodic health reports
+# DISCORD_ALERT_WEBHOOK_URL   - Webhook for critical alerts
+# MONITOR_INTERVAL            - Monitoring interval in seconds (default: 60)
 # ============================================
 
 jobs:
@@ -75,10 +80,29 @@ jobs:
             CONN_PSQL=${{ secrets.CONN_PSQL }}
             POSTGRES_TABLE_NAME=${{ secrets.POSTGRES_TABLE_NAME }}
             DISCORD_STATS_WEBHOOK_URL=${{ secrets.DISCORD_STATS_WEBHOOK_URL }}
+            GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
+            GF_SERVER_ROOT_URL=${{ secrets.GF_SERVER_ROOT_URL }}
+            GF_SERVER_ROOT_URL=${{ secrets.GF_SERVER_ROOT_URL }}
+            DISCORD_MONITOR_WEBHOOK_URL=${{ secrets.DISCORD_MONITOR_WEBHOOK_URL }}
+            DISCORD_ALERT_WEBHOOK_URL=${{ secrets.DISCORD_ALERT_WEBHOOK_URL }}
+            MONITOR_INTERVAL=${{ secrets.MONITOR_INTERVAL }}
             EOF
             
             # Download docker-compose.prod.yml
             curl -o docker-compose.prod.yml https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.prod.yml
+            
+            # Download monitoring configs
+            REPO_RAW=https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}
+            mkdir -p monitoring/prometheus monitoring/alertmanager/templates monitoring/grafana/provisioning/datasources monitoring/grafana/provisioning/dashboards monitoring/grafana/dashboards
+            curl -o monitoring/prometheus/prometheus.yml $REPO_RAW/monitoring/prometheus/prometheus.yml
+            curl -o monitoring/prometheus/alert_rules.yml $REPO_RAW/monitoring/prometheus/alert_rules.yml
+            curl -o monitoring/alertmanager/alertmanager.yml $REPO_RAW/monitoring/alertmanager/alertmanager.yml
+            curl -o monitoring/alertmanager/templates/discord.tmpl $REPO_RAW/monitoring/alertmanager/templates/discord.tmpl
+            curl -o monitoring/grafana/provisioning/datasources/datasource.yml $REPO_RAW/monitoring/grafana/provisioning/datasources/datasource.yml
+            curl -o monitoring/grafana/provisioning/dashboards/dashboards.yml $REPO_RAW/monitoring/grafana/provisioning/dashboards/dashboards.yml
+            curl -o monitoring/grafana/dashboards/infrastructure.json $REPO_RAW/monitoring/grafana/dashboards/infrastructure.json
+            curl -o monitoring/grafana/dashboards/application.json $REPO_RAW/monitoring/grafana/dashboards/application.json
+            curl -o monitoring/grafana/dashboards/redis.json $REPO_RAW/monitoring/grafana/dashboards/redis.json
             
             # Pull latest images
             docker-compose -f docker-compose.prod.yml pull

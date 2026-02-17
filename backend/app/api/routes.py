@@ -121,14 +121,45 @@ async def get_job_status(job_id: str, request: Request) -> Dict[str, Any]:
     if status == JobStatus.queued:
         response["running"] = True
         response["message"] = "Job is queued, waiting for available worker slot."
+        
+        # Calculate queue position
+        try:
+            queued_jobs = await arq_pool.queued_jobs()
+            # queued_jobs is a list of JobDef
+            # Find index of current job
+            position = next((i for i, j in enumerate(queued_jobs) if j.job_id == job_id), None)
+            if position is not None:
+                response["queue_position"] = position + 1
+        except Exception:
+            pass
+
     elif status == JobStatus.in_progress:
         response["running"] = True
         response["message"] = "Scraping in progress..."
+        
+        # Fetch progress from Redis
+        try:
+            progress_data = await arq_pool.get(f"job_progress:{job_id}")
+            if progress_data:
+                # Format: "percent|message|current|total"
+                percent, msg, current, total = progress_data.decode().split("|")
+                response["progress"] = {
+                    "percent": int(percent),
+                    "message": msg,
+                    "current_step": int(current),
+                    "total_steps": int(total)
+                }
+                # Update top-level message for backward compatibility
+                response["message"] = msg
+        except Exception:
+            pass
+
     elif status == JobStatus.complete:
         response["running"] = False
         info = await job.info()
         if info and info.result is not None:
             response["result"] = info.result
+            response["progress"] = {"percent": 100, "message": "Complete", "current_step": 100, "total_steps": 100}
         elif info and info.result is None:
             response["result"] = {"success": False, "error": "Job completed with no result"}
     elif status == JobStatus.not_found:

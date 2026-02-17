@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { ParsedStudent, StudentData } from '@/data/parsedData';
+import { ParsedStudent, StudentData, MentorInfo } from '@/data/parsedData';
 
 const STORAGE_KEY = 'student_data';
 
 interface StudentDataContextType {
   studentData: StudentData | null;
-  setStudentData: (students: ParsedStudent[]) => void;
+  setStudentData: (students: ParsedStudent[], mentor?: MentorInfo) => void;
   clearStudentData: () => void;
   hasData: () => boolean;
   isLoading: boolean;
@@ -33,11 +33,12 @@ export const StudentDataProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, []);
 
-  const setStudentData = (students: ParsedStudent[]) => {
+  const setStudentData = (students: ParsedStudent[], mentor?: MentorInfo) => {
     const data: StudentData = {
       students,
       parsedAt: new Date().toISOString(),
       totalStudents: students.length,
+      mentor,
     };
 
     setStudentDataState(data);

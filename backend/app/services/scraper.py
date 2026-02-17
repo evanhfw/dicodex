@@ -10,7 +10,7 @@ import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Callable, Optional
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -44,13 +44,16 @@ class ScraperService:
         email: str | None = None,
         password: str | None = None,
         on_progress: callable = None,
+        progress_callback: Optional[Callable[[str, int, int], None]] = None,
     ) -> Dict[str, Any]:
         """
         Run the scraping process.
 
         Args:
             email: Dicoding email (optional, falls back to env var)
+            email: Dicoding email (optional, falls back to env var)
             password: Dicoding password (optional, falls back to env var)
+            progress_callback: Optional function (message, current_step, total_steps)
 
         Returns:
             Dict with success status, filename, and student count.
@@ -64,11 +67,20 @@ class ScraperService:
         driver = self._build_driver()
 
         try:
+            if progress_callback:
+                progress_callback("Initializing scraper...", 1, 100)
+
             # Navigate and login
+            if progress_callback:
+                progress_callback("Navigating to login page...", 5, 100)
+
             driver.get(CODINGCAMP_URL)
             wait = WebDriverWait(driver, 30)
             self._wait_for_page_ready(driver, wait)
             self._click_password_link(driver, wait)
+
+            if progress_callback:
+                progress_callback("Logging in...", 10, 100)
             self._login_with_email_password(driver, wait, scraper_email, scraper_password)
 
             # Wait for redirect after login
@@ -79,13 +91,18 @@ class ScraperService:
             mentor_info = self._extract_mentor_from_dom(driver)
             if on_progress:
                 on_progress("started", mentor_info)
+            if progress_callback:
+                progress_callback("Expanding student list...", 15, 100)
 
             # Expand all student data
             self._expand_all_student_data(driver)
             time.sleep(0.8)
 
+            if progress_callback:
+                progress_callback("Extracting student data...", 20, 100)
+
             # Extract and save data
-            payload = self._build_export_json(driver)
+            payload = self._build_export_json(driver, progress_callback)
 
             # Save to file
             group_name = self._sanitize_filename_part(
@@ -98,6 +115,9 @@ class ScraperService:
             out_path.write_text(
                 json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8"
             )
+
+            if progress_callback:
+                progress_callback("Finalizing...", 100, 100)
 
             return {
                 "success": True,
@@ -328,7 +348,11 @@ class ScraperService:
             raise NoSuchElementException(f"{message}. Detail: {last_error}") from last_error
         raise NoSuchElementException(message)
 
-    def _build_export_json(self, driver) -> dict:
+    def _build_export_json(
+        self,
+        driver,
+        progress_callback: Optional[Callable[[str, int, int], None]] = None,
+    ) -> dict:
         """Build the JSON export from scraped data"""
         mentor = self._extract_mentor_from_dom(driver)
 
@@ -347,8 +371,19 @@ class ScraperService:
 
         students = [self._parse_student(block) for block in blocks]
 
+        total_students = len(students)
         # Extract additional data for each student
-        for idx in range(len(students)):
+        for idx in range(total_students):
+            if progress_callback:
+                # Map student processing to 25% - 95% range
+                percent = 25 + int((idx / total_students) * 70)
+                student_name = students[idx]["profile"]["name"]
+                progress_callback(
+                    f"Processing student {idx + 1}/{total_students}: {student_name}",
+                    percent,
+                    100,
+                )
+
             students[idx]["progress"]["daily_checkins"] = {
                 "items": self._extract_daily_checkins_all_pages(driver, idx)
             }

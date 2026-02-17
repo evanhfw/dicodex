@@ -1,0 +1,4175 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-02-17T05:39:37.024244+00:00",
+    "source_url": "https://codingcamp.dicoding.com/",
+    "student_total": 25,
+    "show_all_courses_clicked": 25,
+    "show_all_assignments_clicked": 25
+  },
+  "mentor": {
+    "group": "CAC-19",
+    "mentor_code": "facil-cac-19",
+    "name": "Evan Hanif Widiatama",
+    "nav_items": [
+      "Student Progress",
+      "My Schedule",
+      "Newsletter"
+    ],
+    "support_email": "fasilitator@student.devacademy.id"
+  },
+  "students": [
+    {
+      "profile": {
+        "name": "Nisa Amelia",
+        "profile_link": "/u/cacc001d6x2192",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F19ff807c-e843-4ca3-816b-94088ced7fc0.jpeg?alt=media&token=2d71eb31-611d-4575-95cb-5d7c2c0119d2",
+        "status_badge": "Need Special Attention",
+        "university": "Institut Pertanian Bogor",
+        "major": "Ilmu Komputer",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "98%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "97%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "98%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "5%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sat, Feb 14, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Logika Perbandingan",
+                    "Logika Perulangan",
+                    "Pengenalan JavaScript",
+                    "Variabel dalam JavaScript",
+                    "Tipe Data dalam JavaScript",
+                    "Fungsi dalam JavaScript",
+                    "Logika Perbandingan dalam JavaScript",
+                    "Menggabungkan IF/Else dengan OR dan AND",
+                    "Logika Perulangan dalam JavaScript",
+                    "Tips Sikap Kerja untuk Cara Belajar Pemrograman",
+                    "Rangkuman Mengerti Konsep Dasar Pemrograman",
+                    "Kuis Mengerti Konsep Dasar Pemrograman",
+                    "Pengantar Modifikasi Aplikasi Perangkat Lunak",
+                    "Pengenalan HTML",
+                    "Pengenalan CSS"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "neutral",
+              "reflection": "seperti biasa aku tetap berusaha konsisten untuk tetap terus belajar, untuk mengisi waktu weekeend ini hanya dihabiskan untuk melanjutkan untuk koridor kelas, anw tiap belajar juga terasa seperti mengulas materi dari semester lalu"
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengenalan Konsep Dasar Pemrograman",
+                    "Pengenalan Sintaksis dan Case Sensitive",
+                    "Statement dan Whitespace",
+                    "Keyword dan Pseudocode",
+                    "Latihan Menulis Pseudocode",
+                    "Variabel",
+                    "Mendeklarasikan dan Menggabungkan Variabel dengan Operator",
+                    "Tipe Data"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "so happy belajar bab ini karena memngingatkan materi waktu masih awal masuk departemen yang dimana semester 3, i hope bisa selalu remind materi waktu lalu dan terus belajar supaya dapat hasil yang maksimal diujian akhir nanti"
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Kebutuhan Aplikasi dari sisi Pengguna",
+                    "Studi Kasus Menganalisis Kebutuhan Aplikasi dari Sisi Pengguna",
+                    "Spesifikasi Teknis Aplikasi dan Cara Menentukannya",
+                    "Studi Kasus Menganalisis Spesifikasi Teknis Aplikasi",
+                    "Tips Sikap Kerja dalam Meneliti, Menganalisis, dan Mengevaluasi Kebutuhan Aplikasi",
+                    "Rangkuman Memahami Kebutuhan Aplikasi",
+                    "Kuis Memahami Kebutuhan Aplikasi"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Jujur saja, perasaan saya saat ini adalah campuran antara gugup dan sangat antusias. Ada rasa excited yang luar biasa karena akhirnya saya mulai mempelajari bahasa masa depan. Selama ini saya hanya sebagai pengguna aplikasi, tapi sekarang saya mulai belajar bagaimana \"mesin\" di baliknya bekerja. Yeay to new skills!"
+            },
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Pengenalan Kelas",
+                    "Prasyarat Kemampuan"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "neutral",
+              "reflection": "Jujur saja, perasaan saya saat ini adalah campuran antara gugup dan sangat antusias. Ada rasa excited yang luar biasa karena akhirnya saya mulai mempelajari bahasa masa depan. Selama ini saya hanya sebagai pengguna aplikasi, tapi sekarang saya mulai belajar bagaimana \"mesin\" di baliknya bekerja. Yeay to new skills!"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Iqthimar Ilsha",
+        "profile_link": "/u/cacc001d6y1179",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F443e24bf-3665-4d30-962c-b293bbcd65b8.JPG?alt=media&token=3195e9f8-7f5d-4bae-a7c1-4d667d3e8e53",
+        "status_badge": "Lagging Behind",
+        "university": "Institut Pertanian Bogor",
+        "major": "Manajemen",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "69%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persiapan Studi Kasus Pengalaman Belajar",
+                    "Membuat Repository Baru",
+                    "Menambahkan Pengalaman Belajar Pertama",
+                    "Menambahkan Kembali Progres Belajar",
+                    "Mengubah Tampilan Menggunakan Format Markdown"
+                  ],
+                  "title": "Belajar Dasar Git dengan GitHub"
+                }
+              ],
+              "mood": "good",
+              "reflection": "belajar git sungguh membuat saya merenung. banyak operasi website yang mudah saya pahami secara langsung. tapi git ini harus membedah secara mendalam, karena memang sangat bagus untuk coder tapi wallahi susah"
+            },
+            {
+              "date": "Sat, Feb 14, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Apa itu Gerbang Logika",
+                    "Transkrip Apa itu Gerbang Logika",
+                    "Gerbang Logika OR",
+                    "Gerbang Logika NOT"
+                  ],
+                  "title": "Pengenalan ke Logika Pemrograman (Programming Logic 101)"
+                }
+              ],
+              "mood": "good",
+              "reflection": "materi ini membuat saya throwback ke zaman semester 1 saya di ipb. di mana di sini ada mata kuiiah computational thinking. sungguh penyegaran yang baik"
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Rangkuman Modifikasi Aplikasi Perangkat Lunak",
+                    "Studi Kasus Pembuatan Dokumentasi Teknis Aplikasi"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "sedikit lebih pusing dibanding sebelumnya, materi kali ini semakin susah menurut saya. sangat insightfull dan menantang untuk terus segera diselesaikan"
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Tips Sikap Kerja untuk Meningkatkan Keahlian Belajar Bahasa Pemrograman",
+                    "Rangkuman Modifikasi Aplikasi Perangkat Lunak",
+                    "Kuis Modifikasi Aplikasi Perangkat Lunak"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Insight sangat menarik dengan pemahaman yang mendalam terkait coding. terlebih saya memulai dari 0 jika dilihat dari jurusan saya"
+            },
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Spesifikasi Teknis Aplikasi dan Cara Menentukannya",
+                    "Studi Kasus Menganalisis Spesifikasi Teknis Aplikasi"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "banyak yang harus dipelajar lebih banyak. materi yang dipelajari sangat membantu saya dalam menyelesaikan kelas ini kedepannya"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Salsa Dewi Andentia",
+        "profile_link": "/u/cacc008d6x0308",
+        "photo_url": "",
+        "status_badge": "Need Special Attention",
+        "university": "Universitas Gadjah Mada",
+        "major": "Teknik Pengelolaan Dan Pemeliharaan Infrastruktur Sipil",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "33%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": []
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Safira Nazwa Natania",
+        "profile_link": "/u/cacc009d6x1492",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F1c5acdc8-f50b-4b34-830e-461fab4e980f.jpeg?alt=media&token=349c3da3-2db3-47a5-88e1-ff7b79cd33b9",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Gunadarma",
+        "major": "Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Prasyarat Kemampuan",
+                    "Prasyarat Tools",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Latihan Ujian",
+                    "Pengantar Git dan GitHub",
+                    "Mengenal Git secara Lebih Dalam",
+                    "Mengenal GitHub secara Lebih Dalam",
+                    "Latihan Membuat Akun GitHub",
+                    "Latihan Mengeksplorasi Proyek GitHub",
+                    "Latihan Mengenal GitHub Dashboard",
+                    "Notifikasi GitHub",
+                    "Rangkuman Git dan Github",
+                    "Kuis Git dan Github",
+                    "Pengantar Dasar Git",
+                    "Mengenal Perintah Dasar Git secara Lebih Dalam",
+                    "Mengenal Git Workflow",
+                    "Mengenal Repository",
+                    "Latihan Membuat Repository Baru",
+                    "Latihan Membuat Readme untuk Repository",
+                    "Latihan Menambahkan File Baru",
+                    "Latihan Mengubah Data dalam Berkas Menggunakan Commit",
+                    "Latihan Membuat Release File",
+                    "Rangkuman Dasar Git",
+                    "Kuis Dasar Git",
+                    "Persiapan Studi Kasus Pengalaman Belajar",
+                    "Membuat Repository Baru",
+                    "Menambahkan Pengalaman Belajar Pertama",
+                    "Menambahkan Kembali Progres Belajar",
+                    "Mengubah Tampilan Menggunakan Format Markdown",
+                    "Tantangan Menambahkan Progres Belajar",
+                    "Melihat History Perubahan",
+                    "Merilis Dokumentasi Pengalaman Belajar",
+                    "Rangkuman Studi Kasus Pengalaman Belajar",
+                    "Kuis Studi Kasus Pengalaman Belajar",
+                    "Pengantar Git Branches",
+                    "Apa itu Branch",
+                    "Latihan Membuat Branch Baru",
+                    "Latihan Melakukan Perpindahan Branch",
+                    "Apa itu Merge",
+                    "Apa itu Pull Request",
+                    "Latihan Melakukan Merge",
+                    "Latihan Menyelesaikan Merge Conflict",
+                    "Rangkuman Git Branches",
+                    "Kuis Git Branches",
+                    "Pengantar Kolaborasi dengan Tim",
+                    "Apa itu Kolaborasi",
+                    "Latihan Berkolaborasi dengan Tim",
+                    "Apa Itu Fork",
+                    "Latihan Berkolaborasi pada Public Repository",
+                    "Latihan Melakukan Revert",
+                    "Apa Itu Squashing Changes",
+                    "Latihan Melakukan Squashing Changes",
+                    "Apa Itu Code Reviews",
+                    "Latihan Melakukan Code Reviews",
+                    "Rangkuman Kolaborasi dengan Tim",
+                    "Kuis Kolaborasi dengan Tim",
+                    "Persiapan Studi Kasus Kolaborasi dengan Tim",
+                    "Membuat Repository Baru",
+                    "Menambahkan Aturan Mendaftar Volunter",
+                    "Menyalin Repository",
+                    "Menambahkan Data Diri dalam Berkas README.md",
+                    "Melakukan Pull Request",
+                    "Menangani Pull Request",
+                    "Tantangan Melakukan Pull-Request pada Repository Dicoding",
+                    "Rangkuman Studi Kasus Kolaborasi dengan Tim",
+                    "Kuis Studi Kasus Kolaborasi dengan Tim",
+                    "Pengantar GitHub sebagai Portofolio",
+                    "Mengapa GitHub Menjadi Portofolio para Developer",
+                    "Latihan Membuat Portofolio Menggunakan GitHub",
+                    "Latihan Melihat Portofolio para Developer",
+                    "Rangkuman GitHub sebagai Portofolio",
+                    "Kuis GitHub sebagai Portofolio",
+                    "Rangkuman Kelas",
+                    "Ujian Akhir"
+                  ],
+                  "title": "Belajar Dasar Git dengan GitHub"
+                }
+              ],
+              "mood": "good",
+              "reflection": "saya merasa pengetahuan saya bertambah, dan saya lega saya belajar dengan perasaan senang, tidak tertekan"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Hanif Fadhilah",
+        "profile_link": "/u/cacc009d6y0869",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F43f82ec4-4d3e-4e77-8c65-95e0ca2372e0.jpg?alt=media&token=8db14881-bbde-4f07-952d-ed8182809207",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Gunadarma",
+        "major": "Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengantar Git Branches",
+                    "Apa itu Branch",
+                    "Latihan Membuat Branch Baru",
+                    "Latihan Melakukan Perpindahan Branch",
+                    "Apa itu Merge",
+                    "Apa itu Pull Request",
+                    "Latihan Melakukan Merge",
+                    "Latihan Menyelesaikan Merge Conflict",
+                    "Rangkuman Git Branches",
+                    "Kuis Git Branches",
+                    "Pengantar Kolaborasi dengan Tim",
+                    "Apa itu Kolaborasi",
+                    "Latihan Berkolaborasi dengan Tim",
+                    "Apa Itu Fork",
+                    "Latihan Berkolaborasi pada Public Repository",
+                    "Latihan Melakukan Revert",
+                    "Apa Itu Squashing Changes",
+                    "Latihan Melakukan Squashing Changes",
+                    "Apa Itu Code Reviews",
+                    "Latihan Melakukan Code Reviews",
+                    "Rangkuman Kolaborasi dengan Tim",
+                    "Kuis Kolaborasi dengan Tim",
+                    "Persiapan Studi Kasus Kolaborasi dengan Tim",
+                    "Membuat Repository Baru",
+                    "Menambahkan Aturan Mendaftar Volunter",
+                    "Menyalin Repository",
+                    "Menambahkan Data Diri dalam Berkas README.md",
+                    "Melakukan Pull Request",
+                    "Menangani Pull Request",
+                    "Tantangan Melakukan Pull-Request pada Repository Dicoding",
+                    "Rangkuman Studi Kasus Kolaborasi dengan Tim",
+                    "Kuis Studi Kasus Kolaborasi dengan Tim",
+                    "Pengantar GitHub sebagai Portofolio",
+                    "Mengapa GitHub Menjadi Portofolio para Developer",
+                    "Latihan Membuat Portofolio Menggunakan GitHub",
+                    "Latihan Melihat Portofolio para Developer",
+                    "Rangkuman GitHub sebagai Portofolio",
+                    "Kuis GitHub sebagai Portofolio",
+                    "Rangkuman Kelas",
+                    "Ujian Akhir"
+                  ],
+                  "title": "Belajar Dasar Git dengan GitHub"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Saya menyadari bahwa belajar Git bukan sekadar memahami perintah seperti *commit*, *push*, dan *pull*, tetapi juga melatih kedisiplinan dalam mengelola versi pekerjaan saya. Proses belajar ini membuat saya lebih teliti dalam mencatat perubahan, lebih terstruktur dalam kolaborasi, dan lebih siap menghadapi kesalahan karena setiap revisi terdokumentasi dengan baik."
+            },
+            {
+              "date": "Sat, Feb 14, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengenalan Computational Thinking",
+                    "Transkrip Pengenalan Computational Thinking",
+                    "Decomposition",
+                    "Pattern Recognition",
+                    "Abstraction",
+                    "Algorithm",
+                    "Evaluation",
+                    "Rangkuman dari Computational Thinking",
+                    "Kuis Sub-modul Computational Thinking",
+                    "Studi Kasus Penggunaan Logika Pemrograman",
+                    "Transkrip Studi Kasus Penggunaan Logika Pemrograman",
+                    "Rangkuman Kelas",
+                    "Ujian Akhir"
+                  ],
+                  "title": "Pengenalan ke Logika Pemrograman (Programming Logic 101)"
+                }
+              ],
+              "mood": "neutral",
+              "reflection": "studi kasus kali ini membuat saya belajar penggunaan logika pemrograman. walaupun masih banyak logika-logika lain yang harus dipelajari dalam bahasa pemrograman."
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Latihan Ujian",
+                    "Apa itu Logika Pemrograman",
+                    "Transkrip Apa itu Logika Pemrograman",
+                    "Perbedaan Logika dan Algoritma Pemrograman",
+                    "Penalaran Logika Induktif dan Deduktif",
+                    "Logika Pemrograman Dasar",
+                    "Rangkuman dari Pendahuluan",
+                    "Kuis Sub-modul Pendahuluan",
+                    "Apa itu Gerbang Logika",
+                    "Transkrip Apa itu Gerbang Logika",
+                    "Gerbang Logika AND",
+                    "Gerbang Logika OR",
+                    "Gerbang Logika NOT",
+                    "Gerbang Logika NAND",
+                    "Gerbang Logika NOR",
+                    "Gerbang Logika XOR",
+                    "Gerbang Logika XNOR",
+                    "Rangkuman dari Gerbang Logika",
+                    "Kuis Sub-modul Gerbang Logika"
+                  ],
+                  "title": "Pengenalan ke Logika Pemrograman (Programming Logic 101)"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Dalam tema ini, poin utamanya adalah mengubah cara berpikir manusia yang penuh asumsi menjadi cara berpikir mesin yang eksplisit, langkah demi langkah, dan logis."
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengantar Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Apa itu Pengarsipan Versi Perangkat Lunak",
+                    "Studi Kasus Pengarsipan Versi Perangkat Lunak",
+                    "Pengenalan Style Guide",
+                    "Studi Kasus Menyesuaikan Gaya Penulisan Kode Sesuai Standar",
+                    "Apa itu Komentar pada Kode",
+                    "Studi Kasus Menambahkan Komentar pada Kode",
+                    "Pengenalan Dokumentasi Teknis Aplikasi",
+                    "Studi Kasus Pembuatan Dokumentasi Teknis Aplikasi",
+                    "Tips Cara Mengomunikasikan Dokumentasi kepada Stakeholders (pemegang kepentingan perusahaan)",
+                    "Rangkuman dari Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Kuis Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Rangkuman Kelas",
+                    "Ujian Akhir"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Materi tentang komentar pada kode mengajarkan saya bahwa kode yang baik bukan hanya berjalan dengan benar, tetapi juga mudah dipahami oleh orang lain. Dengan menambahkan komentar yang jelas dan relevan, saya dapat membantu tim memahami alur logika program. Pengenalan dokumentasi teknis aplikasi membuat saya lebih memahami pentingnya menjelaskan fitur, arsitektur, dan cara penggunaan sistem secara terstruktur."
+            },
+            {
+              "date": "Tue, Feb 10, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Logika Perulangan",
+                    "Pengenalan JavaScript",
+                    "Variabel dalam JavaScript",
+                    "Tipe Data dalam JavaScript",
+                    "Fungsi dalam JavaScript"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "dengan mempelajari logika perulangan, pengenalan Javascript, Variabel dalam Javascript, tipe data dan fungsi membuat saya mereview beberapa materi di semester sebelumnya."
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Adi Pratama",
+        "profile_link": "/u/cacc009d6y2312",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F0a11b7ee-bb4c-4500-a38f-0df6126cd54a.jpeg?alt=media&token=5f65b857-51c9-4bec-a7c1-65544d75772a",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Gunadarma",
+        "major": "Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "51%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengenalan Data",
+                    "Kriteria Data untuk AI",
+                    "Infrastruktur Data di Industri",
+                    "[Story] Apa yang Diperlukan untuk Membuat AI?",
+                    "Rangkuman Data untuk AI",
+                    "Kuis Data untuk AI"
+                  ],
+                  "title": "Belajar Dasar AI"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Pembelajaran mengenai data sangat membantu saya karena sebelumnya saya sangat kebingungan dalam data data yang ada."
+            },
+            {
+              "date": "Sat, Feb 14, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Prasyarat Kemampuan",
+                    "Prasyarat Tools",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Penerapan AI dalam Dunia Nyata",
+                    "Pengenalan AI",
+                    "Taksonomi AI",
+                    "AI Workflow",
+                    "[Story] Belajar Mempermudah Pekerjaan dengan AI",
+                    "Rangkuman Berkenalan dengan Artificial Intelligence (AI)",
+                    "Kuis Berkenalan dengan Artificial Intelligence (AI)"
+                  ],
+                  "title": "Belajar Dasar AI"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Hari ini saya belajar mengenai Apa itu AI dan sejarah dasarnya AI yang membuat saya jadi mengerti bahwa sekarang AI menjadi sangat dicari untuk beberapa pekerjaan dan membuat saya makin bersemangat dalam melakukan pembelajaran."
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Hari ini saya sudah melakukan yang terbaik dalam memahami github walaupun agak sedikit pusing tapi dengan mencobanya saya bisa dengan mengikuti panduan dari materi yang ada."
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengantar Dasar Git",
+                    "Mengenal Perintah Dasar Git secara Lebih Dalam",
+                    "Mengenal Git Workflow",
+                    "Mengenal Repository",
+                    "Latihan Membuat Repository Baru",
+                    "Latihan Membuat Readme untuk Repository",
+                    "Latihan Menambahkan File Baru",
+                    "Latihan Mengubah Data dalam Berkas Menggunakan Commit",
+                    "Latihan Membuat Release File",
+                    "Rangkuman Dasar Git",
+                    "Kuis Dasar Git",
+                    "Persiapan Studi Kasus Pengalaman Belajar",
+                    "Membuat Repository Baru",
+                    "Menambahkan Pengalaman Belajar Pertama",
+                    "Menambahkan Kembali Progres Belajar",
+                    "Mengubah Tampilan Menggunakan Format Markdown",
+                    "Tantangan Menambahkan Progres Belajar",
+                    "Melihat History Perubahan",
+                    "Merilis Dokumentasi Pengalaman Belajar",
+                    "Rangkuman Studi Kasus Pengalaman Belajar",
+                    "Kuis Studi Kasus Pengalaman Belajar",
+                    "Pengantar Git Branches",
+                    "Apa itu Branch",
+                    "Latihan Membuat Branch Baru",
+                    "Latihan Melakukan Perpindahan Branch",
+                    "Apa itu Merge",
+                    "Apa itu Pull Request",
+                    "Latihan Melakukan Merge",
+                    "Latihan Menyelesaikan Merge Conflict",
+                    "Rangkuman Git Branches",
+                    "Kuis Git Branches"
+                  ],
+                  "title": "Belajar Dasar Git dengan GitHub"
+                }
+              ],
+              "mood": "neutral",
+              "reflection": "Sedikit kurang bersemangat untuk belajarnya karena masalah jaringan yang sangat menggangu tapi tetap saya pahami tiap materi yang diberikan dengan baik."
+            },
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Prasyarat Kemampuan",
+                    "Prasyarat Tools",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Latihan Ujian",
+                    "Pengantar Git dan GitHub",
+                    "Mengenal Git secara Lebih Dalam",
+                    "Mengenal GitHub secara Lebih Dalam",
+                    "Latihan Membuat Akun GitHub",
+                    "Latihan Mengeksplorasi Proyek GitHub",
+                    "Latihan Mengenal GitHub Dashboard",
+                    "Notifikasi GitHub",
+                    "Rangkuman Git dan Github",
+                    "Kuis Git dan Github"
+                  ],
+                  "title": "Belajar Dasar Git dengan GitHub"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Saya belajar banyak hal baru mengenai github dan saya awalnya agak kebingungan tapi sekarang sudah lumayan mengerti dasar dasarnya."
+            },
+            {
+              "date": "Tue, Feb 10, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "saya jadi bisa mengingat kembali materi logika ini berkat modul modul yang diberikan, dan juga menambah beberapa hal baru yang bisa saya pelajari berkat modul ini."
+            },
+            {
+              "date": "Mon, Feb 9, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Pengenalan Kelas",
+                    "Prasyarat Kemampuan",
+                    "Prasyarat Tools",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Pre-test",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Latihan Kuis",
+                    "Pengantar Kebutuhan Aplikasi",
+                    "Kebutuhan Aplikasi dari sisi Pengguna",
+                    "Studi Kasus Menganalisis Kebutuhan Aplikasi dari Sisi Pengguna",
+                    "Spesifikasi Teknis Aplikasi dan Cara Menentukannya",
+                    "Studi Kasus Menganalisis Spesifikasi Teknis Aplikasi",
+                    "Tips Sikap Kerja dalam Meneliti, Menganalisis, dan Mengevaluasi Kebutuhan Aplikasi",
+                    "Rangkuman Memahami Kebutuhan Aplikasi",
+                    "Kuis Memahami Kebutuhan Aplikasi",
+                    "Pengantar Perencanaan Modifikasi Aplikasi",
+                    "Spesifikasi Kebutuhan Perangkat Lunak dan Struktur Penulisannya",
+                    "Studi Kasus Pembuatan Dokumen Spesifikasi Kebutuhan Perangkat Lunak",
+                    "Alur Kerja Aplikasi",
+                    "Penyelesaian Masalah Menggunakan Cara Berpikir Komputasional",
+                    "Studi Kasus Penyelesaian Masalah yang Terjadi pada Sebuah Aplikasi",
+                    "Pengenalan Flowchart",
+                    "Studi Kasus Penggunaan Flowchart untuk Aplikasi Penjualan",
+                    "Tips Sikap Kerja dalam Kolaborasi Perencanaan Aplikasi dengan Tim",
+                    "Rangkuman Perencanaan Modifikasi Aplikasi",
+                    "Kuis Perencanaan Modifikasi Aplikasi"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Pelajarannya cukup menarik dan juga membantu banget karena dari dasar dasar seperti yang saya inginkan, dan saya bakalan belajar dengan giat selama program ini."
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Dzikri Bassyril Mu'Minin",
+        "profile_link": "/u/cacc011d6y2553",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2Ff730dab2-1034-4470-a002-8fd2cb0a5b7a.png?alt=media&token=0b289ae9-5e26-4875-a8fc-a829b2a5608f",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Padjadjaran",
+        "major": "Teknik Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "82%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Machine Learning Workflow",
+                    "Model Maintenance",
+                    "Machine Learning di Industri"
+                  ],
+                  "title": "Belajar Dasar AI"
+                }
+              ],
+              "mood": "good",
+              "reflection": "cukup inshightfull sekali bisa belajar bagaimana dasar dasar AI yang ilmunya mungkin bisa sangat mahal sekali di zaman sekarang yang serba AI dan kita harus adaptasi dan menguasainya"
+            },
+            {
+              "date": "Sat, Feb 14, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "menambah ilmu tentang per git git ini sangat berguna sekali dulu saya hanaya clone pull dan push saja sekarang mungkin ketika sudah tau bagaimana workflownya bisa lebih terstruktur dan baik di kolaborasinya"
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Lagi lagi saya terkadang lupa dengan hal dasar programing karna saya jarang mengulanginya padahal di dunia IT saya sudah cukup lama"
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [],
+              "mood": "neutral",
+              "reflection": "Mengingatkan kembali tentang materi dasar ini karna walapun saya sudah bertahun tahun di dalam dunia IT tapi terkadang saya lupa tentang hal dasar nya ini padahal ini adalah pondasi agar bisa sukses di dunia IT"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Dewita Sari Puspita Ningrum",
+        "profile_link": "/u/cacc013d6x2458",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F94d25cdd-0a04-4d31-9ae9-f0e16186b57a.png?alt=media&token=438f8d70-2337-41f5-9e72-09e2dba3583f",
+        "status_badge": "Need Special Attention",
+        "university": "Universitas Terbuka",
+        "major": "Sistem Informasi",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "98%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "9%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Apa itu Pengarsipan Versi Perangkat Lunak",
+                    "Studi Kasus Pengarsipan Versi Perangkat Lunak",
+                    "Pengenalan Style Guide",
+                    "Studi Kasus Menyesuaikan Gaya Penulisan Kode Sesuai Standar",
+                    "Apa itu Komentar pada Kode",
+                    "Studi Kasus Menambahkan Komentar pada Kode",
+                    "Pengenalan Dokumentasi Teknis Aplikasi",
+                    "Studi Kasus Pembuatan Dokumentasi Teknis Aplikasi",
+                    "Tips Cara Mengomunikasikan Dokumentasi kepada Stakeholders (pemegang kepentingan perusahaan)",
+                    "Rangkuman dari Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Kuis Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Rangkuman Kelas",
+                    "Ujian Akhir"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Setelah menyelesaikan kelas memulai dasar pemrograman untuk menjadi pengembang software, saya mendapatkan banyak sekali pelajaran baru yang baru aku ketahui. Seperti membuat dokumentasi dan ini merupakan hal yang sangat penting bagi pengembang software. Dengan adanya dokumentasi ini para pengembang mengetahui riwayat yang telah mereka ubah."
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Logika Perulangan dalam JavaScript",
+                    "Tips Sikap Kerja untuk Cara Belajar Pemrograman",
+                    "Rangkuman Mengerti Konsep Dasar Pemrograman",
+                    "Kuis Mengerti Konsep Dasar Pemrograman",
+                    "Pengantar Modifikasi Aplikasi Perangkat Lunak",
+                    "Pengenalan HTML",
+                    "Pengenalan CSS",
+                    "Studi Kasus Aplikasi Login - Persiapan",
+                    "Instalasi Visual Studio Code",
+                    "Studi Kasus Aplikasi Login - Modifikasi Antarmuka Aplikasi Perangkat Lunak",
+                    "Studi Kasus Aplikasi Login - Modifikasi Fungsionalitas Aplikasi Perangkat Lunak",
+                    "Tips Sikap Kerja untuk Meningkatkan Keahlian Belajar Bahasa Pemrograman",
+                    "Rangkuman Modifikasi Aplikasi Perangkat Lunak",
+                    "Kuis Modifikasi Aplikasi Perangkat Lunak"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Hari ini aku belajar bagaimana membuat web yang interaktif dengan menggunakan HTML, CSS, dan JavaScript."
+            },
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Penyelesaian Masalah Menggunakan Cara Berpikir Komputasional",
+                    "Studi Kasus Penyelesaian Masalah yang Terjadi pada Sebuah Aplikasi",
+                    "Studi Kasus Penggunaan Flowchart untuk Aplikasi Penjualan",
+                    "Tips Sikap Kerja dalam Kolaborasi Perencanaan Aplikasi dengan Tim",
+                    "Rangkuman Perencanaan Modifikasi Aplikasi",
+                    "Kuis Perencanaan Modifikasi Aplikasi",
+                    "Pengenalan Konsep Dasar Pemrograman",
+                    "Pengenalan Sintaksis dan Case Sensitive",
+                    "Statement dan Whitespace",
+                    "Keyword dan Pseudocode",
+                    "Latihan Menulis Pseudocode",
+                    "Variabel",
+                    "Mendeklarasikan dan Menggabungkan Variabel dengan Operator",
+                    "Tipe Data",
+                    "Logika Perbandingan",
+                    "Logika Perulangan",
+                    "Pengenalan JavaScript",
+                    "Variabel dalam JavaScript",
+                    "Tipe Data dalam JavaScript",
+                    "Fungsi dalam JavaScript",
+                    "Logika Perbandingan dalam JavaScript",
+                    "Menggabungkan IF/Else dengan OR dan AND",
+                    "Logika Perulangan dalam JavaScript",
+                    "Tips Sikap Kerja untuk Cara Belajar Pemrograman",
+                    "Rangkuman Mengerti Konsep Dasar Pemrograman",
+                    "Kuis Mengerti Konsep Dasar Pemrograman"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Hari ini saya belajar mengenai JavaScript, tentang variabel, tipe data, perulangan dengan menggunakan If else, for, while, dan juga macam-macam logika"
+            },
+            {
+              "date": "Tue, Feb 10, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Prasyarat Kemampuan",
+                    "Prasyarat Tools",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Latihan Ujian",
+                    "Pengantar Git dan GitHub"
+                  ],
+                  "title": "Belajar Dasar Git dengan GitHub"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Hari ini aku udah menyelesaikan materi pengenalan logika pemrograma, dari situ aku mengetahui bahwa selama ini aku selalu melakukan algoritma. Melakukan kegiatan atau mengambil suatu keputusan dengan cara berurutan."
+            },
+            {
+              "date": "Mon, Feb 9, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengantar Perencanaan Modifikasi Aplikasi",
+                    "Spesifikasi Kebutuhan Perangkat Lunak dan Struktur Penulisannya",
+                    "Studi Kasus Pembuatan Dokumen Spesifikasi Kebutuhan Perangkat Lunak",
+                    "Alur Kerja Aplikasi",
+                    "Penyelesaian Masalah Menggunakan Cara Berpikir Komputasional",
+                    "Studi Kasus Penyelesaian Masalah yang Terjadi pada Sebuah Aplikasi"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Setelah mempelajari materi baru, saya jadi mengetahui mengenai struktur penulisan dalam menulis dokumen spesifikasi kebutuhan perangkat lunak, dan juga bagaimana alur kerja aplikasi."
+            },
+            {
+              "date": "Sun, Feb 8, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Studi Kasus Menganalisis Kebutuhan Aplikasi dari Sisi Pengguna",
+                    "Spesifikasi Teknis Aplikasi dan Cara Menentukannya",
+                    "Studi Kasus Menganalisis Spesifikasi Teknis Aplikasi",
+                    "Tips Sikap Kerja dalam Meneliti, Menganalisis, dan Mengevaluasi Kebutuhan Aplikasi",
+                    "Rangkuman Memahami Kebutuhan Aplikasi"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Jadi setiap stake holder membutuhkan dokumen teknis masing-masing. Dalam dokumen menggunakan bahasa yang teknis tetapi tetap harus mudah dimengerti khususnya oleh user."
+            },
+            {
+              "date": "Sat, Feb 7, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengantar Kebutuhan Aplikasi",
+                    "Kebutuhan Aplikasi dari sisi Pengguna",
+                    "Studi Kasus Menganalisis Kebutuhan Aplikasi dari Sisi Pengguna"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Untuk membuat sebuah aplikasi yang kompleks membutuhkan waktu yang banyak. Membuat aplikasi dapat dilihat dari sisi penggunanya, agar pengguna dapat memakai aplikasi yang dibuat sesuai dengan kebutuhannya."
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Faiq Iqbaal Mauludin",
+        "profile_link": "/u/cacc126d6y0043",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F69f76f9e-485f-4f67-9caf-01c3de97a59c.jpg?alt=media&token=d049c013-365c-44a5-9b3f-2b6e41f3c07c",
+        "status_badge": "Lagging Behind",
+        "university": "Politeknik Negeri Bandung",
+        "major": "Teknik Telekomunikasi",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": []
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Ridho Dwi Satrio",
+        "profile_link": "/u/cacc193d6y0905",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F934bd6fb-17bb-434b-ad04-0f6601cf7da6.jpeg?alt=media&token=a9ba5115-4ebe-4808-84b1-1a9933fb33d7",
+        "status_badge": "On Ideal Schedule",
+        "university": "Universitas Bina Sarana Informatika",
+        "major": "Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "8%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sat, Feb 14, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Model Maintenance",
+                    "Machine Learning di Industri",
+                    "Batasan Machine Learning",
+                    "[Story] Machine Learning: Harapan menjadi kenyataan",
+                    "Rangkuman Pengantar Machine Learning",
+                    "Kuis Pengantar Machine Learning",
+                    "Pengenalan Deep Learning",
+                    "Mengenal Artificial Neural Network",
+                    "Gambaran Penerapan Deep Learning di Industri",
+                    "Latihan Membuat Model Deep Learning",
+                    "Proses di Balik Deep Learning",
+                    "[Story] Hidup Semakin Mudah dengan Bantuan Mesin",
+                    "Rangkuman Deep Learning untuk Semua Orang",
+                    "Kuis Deep Learning untuk Semua Orang",
+                    "Rangkuman Kelas",
+                    "Ujian Akhir"
+                  ],
+                  "title": "Belajar Dasar AI"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Susah banget materi deep learning tapi asik, tinggal mengimplementasikan aja materi yang sudah saya pelajari."
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengenalan AI",
+                    "Taksonomi AI",
+                    "AI Workflow",
+                    "[Story] Belajar Mempermudah Pekerjaan dengan AI",
+                    "Rangkuman Berkenalan dengan Artificial Intelligence (AI)",
+                    "Kuis Berkenalan dengan Artificial Intelligence (AI)",
+                    "Pengenalan Data",
+                    "Kriteria Data untuk AI",
+                    "Infrastruktur Data di Industri",
+                    "[Story] Apa yang Diperlukan untuk Membuat AI?",
+                    "Rangkuman Data untuk AI",
+                    "Kuis Data untuk AI",
+                    "Pengenalan Machine Learning",
+                    "Tipe-Tipe Machine Learning",
+                    "Machine Learning Workflow"
+                  ],
+                  "title": "Belajar Dasar AI"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Seru banget si materi belajar dasar AI ini, ya walaupun cukup sulit, tapi itu yang buat saya jadi lebih tertarik buat ngelanjutin materi berikutnya. Tapi sayang banget karena sesi practifce nya kurang."
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Menambahkan Data Diri dalam Berkas README.md",
+                    "Melakukan Pull Request",
+                    "Menangani Pull Request",
+                    "Tantangan Melakukan Pull-Request pada Repository Dicoding",
+                    "Rangkuman Studi Kasus Kolaborasi dengan Tim",
+                    "Kuis Studi Kasus Kolaborasi dengan Tim",
+                    "Pengantar GitHub sebagai Portofolio",
+                    "Mengapa GitHub Menjadi Portofolio para Developer",
+                    "Latihan Membuat Portofolio Menggunakan GitHub",
+                    "Latihan Melihat Portofolio para Developer",
+                    "Rangkuman GitHub sebagai Portofolio",
+                    "Kuis GitHub sebagai Portofolio",
+                    "Rangkuman Kelas",
+                    "Ujian Akhir"
+                  ],
+                  "title": "Belajar Dasar Git dengan GitHub"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Seneng banget karena di materi ini saya belajar bagaimana caranya membuat sebuah portofolio di github."
+            },
+            {
+              "date": "Tue, Feb 10, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Menambahkan Kembali Progres Belajar",
+                    "Mengubah Tampilan Menggunakan Format Markdown",
+                    "Tantangan Menambahkan Progres Belajar",
+                    "Melihat History Perubahan",
+                    "Merilis Dokumentasi Pengalaman Belajar",
+                    "Rangkuman Studi Kasus Pengalaman Belajar",
+                    "Kuis Studi Kasus Pengalaman Belajar",
+                    "Pengantar Git Branches",
+                    "Apa itu Branch",
+                    "Latihan Membuat Branch Baru",
+                    "Latihan Melakukan Perpindahan Branch",
+                    "Apa itu Merge"
+                  ],
+                  "title": "Belajar Dasar Git dengan GitHub"
+                }
+              ],
+              "mood": "neutral",
+              "reflection": "Wah semakin kesini materi git ini cukup seru banyak sekali istilah-istilah git yang baru saya tau dari materi ini"
+            },
+            {
+              "date": "Mon, Feb 9, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Rangkuman Git dan Github",
+                    "Kuis Git dan Github",
+                    "Pengantar Dasar Git",
+                    "Mengenal Perintah Dasar Git secara Lebih Dalam",
+                    "Mengenal Git Workflow",
+                    "Mengenal Repository",
+                    "Latihan Membuat Repository Baru",
+                    "Latihan Membuat Readme untuk Repository",
+                    "Latihan Menambahkan File Baru",
+                    "Latihan Mengubah Data dalam Berkas Menggunakan Commit",
+                    "Latihan Membuat Release File",
+                    "Rangkuman Dasar Git",
+                    "Kuis Dasar Git",
+                    "Persiapan Studi Kasus Pengalaman Belajar",
+                    "Membuat Repository Baru",
+                    "Menambahkan Pengalaman Belajar Pertama"
+                  ],
+                  "title": "Belajar Dasar Git dengan GitHub"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Saya suka pada kelas ini karena di kelas ini cukup banyak praktek nya jadi kita bisa langsung menerapkan teori yang dijelaskan sebelumnya."
+            },
+            {
+              "date": "Sun, Feb 8, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Latihan Ujian",
+                    "Apa itu Logika Pemrograman",
+                    "Transkrip Apa itu Logika Pemrograman",
+                    "Perbedaan Logika dan Algoritma Pemrograman"
+                  ],
+                  "title": "Pengenalan ke Logika Pemrograman (Programming Logic 101)"
+                }
+              ],
+              "mood": "good",
+              "reflection": "progres saya selama belajar cukup baik karena saya rasa materi yang di sampaikan sangat mudah dipahami bagi orang yang hanya mempunyai sedikit basic di bidang teknologi ini, seperti saya"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Ladya Kalascha",
+        "profile_link": "/u/cacc200d6x1654",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F078c18af-c447-427d-8924-10865755c7f7.jpeg?alt=media&token=ca2b00cc-7459-47db-a110-4961c2a2d14c",
+        "status_badge": "Need Special Attention",
+        "university": "Universitas Diponegoro",
+        "major": "Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "23%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "99%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": []
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Epsilona Katiga Capricorna",
+        "profile_link": "/u/cacc204d6x0673",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F2c0114fd-3361-4f5f-bfea-c7cc512854c6.jpg?alt=media&token=58573ea5-dc20-4b3c-84a0-2b3b3aa42574",
+        "status_badge": "On Ideal Schedule",
+        "university": "Universitas Esa Unggul",
+        "major": "Teknik Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "15%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "waktu mendaftar saya memahami beberapa materi, sebenarnya saya banyak mencatat sih untuk memahami dikit saja."
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Hilman Maulana",
+        "profile_link": "/u/cacc222d6y0723",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2Fb33ac123-f4d5-42cd-b68d-c682c90b2fc7.JPG?alt=media&token=6a9d7790-fef8-4464-95de-31241f634c76",
+        "status_badge": "Need Special Attention",
+        "university": "Universitas Islam Negeri Sunan Gunung Djati",
+        "major": "Teknik Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "1%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "84%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "2%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "5%",
+              "status": "In Progress"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Fundamental Matriks",
+                    "Implementasi Matriks pada Python",
+                    "Operasi Matriks pada Python",
+                    "Rangkuman Matriks",
+                    "Kuis Matriks"
+                  ],
+                  "title": "Memulai Pemrograman dengan Python"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Apa yang dimaksud dengan matriks dalam pemrograman? Himpunan bilangan yang dapat berbentuk tiga dimensi atau lebih. Himpunan yang terdiri dari bilangan berdasarkan baris dan kolom. Kumpulan data yang diatur dalam bentuk tabel dua dimensi dengan setiap elemennya terdefinisi berdasarkan baris dan kolom. Kumpulan data berbentuk tabel tiga dimensi dengan setiap elemennya dapat diakses melalui metode indexing."
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengantar Prompt Engineer untuk Aktivitas Software Development",
+                    "Prompt Engineering untuk Menuliskan Kode",
+                    "Prompt Engineering untuk Menganalisis Kode",
+                    "Prompt Engineering untuk Membuat Test Script dalam Automated Testing",
+                    "Prompt Engineering untuk Dokumentasi Kode",
+                    "Rangkuman Prompt Engineering untuk Aktivitas Software Development",
+                    "Kuis Prompt Engineering untuk Aktivitas Software Development",
+                    "Pengantar Limitasi dan Etika Penggunaan Generative AI untuk Software Developer",
+                    "Limitasi Generative AI untuk Software Developer",
+                    "Etika Penggunaan Generative AI untuk Software Developer",
+                    "Rangkuman Limitasi dan Etika Penggunaan Generative AI untuk Software Developer",
+                    "Kuis Limitasi dan Etika Penggunaan Generative AI untuk Software Developer",
+                    "Rangkuman Kelas",
+                    "Ujian Akhir"
+                  ],
+                  "title": "Prompt Engineering untuk Software Developer"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Setelah menyelesaikan seluruh materi, saya memahami bahwa Generative AI bukan hanya alat untuk mempercepat pekerjaan, tetapi juga membutuhkan keterampilan dalam menyusun prompt yang jelas serta tanggung jawab dalam memverifikasi hasilnya. Saya belajar bagaimana AI dapat membantu dalam penulisan kode, analisis, testing, dan dokumentasi, namun tetap memiliki keterbatasan yang harus disadari. Selain itu, aspek etika seperti transparansi, keamanan data, dan kepatuhan terhadap kebijakan perusahaan menjadi hal penting yang tidak boleh diabaikan. Pembelajaran ini membuat saya lebih bijak dan profesional dalam memanfaatkan AI dalam proses pengembangan perangkat lunak."
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Apa itu Pola pada Prompt?",
+                    "Pengantar Pola Dasar Prompt Engineering",
+                    "Pola Dasar: Persona",
+                    "Pola Dasar: Persona Audiens",
+                    "Pola Dasar: Few-shots",
+                    "Pola Dasar: Chain-of-Thought",
+                    "Pola Dasar: ReAct",
+                    "Pengantar Adaptive Prompting",
+                    "Adaptive Prompting: Pola Question Refinement",
+                    "Adaptive Prompting: Pola Alternative Approaches",
+                    "Adaptive Prompting: Pola Cognitive Verifier",
+                    "Adaptive Prompting: Pola Flipped Interaction",
+                    "Berbagai Pola untuk Memastikan Konsistensi Hasil",
+                    "Pola Konsistensi Hasil: Tail Generation",
+                    "Pola Konsistensi Hasil: Pola Template",
+                    "Iterative Prompt Development",
+                    "Rangkuman Berbagai Pola dalam Prompt Engineering",
+                    "Kuis Berbagai Pola dalam Prompt Engineering"
+                  ],
+                  "title": "Prompt Engineering untuk Software Developer"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Setelah mempelajari berbagai pola dalam Prompt Engineering, saya jadi memahami bahwa membuat prompt itu bukan sekadar memberi pertanyaan, tetapi ada strategi dan struktur yang bisa digunakan agar hasilnya lebih maksimal. Saya baru sadar bahwa penggunaan pola seperti Persona, Few-shots, hingga Chain-of-Thought sangat membantu dalam mengarahkan model agar lebih fokus dan terstruktur dalam menjawab. Bagian Adaptive Prompting juga membuka wawasan saya bahwa ketika jawaban kurang sesuai, kita tidak harus langsung mengganti pertanyaan, tetapi bisa memperbaikinya dengan teknik seperti Question Refinement atau Flipped Interaction. Selain itu, pola untuk menjaga konsistensi hasil seperti Template dan Tail Generation membuat saya mengerti pentingnya format dalam mendapatkan output yang stabil. Secara keseluruhan, materi ini membuat saya lebih sadar bahwa kualitas respons sangat dipengaruhi oleh cara kita menyusun prompt. Saya merasa lebih percaya diri untuk bereksperimen dan mengembangkan prompt yang lebih efektif ke depannya."
+            },
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Best Practice Pembuatan Prompt",
+                    "Rangkuman Pengenalan Prompt Engineering",
+                    "Kuis Pengenalan Prompt Engineering"
+                  ],
+                  "title": "Prompt Engineering untuk Software Developer"
+                }
+              ],
+              "mood": "good",
+              "reflection": "materinya sangat mudah dipelajari, namun harus melihat melihat kata2 bahasa yang terdengar baru seperti prompting, LLM, dll dan itu merupakan hal bagus karena saya menjadi tahu apa artinya dan apa itu fungsinya"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Aprido Ilham",
+        "profile_link": "/u/cacc224d6y0500",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F707880ce-b93c-4621-ab95-09778b174d48.jpg?alt=media&token=0673d814-1a49-49e8-b848-c71a66912b34",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Islam Negeri Syarif Hidayatullah",
+        "major": "Sistem Informasi",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "14%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Melalui materi ini, saya telah bertransformasi dari sekadar penulis kode menjadi pengelola proyek yang lebih terstruktur. Saya kini memahami bahwa Git bukan hanya tentang menyimpan berkas, melainkan tentang merekam jejak sejarah pengembangan melalui fitur branching, committing, dan merging yang aman. Pemahaman saya tentang ekosistem GitHub juga semakin dalam, terutama dalam memanfaatkannya sebagai ruang kolaborasi tim melalui mekanisme Pull Request dan Code Review yang efektif, serta sebagai media portofolio profesional yang dapat diakses dari mana saja. Kemampuan menangani conflict dan menyusun dokumentasi dengan Markdown menjadi bekal kepercayaan diri saya untuk terjun ke dalam pengembangan perangkat lunak skala industri."
+            },
+            {
+              "date": "Sat, Feb 14, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Melalui modul ini, saya telah membangun fondasi berpikir komputasional yang kuat dengan memahami bahwa pemrograman adalah gabungan antara logika penyelesaian masalah dan algoritma yang terstruktur. Saya belajar untuk memecah masalah kompleks menjadi bagian kecil melalui decomposition, mengenali pola, melakukan abstraksi, hingga menyusun solusi langkah demi langkah menggunakan pseudocode atau flowchart. Pemahaman saya semakin lengkap dengan mempelajari konsep Gerbang Logika (seperti AND, OR, XOR) yang menjadi dasar pemrosesan data digital, serta pentingnya menerapkan prinsip algoritma yang efektif dan pasti (definiteness) untuk menghasilkan output yang akurat. Bekal pola pikir ini membuat saya lebih siap untuk menghadapi tantangan pemrograman teknis selanjutnya."
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Setelah berhasil menyelesaikan ujian akhir kelas \"Memulai Dasar Pemrograman untuk Menjadi Pengembang Software\", saya mendapatkan pemahaman holistik bahwa menjadi pengembang perangkat lunak bukan hanya tentang menulis kode, melainkan dimulai dari perencanaan yang matang melalui dokumen URS dan SKPL untuk memahami kebutuhan pengguna. Saya kini mampu menerapkan pola pikir komputasional dan algoritma yang divisualisasikan melalui flowchart sebelum menerjemahkannya ke dalam sintaksis HTML, CSS, dan JavaScript yang terstruktur. Selain kemampuan teknis, saya juga menyadari krusialnya aspek kolaborasi tim, penggunaan Version Control System (Git) untuk pengarsipan, serta penerapan Style Guide dan dokumentasi teknis yang baik agar kode mudah dipelihara dan dipahami oleh seluruh stakeholder. Dengan bekal soft skill seperti manajemen prioritas dan komunikasi yang efektif, saya merasa siap untuk mengimplementasikan ilmu ini dalam proyek pengembangan aplikasi yang nyata dan profesional."
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengantar Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Apa itu Pengarsipan Versi Perangkat Lunak",
+                    "Studi Kasus Pengarsipan Versi Perangkat Lunak",
+                    "Pengenalan Style Guide",
+                    "Studi Kasus Menyesuaikan Gaya Penulisan Kode Sesuai Standar",
+                    "Apa itu Komentar pada Kode",
+                    "Studi Kasus Menambahkan Komentar pada Kode",
+                    "Studi Kasus Pembuatan Dokumentasi Teknis Aplikasi",
+                    "Tips Cara Mengomunikasikan Dokumentasi kepada Stakeholders (pemegang kepentingan perusahaan)",
+                    "Rangkuman dari Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Kuis Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Pada hari ini saya telah memperdalam pemahaman mengenai pentingnya dokumentasi dan manajemen perubahan dalam pengembangan perangkat lunak, termasuk penggunaan Version Control System seperti Git dan GitHub untuk pengarsipan kode secara aman dan terorganisir. Saya menyadari bahwa menulis kode bukan hanya agar dimengerti oleh komputer, tetapi juga harus mudah dibaca oleh manusia dengan mengikuti Style Guide atau Code Convention yang konsisten serta penggunaan komentar yang bijak. Selain itu, saya belajar cara menyusun dokumentasi teknis yang komprehensif, baik untuk kebutuhan development maupun end-user, serta pentingnya mengomunikasikannya kepada stakeholders dengan adab dan tanggung jawab yang tinggi. Tantangan ke depannya adalah mulai menerapkan alat seperti JSDoc untuk otomatisasi dokumentasi dan memastikan setiap perubahan kode terdokumentasi dengan baik melalui riwayat commit yang jelas, guna mendukung keberlanjutan proyek aplikasi yang sedang saya kembangkan."
+            },
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengantar Modifikasi Aplikasi Perangkat Lunak",
+                    "Pengenalan HTML",
+                    "Pengenalan CSS",
+                    "Studi Kasus Aplikasi Login - Persiapan",
+                    "Instalasi Visual Studio Code",
+                    "Studi Kasus Aplikasi Login - Modifikasi Antarmuka Aplikasi Perangkat Lunak",
+                    "Studi Kasus Aplikasi Login - Modifikasi Fungsionalitas Aplikasi Perangkat Lunak",
+                    "Tips Sikap Kerja untuk Meningkatkan Keahlian Belajar Bahasa Pemrograman",
+                    "Rangkuman Modifikasi Aplikasi Perangkat Lunak",
+                    "Kuis Modifikasi Aplikasi Perangkat Lunak"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Hari ini saya sudah mendalami fondasi pengembangan web yang mencakup penggunaan HTML sebagai struktur dasar halaman serta penerapan CSS untuk mengatur visualisasi dan tata letak website agar lebih presisi dan menarik. Saya memahami bahwa HTML berfungsi sebagai kerangka dokumen menggunakan berbagai tag seperti heading, paragraf, dan hyperlink, sementara CSS berperan sebagai declarative language yang mengefisiensikan proses styling pada banyak berkas sekaligus. Selain aspek teknis, saya juga belajar untuk terus mengasah keahlian dengan banyak berlatih melalui modifikasi proyek yang sudah ada serta mencoba membangun aplikasi berdasarkan topik yang saya minati agar proses belajar tetap menyenangkan. Kedepannya, saya berencana untuk lebih konsisten dalam bereksplorasi menambahkan fitur-fitur baru pada proyek aplikasi saya guna memastikan pemahaman terhadap HTML dan CSS ini semakin tajam dan matang."
+            },
+            {
+              "date": "Tue, Feb 10, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Rangkuman Memahami Kebutuhan Aplikasi",
+                    "Rangkuman Perencanaan Modifikasi Aplikasi",
+                    "Fungsi dalam JavaScript",
+                    "Logika Perbandingan dalam JavaScript",
+                    "Menggabungkan IF/Else dengan OR dan AND",
+                    "Logika Perulangan dalam JavaScript",
+                    "Tips Sikap Kerja untuk Cara Belajar Pemrograman",
+                    "Rangkuman Mengerti Konsep Dasar Pemrograman",
+                    "Kuis Mengerti Konsep Dasar Pemrograman"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Dari tanggal 8 Februari hingga 10 Februari, saya sudah mendalami fondasi penting dalam pengembangan perangkat lunak, mulai dari penyusunan dokumen kebutuhan pengguna (URS) dan spesifikasi teknis (SKPL) hingga penerapan logika dasar pemrograman menggunakan JavaScript. Saya merasa sangat antusias karena kini lebih memahami bahwa membangun aplikasi yang baik memerlukan pola pikir komputasional yang terstruktur, seperti dekomposisi masalah dan penggunaan flowchart sebelum menulis kode. Tantangan terbesar saat ini adalah melatih ketelitian terhadap sintaksis JavaScript yang case sensitive serta logika perulangan yang kompleks, namun hal ini justru memotivasi saya untuk lebih disiplin dalam manajemen waktu belajar."
+            },
+            {
+              "date": "Sat, Feb 7, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Saya baru saja memili kelas yaitu Memulai Dasar Pemrograman untuk Menjadi Pengembang Software, yang dimana ini adalah langkah awal saya dalam mengikuti program Coding Camp 2026,."
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Silviyana",
+        "profile_link": "/u/cacc225d6x1997",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F812b3300-38b0-449a-afce-231f396f0edc.jpg?alt=media&token=9c216338-e072-453b-a042-617915bb184b",
+        "status_badge": "On Ideal Schedule",
+        "university": "Universitas Islam Sultan Agung",
+        "major": "Teknik Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "21%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "sangat seru, tantangannya ehm belum ada karena belum ada projek yg besar. rencananya bisa bikin projek AI kedepannya"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Dimas Husen",
+        "profile_link": "/u/cacc248d6y2590",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F318946b0-30ba-4656-9586-55d83064ce28.jpg?alt=media&token=62e00eb4-2f40-4be8-86e4-fd801debe0f4",
+        "status_badge": "Need Special Attention",
+        "university": "Universitas Lampung",
+        "major": "Teknik Elektro",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengenalan Kelas",
+                    "Mekanisme Belajar"
+                  ],
+                  "title": "[Univ] Coding Camp powered by DBS Foundation 2026 - Kuis ILT AI Engineer"
+                }
+              ],
+              "mood": "good",
+              "reflection": "1. Perasaan / Insight mengenai progres belajar sejauh ini Sejauh ini saya merasa proses belajar di program AI Engineer sangat menantang sekaligus memotivasi. Materi yang diberikan tidak hanya bersifat teori, tetapi juga langsung mengarah pada praktik industri seperti pemrosesan data, machine learning, dan pemahaman alur kerja AI. Saya menyadari bahwa membangun sistem AI bukan hanya tentang menulis kode, tetapi juga tentang memahami data, logika model, dan bagaimana hasilnya digunakan untuk mengambil keputusan. Ini membuka wawasan saya tentang bagaimana AI benar-benar bekerja di dunia nyata. 2. Hal-hal yang menjadi tantangan belajar saat ini Tantangan utama yang saya rasakan adalah memahami konsep matematika dan statistik di balik model AI serta menghubungkannya dengan implementasi di kode. Selain itu, mengolah dataset yang besar dan tidak rapi juga membutuhkan ketelitian dan kesabaran. Waktu belajar yang harus dibagi dengan aktivitas lain juga menjadi tantangan, sehingga saya perlu mengatur manajemen waktu dengan lebih disiplin agar bisa mengikuti materi secara optimal. 3. Rencana atau hal baru yang ingin dicoba ke depannya Ke depan, saya ingin lebih banyak berlatih dengan proyek nyata, seperti membuat sistem prediksi atau klasifikasi berbasis data dunia nyata. Saya juga ingin mulai mengeksplorasi model AI yang lebih lanjut seperti deep learning dan model yang digunakan dalam computer vision atau NLP. Selain itu, saya berencana untuk membangun portofolio proyek AI agar hasil belajar saya bisa terlihat secara konkret dan bisa digunakan untuk peluang karier di bidang teknologi."
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Muhammad Taufiqulhakim",
+        "profile_link": "/u/cacc284d6y2090",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2Fb33ea12c-1288-4786-a4ec-383f16465015.jpg?alt=media&token=98f26900-c8e9-44f6-83ec-8bc8bd9322e1",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Negeri Surabaya",
+        "major": "Sains Data",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Mon, Feb 9, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Pengenalan Kelas",
+                    "Prasyarat Kemampuan",
+                    "Prasyarat Tools",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Pre-test",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Latihan Kuis"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "materi yang disiapkan cukup baik. untuk saya sendiri semoga bisa konsisten tiap hari. jika bisa selalu ditingkatkan tiap harinya"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Mesak Mychart Elsafan Purba",
+        "profile_link": "/u/cacc290d6y1747",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F7c286f96-c9e0-42fe-bd4a-f2dd8396181b.jpg?alt=media&token=d83ea598-e66f-4450-95c6-52e4297f623b",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Pancasila",
+        "major": "Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "23%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Penerapan AI dalam Dunia Nyata",
+                    "Pengenalan AI"
+                  ],
+                  "title": "Belajar Dasar AI"
+                }
+              ],
+              "mood": "good",
+              "reflection": "pelajaran inii membutuhkan waktu lebih lama untuk saya pahami karena menarik dan termasuk bagan peminatan saya, kedepannya saya akan belajar lebih dalam agar mencapai tingkat pemahaman maksimal."
+            },
+            {
+              "date": "Sat, Feb 14, 2026",
+              "goals": [],
+              "mood": "neutral",
+              "reflection": "Saya merasa kurang dalam mater Git jadi saya menulang ulang agar bisa memahami secara ekstra. Saya harus belajar banyak melalu materi git karena beberapa bab ada ilmu baru saya ketahui."
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Saya sangat senang ada materi ini, dikarenakan saya tidak terlalu mengerti mekanisme dari Git. Dari materi disampaikan aku jadi paham dan mengerti definisi atau ilmu baru dari Git."
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Pelajaran ini sangat membuat saya tertarik untuk mengetahui lebih banyak dan banyak lagi. Karena banyak ilmu baru yang banyak saya dapatkan hingga saya ingin mengulang ulang materi itu. Namun saya memiliki keterbatasan mengingat seperti perbedaan pada XOR,OR,NAND dan lain sebagainya, jadi yang saya lakukan ke depan agar lebih mengingat lebih tajam."
+            },
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Akhir Tes Seleksi Coding Camp powered by DBS Foundation"
+                  ],
+                  "title": "Tes Seleksi Coding Camp powered by DBS Foundation - AI Engineer dan Data Scientist"
+                }
+              ],
+              "mood": "good",
+              "reflection": "ya ini sangat membantu sekali, sepertinya saya harus mengulang materi awal kampus karena saya sudah sms 6, program ini membantu saya dalam mengingatkan kembali."
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Awanda Rosi Firdaus",
+        "profile_link": "/u/cacc303d6y0539",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F9416c8b4-706a-46bc-b1c9-3edaaec3f935.jpg?alt=media&token=b798431b-a664-45c4-9ebc-510ff3bfef5d",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Persatuan Guru Republik Indonesia Semarang",
+        "major": "Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "2%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": []
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Muhamad Wika Valentino",
+        "profile_link": "/u/cacc358d6y1359",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F1468e6c1-c484-46a7-86e5-c215e7c0a7f3.jpeg?alt=media&token=a73a3b92-aa5b-40af-a483-f00455c7e63d",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Nusantara PGRI Kediri",
+        "major": "Sistem Informasi",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "74%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "1%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "saya sudah menyelesaikan materi tentang dasar git dengan github dan siap melanujutkan ke materi selanjutnya"
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "sudah menyelesaikan materi \"Pengenalan ke Logika Pemrograman (Programming Logic 101)\" yang mempelajari beberapa logika dalam pemrograman. Dan setelah mempelajari materi saya bisa lebih memahami logika-logika dalam pemrograman"
+            },
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Latihan Ujian",
+                    "Apa itu Logika Pemrograman",
+                    "Transkrip Apa itu Logika Pemrograman",
+                    "Perbedaan Logika dan Algoritma Pemrograman",
+                    "Penalaran Logika Induktif dan Deduktif",
+                    "Logika Pemrograman Dasar",
+                    "Rangkuman dari Pendahuluan",
+                    "Kuis Sub-modul Pendahuluan",
+                    "Apa itu Gerbang Logika",
+                    "Transkrip Apa itu Gerbang Logika",
+                    "Gerbang Logika AND",
+                    "Gerbang Logika OR",
+                    "Gerbang Logika NOT",
+                    "Gerbang Logika NAND",
+                    "Gerbang Logika NOR",
+                    "Gerbang Logika XOR",
+                    "Gerbang Logika XNOR",
+                    "Rangkuman dari Gerbang Logika",
+                    "Kuis Sub-modul Gerbang Logika"
+                  ],
+                  "title": "Pengenalan ke Logika Pemrograman (Programming Logic 101)"
+                }
+              ],
+              "mood": "good",
+              "reflection": "pada hari ini, saya sudah menyelesaikan materi \"Memulai Dasar Pemrograman untuk Menjadi Pengembang Software\" dan sudah lulus. Setelah lanjut ke materi selanjutnya yaitu tentang \"Pengenalan ke Logika Pemrograman\", dan sudah mempelajari pendahuluan, Gerbang logika yang berisi macam-macam logika dalam pemrograman."
+            },
+            {
+              "date": "Tue, Feb 10, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Rangkuman Perencanaan Modifikasi Aplikasi",
+                    "Pengenalan Konsep Dasar Pemrograman",
+                    "Pengenalan Sintaksis dan Case Sensitive",
+                    "Statement dan Whitespace",
+                    "Keyword dan Pseudocode",
+                    "Latihan Menulis Pseudocode",
+                    "Variabel",
+                    "Mendeklarasikan dan Menggabungkan Variabel dengan Operator",
+                    "Tipe Data",
+                    "Logika Perbandingan",
+                    "Logika Perulangan",
+                    "Pengenalan JavaScript",
+                    "Variabel dalam JavaScript",
+                    "Tipe Data dalam JavaScript",
+                    "Fungsi dalam JavaScript",
+                    "Logika Perbandingan dalam JavaScript",
+                    "Menggabungkan IF/Else dengan OR dan AND",
+                    "Logika Perulangan dalam JavaScript",
+                    "Tips Sikap Kerja untuk Cara Belajar Pemrograman",
+                    "Rangkuman Mengerti Konsep Dasar Pemrograman",
+                    "Kuis Mengerti Konsep Dasar Pemrograman",
+                    "Pengantar Modifikasi Aplikasi Perangkat Lunak",
+                    "Pengenalan HTML",
+                    "Pengenalan CSS",
+                    "Studi Kasus Aplikasi Login - Persiapan",
+                    "Instalasi Visual Studio Code",
+                    "Studi Kasus Aplikasi Login - Modifikasi Antarmuka Aplikasi Perangkat Lunak",
+                    "Studi Kasus Aplikasi Login - Modifikasi Fungsionalitas Aplikasi Perangkat Lunak",
+                    "Tips Sikap Kerja untuk Meningkatkan Keahlian Belajar Bahasa Pemrograman",
+                    "Rangkuman Modifikasi Aplikasi Perangkat Lunak",
+                    "Kuis Modifikasi Aplikasi Perangkat Lunak"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "kali ini saya sudah mempelajari materi tentang dasar-dasar pemrograman seperti logikanya, bagaimana cara menggunakannya pada bahasa pemrograman javascript. Dan memperlajari tentang HTML serta CSS dengan studi kasus, serta sudah mencoba memodifikasi programnya"
+            },
+            {
+              "date": "Mon, Feb 9, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Pengenalan Kelas",
+                    "Prasyarat Kemampuan",
+                    "Prasyarat Tools",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi",
+                    "Pre-test",
+                    "Glosarium",
+                    "Daftar Referensi",
+                    "Latihan Kuis",
+                    "Pengantar Kebutuhan Aplikasi",
+                    "Kebutuhan Aplikasi dari sisi Pengguna",
+                    "Studi Kasus Menganalisis Kebutuhan Aplikasi dari Sisi Pengguna",
+                    "Spesifikasi Teknis Aplikasi dan Cara Menentukannya",
+                    "Studi Kasus Menganalisis Spesifikasi Teknis Aplikasi",
+                    "Tips Sikap Kerja dalam Meneliti, Menganalisis, dan Mengevaluasi Kebutuhan Aplikasi",
+                    "Rangkuman Memahami Kebutuhan Aplikasi",
+                    "Kuis Memahami Kebutuhan Aplikasi",
+                    "Pengantar Perencanaan Modifikasi Aplikasi",
+                    "Spesifikasi Kebutuhan Perangkat Lunak dan Struktur Penulisannya",
+                    "Studi Kasus Pembuatan Dokumen Spesifikasi Kebutuhan Perangkat Lunak",
+                    "Alur Kerja Aplikasi",
+                    "Penyelesaian Masalah Menggunakan Cara Berpikir Komputasional"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "materinya sangat bagus dan dapat dipahami tantangan mungkin waktu dan fokus masih belum terfokus, dan kedepannya akan lebih memfokuskan diri untuk memahami materi dengan baik"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Khalisah Hasna Naila Shifa",
+        "profile_link": "/u/cacc452d6x0946",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2F5051b76c-b1bb-439e-95b3-5656bd640795.jpeg?alt=media&token=8abbbc66-dc66-4e0d-b686-e3c7aa275113",
+        "status_badge": "Need Special Attention",
+        "university": "Universitas Muhammadiyah Jakarta",
+        "major": "Teknik Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Mekanisme Belajar"
+                  ],
+                  "title": "[Univ] Coding Camp powered by DBS Foundation 2026 - Kuis ILT AI Engineer"
+                }
+              ],
+              "mood": "neutral",
+              "reflection": "Hari ini habis kepleset, jujur sakit banget yaa. Terus cape karena banyak acara jugaa. Abis itu ke jakarta juga"
+            },
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Mekanisme Belajar"
+                  ],
+                  "title": "[Univ] Coding Camp powered by DBS Foundation 2026 - Kuis ILT AI Engineer"
+                }
+              ],
+              "mood": "neutral",
+              "reflection": "hari ini ga ada yg spesial, biasa aja. cape sih cape banget karena ada acara terus. baru bisa ngerjain modul besok apa ya"
+            },
+            {
+              "date": "Tue, Feb 10, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengenalan Kelas",
+                    "Mekanisme Belajar"
+                  ],
+                  "title": "[Univ] Coding Camp powered by DBS Foundation 2026 - Kuis ILT AI Engineer"
+                }
+              ],
+              "mood": "bad",
+              "reflection": "halo, hari ini aku sedang sedih Dan bingung karena aku sedang ada sedikit masalah dengan orang tersayang, jadi sedih deh"
+            },
+            {
+              "date": "Mon, Feb 9, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengenalan Kelas"
+                  ],
+                  "title": "[Univ] Coding Camp powered by DBS Foundation 2026 - Kuis ILT AI Engineer"
+                }
+              ],
+              "mood": "neutral",
+              "reflection": "sebetulnya belum memulai pembelajaran sih, baru mau memulai hari ini. Dan perasaanya seneng sih bisa ngikutin program Dicoding lagi"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Fajar Ilhami Indo Syaputra",
+        "profile_link": "/u/cacc488d6y2625",
+        "photo_url": "",
+        "status_badge": "Need Special Attention",
+        "university": "Universitas Darma Persada",
+        "major": "Teknologi Informasi",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "13%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": []
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Satrio Wibowo",
+        "profile_link": "/u/cacc589d6y0463",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2Ff39393f8-2de1-4cf6-b8b8-b095a6dc3482.jpg?alt=media&token=cc45c133-e989-4d7e-bd02-2be2d8196243",
+        "status_badge": "On Ideal Schedule",
+        "university": "Universitas Pertahanan",
+        "major": "Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "11%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Sedikit review ulang python dari pelajaran di kampus dan mengulik sedikit lebih dalam pada librarynya"
+            },
+            {
+              "date": "Wed, Feb 11, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Dengan belajar ini saya paham penggunaan dari logika yang sering saya temui di berbagai kode dan menerapkannya dalam coding."
+            },
+            {
+              "date": "Tue, Feb 10, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Dengan belajar ini saya mengetahui gambaran umum dari AI sekarang seperti apa dan bagaimana pemanfaatannya"
+            },
+            {
+              "date": "Mon, Feb 9, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Sekarang saya paham cara menggunakan Git dan semoga bisa segera mengaplikasikannya bersama dengan rekan-rekan"
+            },
+            {
+              "date": "Sun, Feb 8, 2026",
+              "goals": [],
+              "mood": "good",
+              "reflection": "Melalui modul permulaan ini saya mendapatkan insight terbaru mengenai kompleksnya pemrograman software. Tantangan yang mungkin dihadapi adalah mungkin pada bagian styling guide yang baru bagi saya dana saya merasa harus belajar lebih. Kedepannya saya akan mencoba mencari referensi dan pembelajaran lain mengenai materi ini untuk menunjuang progres saya"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Khoirur Roziqin",
+        "profile_link": "/u/cacc796d6y0167",
+        "photo_url": "",
+        "status_badge": "Need Special Attention",
+        "university": "Politeknik Baja Tegal",
+        "major": "Teknik Informatika",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "9%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Sun, Feb 15, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Persetujuan Hak Cipta",
+                    "Pengenalan Kelas",
+                    "Prasyarat Kemampuan",
+                    "Prasyarat Tools",
+                    "Mekanisme Belajar",
+                    "Forum Diskusi"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "Saya merasa bersyukur dan termotivasi karena sejauh ini saya bisa mengikuti materi dengan cukup baik. Beberapa konsep yang awalnya terasa sulit sekarang mulai saya pahami setelah dipraktikkan. Saya menyadari bahwa konsistensi belajar setiap hari sangat membantu dalam memahami materi secara bertahap."
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    },
+    {
+      "profile": {
+        "name": "Haidar Azhar Bihaque Amrulloh",
+        "profile_link": "/u/cacc952d6y1578",
+        "photo_url": "https://firebasestorage.googleapis.com/v0/b/codingcamp-dbs.firebasestorage.app/o/2026-B1%2Fprofiles%2Fdedb5754-ebad-4837-9082-cb637c427090.jpeg?alt=media&token=970d16a7-c7e5-4d16-9e85-047e977c3a04",
+        "status_badge": "Lagging Behind",
+        "university": "Universitas Islam Negeri Profesor Kiai Haji Saifuddin Zuhri Purwokerto",
+        "major": "Ilmu Al-Qur'An Dan Tafsir",
+        "facilitator": "Evan Hanif Widiatama",
+        "lecturer": ""
+      },
+      "progress": {
+        "attendances": {
+          "last_updated": "Feb 16, 2026",
+          "items": []
+        },
+        "course_progress": {
+          "last_updated": "Feb 15, 2026, 15:00 WIB",
+          "items": [
+            {
+              "course": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Pengenalan ke Logika Pemrograman (Programming Logic 101)",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar Git dengan GitHub",
+              "progress_percent": "100%",
+              "status": "Completed"
+            },
+            {
+              "course": "Belajar Dasar AI",
+              "progress_percent": "2%",
+              "status": "In Progress"
+            },
+            {
+              "course": "Memulai Pemrograman dengan Python",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Machine Learning untuk Pemula",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Belajar Fundamental Deep Learning",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            },
+            {
+              "course": "Membangun Proyek Deep Learning Tingkat Mahir",
+              "progress_percent": "0%",
+              "status": "Not Started"
+            }
+          ]
+        },
+        "assignments": {
+          "last_updated": "Feb 16, 2026",
+          "items": [
+            {
+              "assignment": "Assignment Soft Skill 1 Personal Productivity: How to Boost Your Output",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 2 Growth Mindset and Personal Development: Establish Your All Star Potentials",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 3 Flexing Under Pressure: Mastering Stress Management and Adaptability",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 4 Communication and Networking: The Art of Persuasion and Creating Connection",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 5 Project Management",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 6 Personal Branding: Be The Best Version of Yourself",
+              "status": "Uncompleted"
+            },
+            {
+              "assignment": "Assignment Soft Skill 7 Interview Preparation: How to Deal with Recruiter?",
+              "status": "Uncompleted"
+            }
+          ],
+          "fallback_text_if_empty": ""
+        },
+        "daily_checkins": {
+          "items": [
+            {
+              "date": "Fri, Feb 13, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Menggabungkan IF/Else dengan OR dan AND",
+                    "Logika Perulangan dalam JavaScript",
+                    "Tips Sikap Kerja untuk Cara Belajar Pemrograman",
+                    "Rangkuman Mengerti Konsep Dasar Pemrograman",
+                    "Kuis Mengerti Konsep Dasar Pemrograman",
+                    "Pengantar Modifikasi Aplikasi Perangkat Lunak",
+                    "Pengenalan HTML",
+                    "Pengenalan CSS",
+                    "Studi Kasus Aplikasi Login - Persiapan",
+                    "Instalasi Visual Studio Code",
+                    "Studi Kasus Aplikasi Login - Modifikasi Antarmuka Aplikasi Perangkat Lunak",
+                    "Studi Kasus Aplikasi Login - Modifikasi Fungsionalitas Aplikasi Perangkat Lunak",
+                    "Tips Sikap Kerja untuk Meningkatkan Keahlian Belajar Bahasa Pemrograman",
+                    "Rangkuman Modifikasi Aplikasi Perangkat Lunak",
+                    "Kuis Modifikasi Aplikasi Perangkat Lunak",
+                    "Pengantar Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Apa itu Pengarsipan Versi Perangkat Lunak",
+                    "Studi Kasus Pengarsipan Versi Perangkat Lunak",
+                    "Pengenalan Style Guide",
+                    "Studi Kasus Menyesuaikan Gaya Penulisan Kode Sesuai Standar",
+                    "Apa itu Komentar pada Kode",
+                    "Studi Kasus Menambahkan Komentar pada Kode",
+                    "Pengenalan Dokumentasi Teknis Aplikasi",
+                    "Studi Kasus Pembuatan Dokumentasi Teknis Aplikasi",
+                    "Tips Cara Mengomunikasikan Dokumentasi kepada Stakeholders (pemegang kepentingan perusahaan)",
+                    "Rangkuman dari Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Kuis Dokumentasi Pemrograman dan Pengembangan Aplikasi Perangkat Lunak",
+                    "Rangkuman Kelas",
+                    "Ujian Akhir"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "- perasaan yang senang, bahagia, dan semangat, serta hal yang harus kita perjuangan kan dengan gigih tanpa menyerah dan putus asa"
+            },
+            {
+              "date": "Thu, Feb 12, 2026",
+              "goals": [
+                {
+                  "items": [
+                    "Pengenalan Flowchart",
+                    "Studi Kasus Penggunaan Flowchart untuk Aplikasi Penjualan",
+                    "Tips Sikap Kerja dalam Kolaborasi Perencanaan Aplikasi dengan Tim",
+                    "Rangkuman Perencanaan Modifikasi Aplikasi",
+                    "Kuis Perencanaan Modifikasi Aplikasi",
+                    "Pengenalan Konsep Dasar Pemrograman"
+                  ],
+                  "title": "Memulai Dasar Pemrograman untuk Menjadi Pengembang Software"
+                }
+              ],
+              "mood": "good",
+              "reflection": "• Perasaan yang membara karena pembelajaran ini • Hal-hal dan tantangan yang sesuai dengan pemikiran serta kegiatan sehari-hari • Rencana yang matang dan mood yang bergejolak dalam belajar"
+            }
+          ]
+        },
+        "point_histories": {
+          "last_updated": "Feb 16, 2026",
+          "total_point": "0 pts",
+          "items": [],
+          "fallback_text_if_empty": "You have no point histories data."
+        }
+      }
+    }
+  ]
+}

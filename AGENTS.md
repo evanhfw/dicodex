@@ -4,255 +4,136 @@ This document provides guidelines for AI coding agents working in this repositor
 
 ## Project Overview
 
-A React dashboard application for tracking cohort/student progress in a coding camp.
-Built with Vite + React 18 + TypeScript + shadcn/ui + Tailwind CSS.
+A full-stack dashboard application for tracking cohort/student progress in a coding camp.
+The system scrapes data from Dicoding Coding Camp using Selenium and presents it via a modern React dashboard.
 
-## Quick Reference
+## Tech Stack
 
-| Tool      | Command                              |
-|-----------|--------------------------------------|
-| Dev       | `npm run dev`                        |
-| Build     | `npm run build`                      |
-| Lint      | `npm run lint`                       |
-| Test      | `npm run test`                       |
-| Test (watch) | `npm run test:watch`              |
+### Frontend (`/frontend`)
+- **Framework**: React 18 + Vite
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui
+- **State/Fetching**: React Query
+- **Routing**: React Router v6
+- **Testing**: Vitest + React Testing Library
 
-## Build & Development Commands
+### Backend (`/backend`)
+- **Language**: Python 3.14
+- **Framework**: FastAPI
+- **Package Manager**: uv
+- **Scraping**: Selenium (Standalone Chrome container)
+- **Task Queue**: Redis (for background scraping jobs)
 
-```bash
-# Install dependencies
-npm install
-
-# Start development server (port 8080)
-npm run dev
-
-# Production build
-npm run build
-
-# Development build (unminified)
-npm run build:dev
-
-# Preview production build
-npm run preview
-```
-
-## Testing
-
-Testing uses Vitest with React Testing Library and jsdom environment.
-
-```bash
-# Run all tests once
-npm run test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run a single test file
-npx vitest run src/test/example.test.ts
-
-# Run tests matching a pattern
-npx vitest run --testNamePattern="should pass"
-
-# Run tests in a specific directory
-npx vitest run src/components/
-```
-
-Test files use the pattern: `*.test.ts` or `*.test.tsx` or `*.spec.ts` or `*.spec.tsx`
-Test setup file: `src/test/setup.ts`
-
-## Linting
-
-```bash
-# Run ESLint on all files
-npm run lint
-
-# Fix auto-fixable issues
-npm run lint -- --fix
-```
-
-ESLint is configured with:
-- TypeScript-ESLint recommended rules
-- React Hooks rules (required)
-- React Refresh rules (warns on non-constant exports)
-- `@typescript-eslint/no-unused-vars` is disabled
+### Infrastructure
+- **Containerization**: Docker + Docker Compose
+- **Monitoring**: Prometheus + Grafana + cAdvisor + Redis Exporter
+- **Reverse Proxy**: Nginx (in production)
 
 ## Project Structure
 
 ```
-src/
-  components/
-    ui/           # shadcn/ui primitives (Button, Card, etc.)
-    dashboard/    # Dashboard-specific components
-  data/           # Data models and mock data
-  lib/            # Utilities (cn helper)
-  pages/          # Route page components
-  test/           # Test setup and test files
-  App.tsx         # Root component with providers
-  main.tsx        # Entry point
+protype-dashboard/
+├── frontend/                # React frontend application
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/         # shadcn/ui primitives
+│   │   │   └── dashboard/  # Dashboard components
+│   │   ├── data/           # Data models and utilities
+│   │   ├── lib/            # Utilities (cn helper)
+│   │   ├── pages/          # Route page components
+│   │   ├── App.tsx         # Root component
+│   │   └── main.tsx        # Entry point
+│   └── package.json
+│
+├── backend/                # Python FastAPI backend
+│   ├── app/
+│   │   ├── main.py         # FastAPI application entry
+│   │   ├── api/            # API routes
+│   │   ├── services/       # Business logic (scraper)
+│   │   └── utils/          # Helpers
+│   ├── output/             # Scraped JSON data storage
+│   └── pyproject.toml      # Python dependencies (uv)
+│
+├── monitoring/             # Monitoring configuration
+│   ├── prometheus/         # Prometheus config & alerts
+│   ├── grafana/            # Grafana provisioning & dashboards
+│   └── alertmanager/       # Alertmanager config
+│
+├── diCodex/                # Legacy/Standalone scraping scripts (reference only)
+├── docker-compose.yml      # Main Docker Compose config
+├── docker-compose.dev.yml  # Development Docker Compose config
+└── README.md
+```
+
+## Development Workflow
+
+### Docker (Recommended)
+
+Run the entire stack with hot-reloading:
+
+```bash
+docker-compose -f docker-compose.dev.yml up
+```
+
+- Frontend: http://localhost:8080
+- Backend API: Accessible via http://localhost:8080/api (proxied)
+- Selenium VNC: http://localhost:7900 (password: secret)
+- Grafana: http://localhost:3001
+
+### Local Development
+
+#### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+#### Backend
+
+```bash
+cd backend
+# Install dependencies with uv
+uv sync
+# Run development server
+uv run uvicorn app.main:app --reload --port 3000
 ```
 
 ## Code Style Guidelines
 
-### Imports
+### Frontend (React/TS)
 
-Use the `@/` path alias for all src imports:
+- **Imports**: Use `@/` alias for src imports (e.g., `import { Button } from "@/components/ui/button"`).
+- **Components**: Functional components with named exports or default exports.
+- **Styling**: Use Tailwind CSS exclusively. Combine classes with `cn()`.
+- **Types**: Define interfaces/types in `src/data` or collocated with components.
+- **Linting**: Ensure `npm run lint` passes.
 
-```tsx
-// Correct
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+### Backend (Python)
 
-// Incorrect
-import { Button } from "../components/ui/button";
-import { cn } from "../../lib/utils";
-```
+- **Style**: Follow PEP 8 guidelines.
+- **Type Hints**: Use Python type hints strictly (FastAPI relies on them).
+- **Async**: Use `async/await` for route handlers and I/O bound operations.
+- **Dependency Management**: Use `uv add <package>` to add dependencies.
 
-Import order (not enforced but preferred):
-1. React and external libraries
-2. UI components from `@/components/ui/`
-3. Custom components
-4. Utilities and helpers
-5. Data and types
+## Testing
 
-### Component Patterns
+- **Frontend**: Run `npm run test` in `frontend/` directory.
+- **Backend**: (Add instructions if pytest is configured, otherwise manual testing via API docs).
 
-Use arrow function components with default exports:
+## Common Tasks
 
-```tsx
-const MyComponent = () => {
-  return <div>Content</div>;
-};
+### Adding a new UI Component
+1. Run `npx shadcn@latest add [component-name]` in `frontend/`.
+2. Customize in `frontend/src/components/ui/`.
 
-export default MyComponent;
-```
+### Modifying the Scraper
+1. Edit `backend/app/services/scraper.py`.
+2. Ensure Selenium selectors are robust.
+3. Test with `docker-compose up` to verify scraping flow.
 
-For UI components with refs, use `React.forwardRef`:
-
-```tsx
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, ...props }, ref) => {
-    return <button ref={ref} className={cn("...", className)} {...props} />;
-  }
-);
-Button.displayName = "Button";
-```
-
-### Styling
-
-Use Tailwind CSS classes exclusively. Combine classes with the `cn()` utility:
-
-```tsx
-import { cn } from "@/lib/utils";
-
-<div className={cn(
-  "base-classes here",
-  isActive && "active-classes",
-  className
-)} />
-```
-
-Use CSS variables for colors (defined in `src/index.css`):
-- Semantic colors: `text-foreground`, `bg-background`, `text-muted-foreground`
-- Status colors: `text-status-red`, `bg-status-green/10`, etc.
-- Component colors: `bg-card`, `border-input`, etc.
-
-### TypeScript
-
-TypeScript is configured with relaxed strictness:
-- `noImplicitAny: false`
-- `strictNullChecks: false`
-- `noUnusedLocals: false`
-- `noUnusedParameters: false`
-
-Define types in the same file or in `src/data/` for shared types:
-
-```tsx
-export type StudentStatus = "Special Attention" | "Lagging" | "Ideal" | "Ahead";
-
-export interface Student {
-  id: number;
-  name: string;
-  status: StudentStatus;
-}
-```
-
-### Naming Conventions
-
-| Element       | Convention        | Example                    |
-|---------------|-------------------|----------------------------|
-| Components    | PascalCase        | `StudentGrid`, `KpiCards`  |
-| Files (comp)  | PascalCase.tsx    | `StudentGrid.tsx`          |
-| Files (util)  | camelCase.ts      | `dashboardData.ts`         |
-| Variables     | camelCase         | `studentCount`             |
-| Constants     | camelCase/UPPER   | `kpiConfig`, `MAX_COUNT`   |
-| Types         | PascalCase        | `StudentStatus`            |
-| CSS classes   | kebab-case        | `status-red`               |
-
-### shadcn/ui Components
-
-UI primitives live in `src/components/ui/`. These are from shadcn/ui and use:
-- Radix UI primitives for accessibility
-- `class-variance-authority` for variants
-- Tailwind CSS for styling
-
-To add new shadcn components: `npx shadcn@latest add [component-name]`
-
-### React Query
-
-Data fetching uses TanStack React Query. The `QueryClient` is set up in `App.tsx`.
-
-### Routing
-
-Uses React Router v6. Routes are defined in `App.tsx`:
-
-```tsx
-<Routes>
-  <Route path="/" element={<Index />} />
-  <Route path="*" element={<NotFound />} />
-</Routes>
-```
-
-### Error Handling
-
-- Use try/catch for async operations
-- Display user-friendly errors via toast notifications (sonner or shadcn toast)
-- Log errors to console in development
-
-## Common Patterns
-
-### Status colors mapping
-
-```tsx
-const getStatusColor = (status: StudentStatus): string => {
-  switch (status) {
-    case "Special Attention": return "status-red";
-    case "Lagging": return "status-yellow";
-    case "Ideal": return "status-green";
-    case "Ahead": return "status-blue";
-  }
-};
-```
-
-### Card with header pattern
-
-```tsx
-<Card>
-  <CardHeader>
-    <CardTitle className="flex items-center gap-2 text-base">
-      <Icon className="h-5 w-5 text-primary" />
-      Title Text
-    </CardTitle>
-  </CardHeader>
-  <CardContent>
-    {/* Content */}
-  </CardContent>
-</Card>
-```
-
-## Pre-commit Checklist
-
-Before committing, ensure:
-1. `npm run lint` passes (or has only acceptable warnings)
-2. `npm run build` succeeds
-3. `npm run test` passes
-4. No console errors in browser dev tools
+### Monitoring
+- **Prometheus**: Config at `monitoring/prometheus/prometheus.yml`.
+- **Grafana**: Dashboards at `monitoring/grafana/dashboards/`.
+- **Alerts**: Rules at `monitoring/prometheus/alert_rules.yml`.
