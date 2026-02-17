@@ -205,46 +205,63 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-medium text-card-foreground truncate">
-                            {student.name}
-                          </span>
-                          {student.status && (
-                            <span
-                              className={cn(
-                                "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium",
-                                student.status === "Special Attention" && "bg-status-red/15 text-status-red",
-                                student.status === "Lagging" && "bg-status-yellow/15 text-status-yellow",
-                                student.status === "Ideal" && "bg-status-green/15 text-status-green",
-                                student.status === "Ahead" && "bg-status-blue/15 text-status-blue"
-                              )}
-                            >
-                              <span className={cn("h-1.5 w-1.5 rounded-full", statusBgColor)} />
-                              {getStatusLabel(student.status)}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                          {student.profile?.university && (
-                            <>
-                              <span className="truncate max-w-[200px]">{student.profile.university}</span>
-                              <span className="text-muted-foreground">•</span>
-                            </>
-                          )}
-                          <span>
-                            {completedCourses}/{student.courses.length} courses
-                          </span>
-                          <span className="text-muted-foreground">•</span>
-                          <span>{avgProgress}% avg</span>
-                        </div>
+                        <span className="text-sm font-medium text-card-foreground truncate block">
+                          {student.name}
+                        </span>
+                        {student.profile?.university && (
+                          <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                            {student.profile.university}
+                          </p>
+                        )}
                       </div>
                     </div>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 text-muted-foreground transition-transform duration-200 shrink-0",
-                        isExpanded && "rotate-180"
+                    <div className="flex items-center gap-2.5 shrink-0">
+                      {/* Status badge */}
+                      {student.status && (
+                        <span
+                          className={cn(
+                            "hidden sm:inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap",
+                            student.status === "Special Attention" && "bg-status-red/15 text-status-red",
+                            student.status === "Lagging" && "bg-status-yellow/15 text-status-yellow",
+                            student.status === "Ideal" && "bg-status-green/15 text-status-green",
+                            student.status === "Ahead" && "bg-status-blue/15 text-status-blue"
+                          )}
+                        >
+                          <span className={cn("h-1.5 w-1.5 rounded-full", statusBgColor)} />
+                          {getStatusLabel(student.status)}
+                        </span>
                       )}
-                    />
+                      {/* Compact progress indicator */}
+                      <div className="hidden md:flex items-center gap-2">
+                        <div className="flex flex-col items-end gap-0.5">
+                          <div className="flex items-center gap-1.5">
+                            <div className="h-1.5 w-14 overflow-hidden rounded-full bg-secondary">
+                              <div
+                                className={cn(
+                                  "h-full rounded-full transition-all",
+                                  avgProgress >= 70 ? "bg-status-green"
+                                    : avgProgress >= 40 ? "bg-status-yellow"
+                                    : "bg-status-red"
+                                )}
+                                style={{ width: `${avgProgress}%` }}
+                              />
+                            </div>
+                            <span className="text-[11px] font-medium text-muted-foreground w-8 text-right">
+                              {avgProgress}%
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground">
+                            {completedCourses}/{student.courses.length} courses
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 text-muted-foreground transition-transform duration-200 shrink-0",
+                          isExpanded && "rotate-180"
+                        )}
+                      />
+                    </div>
                   </div>
 
                   {/* Expanded detail section */}
