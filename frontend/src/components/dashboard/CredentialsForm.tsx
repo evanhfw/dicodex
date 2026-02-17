@@ -185,6 +185,17 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
           name: a.name || a.assignment || '',
           status: a.status === 'Completed' ? 'Completed' as const : 'Uncompleted' as const,
         })),
+        dailyCheckins: (s.daily_checkins || []).map((ci: any) => ({
+          date: ci.date,
+          mood: ci.mood,
+          goals: ci.goals,
+          reflection: ci.reflection
+        })),
+        pointHistories: (s.point_histories || []).map((ph: any) => ({
+          date: ph.date,
+          description: ph.description,
+          points: ph.points
+        })),
         imageUrl: s.profile?.photo_url || s.imageUrl || '',
         profile: s.profile ? {
           university: s.profile.university || '',

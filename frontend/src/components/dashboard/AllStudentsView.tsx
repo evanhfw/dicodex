@@ -1,10 +1,28 @@
 import { useState, useMemo } from "react";
 import { ParsedStudent, ParsedStudentStatus, calculateAverageProgress, getStatusColor } from "@/data/parsedData";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
+} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Users, Search, ChevronDown, GraduationCap, BookOpen, ExternalLink } from "lucide-react";
+import { Users, Search, ChevronDown, GraduationCap, BookOpen, ExternalLink, CalendarCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AllStudentsViewProps {
@@ -349,6 +367,11 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                 <div className="text-xl font-bold text-card-foreground">{completedCourses}/{student.courses.length}</div>
                                 <div className="text-[11px] text-muted-foreground">Completed</div>
                               </div>
+                              <div className="h-8 w-px bg-border" />
+                              <div className="text-center">
+                                <div className="text-xl font-bold text-card-foreground">{student.dailyCheckins?.length || 0}</div>
+                                <div className="text-[11px] text-muted-foreground">Check-ins</div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -418,6 +441,200 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                 </p>
                               </div>
                             ))}
+                          </div>
+                        )}
+
+                        {/* Daily Check-ins */}
+
+                        {student.dailyCheckins && student.dailyCheckins.length > 0 ? (
+                          <div className="pb-2">
+                            <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                              <CalendarCheck className="h-3.5 w-3.5" />
+                              Daily Check-ins ({student.dailyCheckins.length} entries)
+                            </div>
+                            <div className="h-[200px] w-full px-2">
+                              <ResponsiveContainer width="100%" height="100%">
+                                <LineChart
+                                  data={[...student.dailyCheckins]
+                                    .reverse()
+                                    .map(ci => ({
+                                      ...ci,
+                                      parsedDate: new Date(ci.date.replace(/^\w+,\s*/, '')).getTime()
+                                    }))
+                                    .filter(ci => {
+                                      const sevenDaysAgo = new Date();
+                                      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+                                      sevenDaysAgo.setHours(0, 0, 0, 0);
+                                      return ci.parsedDate >= sevenDaysAgo.getTime();
+                                    })
+                                    .map(ci => ({
+                                      date: ci.date,
+                                      parsedDate: ci.parsedDate,
+                                      moodLevel: ci.mood === 'good' ? 3 : ci.mood === 'neutral' ? 2 : 1,
+                                      mood: ci.mood,
+                                      goals: ci.goals,
+                                      reflection: ci.reflection
+                                    }))
+                                  }
+                                  margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
+                                >
+                                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                                  <XAxis 
+                                    dataKey="parsedDate" 
+                                    type="number"
+                                    domain={[
+                                      () => {
+                                        const d = new Date();
+                                        d.setDate(d.getDate() - 6);
+                                        d.setHours(0,0,0,0);
+                                        return d.getTime();
+                                      },
+                                      () => {
+                                        const d = new Date();
+                                        d.setHours(23,59,59,999);
+                                        return d.getTime();
+                                      }
+                                    ]}
+                                    ticks={[...Array(7)].map((_, i) => {
+                                      const d = new Date();
+                                      d.setDate(d.getDate() - (6 - i));
+                                      d.setHours(0, 0, 0, 0);
+                                      return d.getTime();
+                                    })}
+                                    tickFormatter={(time) => {
+                                      const date = new Date(time);
+                                      const today = new Date();
+                                      today.setHours(0,0,0,0);
+                                      
+                                      const yesterday = new Date(today);
+                                      yesterday.setDate(yesterday.getDate() - 1);
+
+                                      // Compare timestamps
+                                      if (time === today.getTime()) return "Today";
+                                      if (time === yesterday.getTime()) return "Yesterday";
+                                      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                                    }}
+                                    tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    interval={0}
+                                    dy={10}
+                                  />
+                                  <YAxis 
+                                    domain={[0, 4]} 
+                                    ticks={[1, 2, 3]}
+                                    tickFormatter={(val) => val === 3 ? "Good" : val === 2 ? "Neutral" : "Bad"}
+                                    tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                                    width={50}
+                                    axisLine={false}
+                                    tickLine={false}
+                                  />
+                                  <Tooltip
+                                    cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }}
+                                    content={({ active, payload }) => {
+                                      if (active && payload && payload.length) {
+                                        const data = payload[0].payload;
+                                        return (
+                                          <div className="rounded-md border bg-popover p-3 shadow-md max-w-[280px]">
+                                            <div className="flex items-center justify-between gap-2 border-b pb-2 mb-2">
+                                              <span className="text-xs font-medium text-muted-foreground">
+                                                {data.date}
+                                              </span>
+                                              <span className="text-lg">
+                                                {data.mood === 'good' ? "😊" : data.mood === 'neutral' ? "😐" : "😟"}
+                                              </span>
+                                            </div>
+                                            
+                                            {/* Goals */}
+                                            {data.goals && data.goals.length > 0 && (
+                                              <div className="mb-2 space-y-1">
+                                                <p className="text-[10px] uppercase font-bold text-muted-foreground">Goals</p>
+                                                {data.goals.map((g: any, i: number) => (
+                                                  <div key={i} className="text-xs">
+                                                    <span className="font-medium text-foreground">{g.title}</span>
+                                                    <div className="flex flex-wrap gap-1 mt-0.5">
+                                                      {g.items.slice(0, 3).map((item: string, j: number) => (
+                                                        <span key={j} className="inline-flex items-center rounded-sm bg-muted px-1 py-0 text-[10px] text-muted-foreground whitespace-nowrap">
+                                                          {item}
+                                                        </span>
+                                                      ))}
+                                                      {g.items.length > 3 && (
+                                                        <span className="text-[10px] text-muted-foreground pl-0.5">+{g.items.length - 3}</span>
+                                                      )}
+                                                    </div>
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            )}
+
+                                            {/* Reflection */}
+                                            {data.reflection && (
+                                              <div className="space-y-1">
+                                                <p className="text-[10px] uppercase font-bold text-muted-foreground">Reflection</p>
+                                                <p className="text-xs italic text-muted-foreground leading-relaxed line-clamp-4">
+                                                  "{data.reflection}"
+                                                </p>
+                                              </div>
+                                            )}
+                                          </div>
+                                        );
+                                      }
+                                      return null;
+                                    }}
+                                  />
+                                  <Line
+                                    type="linear"
+                                    dataKey="moodLevel"
+                                    stroke="hsl(var(--primary))"
+                                    strokeWidth={2}
+                                    activeDot={{ r: 6, strokeWidth: 0, fill: "hsl(var(--foreground))" }}
+                                    dot={(props: any) => {
+                                      const { cx, cy, payload } = props;
+                                      let fill = "hsl(var(--primary))";
+                                      if (payload.mood === 'good') fill = "#10b981"; // emerald-500
+                                      if (payload.mood === 'neutral') fill = "#fbbf24"; // amber-400
+                                      if (payload.mood === 'bad') fill = "#f87171"; // red-400
+                                      
+                                      return (
+                                        <circle 
+                                          cx={cx} 
+                                          cy={cy} 
+                                          r={4} 
+                                          fill={fill} 
+                                          stroke="hsl(var(--background))" 
+                                          strokeWidth={2}
+                                          className="transition-all hover:r-6"
+                                        />
+                                      );
+                                    }}
+                                  />
+                                </LineChart>
+                              </ResponsiveContainer>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="pb-2">
+                            <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                              <CalendarCheck className="h-3.5 w-3.5" />
+                              Daily Check-ins
+                            </div>
+                            <p className="px-3 text-xs text-muted-foreground italic">
+                              No check-in data available
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Point History */}
+                        {student.pointHistories && (
+                          <div className="pb-2">
+                            <div className="mb-1 px-3 py-1 text-xs font-medium text-muted-foreground">
+                              Point History — {student.pointHistories.reduce((sum, p) => sum + p.points, 0)} pts total
+                            </div>
+                            {student.pointHistories.length === 0 && (
+                              <p className="px-3 text-xs text-muted-foreground italic">
+                                No point history data yet
+                              </p>
+                            )}
                           </div>
                         )}
                       </div>

@@ -120,6 +120,20 @@ const UploadPage = () => {
               name: a.assignment || a.name || '',
               status: a.status === 'Completed' ? 'Completed' as const : 'Uncompleted' as const,
             })),
+            dailyCheckins: (progress.daily_checkins?.items || []).map((ci: any) => ({
+              date: ci.date || '',
+              mood: ci.mood || 'neutral',
+              goals: (ci.goals || []).map((g: any) => ({
+                title: g.title || '',
+                items: g.items || [],
+              })),
+              reflection: ci.reflection || '',
+            })),
+            pointHistories: (progress.point_histories?.items || []).map((ph: any) => ({
+              date: ph.date || '',
+              description: ph.description || '',
+              points: ph.points || 0,
+            })),
             imageUrl: profile.photo_url || '',
             profile: {
               university: profile.university || '',
