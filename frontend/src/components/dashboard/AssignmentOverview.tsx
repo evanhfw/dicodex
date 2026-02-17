@@ -1,219 +1,252 @@
 import { useState, useMemo } from "react";
-import { ParsedStudent, getAssignmentStats } from "@/data/parsedData";
+import { ParsedStudent, ParsedStudentStatus, getAssignmentStats } from "@/data/parsedData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ClipboardList, CheckCircle2, XCircle, ChevronRight, Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ClipboardList, CheckCircle2, XCircle, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AssignmentOverviewProps {
   students: ParsedStudent[];
 }
 
-const getInitials = (name: string): string => {
-  const words = name.trim().split(/\s+/);
-  if (words.length >= 2) {
-    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-  }
-  return name.substring(0, 2).toUpperCase();
-};
+type SortField = "name" | "completionRate" | "completed" | "uncompleted";
+type SortDirection = "asc" | "desc";
 
 const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
-  const [selectedAssignment, setSelectedAssignment] = useState<string | null>(null);
+  const [sortField, setSortField] = useState<SortField>("name");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [expandedAssignment, setExpandedAssignment] = useState<string | null>(null);
 
   const stats = useMemo(() => getAssignmentStats(students), [students]);
 
-  // Overall stats
-  const totalAssignments = stats.length;
-  const overallCompletion = useMemo(() => {
-    if (stats.length === 0) return 0;
-    const totalCompleted = stats.reduce((sum, s) => sum + s.completed, 0);
-    const totalPossible = stats.reduce((sum, s) => sum + s.totalStudents, 0);
-    return totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
-  }, [stats]);
+  const sortedAssignments = useMemo(() => {
+    const sorted = [...stats];
+    sorted.sort((a, b) => {
+      let aVal: number | string;
+      let bVal: number | string;
 
-  // Students who haven't completed the selected assignment
+      switch (sortField) {
+        case "name": aVal = a.name; bVal = b.name; break;
+        case "completionRate": aVal = a.completionRate; bVal = b.completionRate; break;
+        case "completed": aVal = a.completed; bVal = b.completed; break;
+        case "uncompleted": aVal = a.uncompleted; bVal = b.uncompleted; break;
+        default: aVal = a.name; bVal = b.name;
+      }
+
+      if (typeof aVal === "string" && typeof bVal === "string") {
+        return sortDirection === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      }
+      return sortDirection === "asc" ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
+    });
+    return sorted;
+  }, [stats, sortField, sortDirection]);
+
+  // Students who haven't completed the expanded assignment
   const uncompletedStudents = useMemo(() => {
-    if (!selectedAssignment) return [];
+    if (!expandedAssignment) return [];
     return students
       .filter(s => {
-        const assignment = (s.assignments || []).find(a => a.name === selectedAssignment);
-        return assignment && assignment.status !== "Completed";
+        const a = (s.assignments || []).find(a => a.name === expandedAssignment);
+        return a && a.status !== "Completed";
       })
       .map(s => ({
         name: s.name,
-        photoUrl: s.profile?.photoUrl || s.imageUrl || "",
-        university: s.profile?.university || "",
         status: s.status,
       }));
-  }, [selectedAssignment, students]);
+  }, [expandedAssignment, students]);
 
-  if (stats.length === 0) {
-    return null; // Don't render if no assignment data
-  }
+  if (stats.length === 0) return null;
 
-  // Shorten assignment name for display
-  const shortenName = (name: string) => {
-    // Remove "Assignment Soft Skill X " prefix for short display
-    return name.replace(/^Assignment\s+Soft\s+Skill\s+\d+\s*/i, "SS" + (name.match(/\d+/)?.[0] || "") + ": ");
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("desc");
+    }
+  };
+
+  const SortButton = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
+    <button
+      onClick={() => handleSort(field)}
+      className={cn(
+        "flex items-center gap-1 hover:text-foreground transition-colors",
+        sortField === field ? "text-foreground font-semibold" : "text-muted-foreground"
+      )}
+    >
+      {children}
+      {sortField === field && (
+        <span className="text-xs">{sortDirection === "asc" ? "↑" : "↓"}</span>
+      )}
+    </button>
+  );
+
+  const statusBadgeStyles: Record<string, string> = {
+    "Special Attention": "bg-status-red/15 text-status-red border-status-red/30",
+    "Lagging": "bg-status-yellow/15 text-status-yellow border-status-yellow/30",
+    "Ideal": "bg-status-green/15 text-status-green border-status-green/30",
+    "Ahead": "bg-status-blue/15 text-status-blue border-status-blue/30",
   };
 
   return (
-    <>
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <ClipboardList className="h-5 w-5 text-primary" />
-            Assignment Overview
-          </CardTitle>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>{totalAssignments} assignments</span>
-            <span>•</span>
-            <span>
-              <span className={cn("font-semibold", overallCompletion >= 70 ? "text-status-green" : overallCompletion >= 40 ? "text-status-yellow" : "text-status-red")}>
-                {overallCompletion}%
-              </span>{" "}
-              overall completion
-            </span>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {stats.map((assignment) => {
-            const completionRate = assignment.completionRate;
-            return (
-              <div
-                key={assignment.name}
-                className="group flex items-center gap-3 rounded-lg border px-4 py-3 transition-all cursor-pointer hover:bg-muted/50 hover:border-primary/30"
-                onClick={() => setSelectedAssignment(assignment.name)}
-              >
-                {/* Completion rate badge */}
-                <div
-                  className={cn(
-                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold",
-                    completionRate === 100
-                      ? "bg-status-green/15 text-status-green"
-                      : completionRate >= 50
-                      ? "bg-status-yellow/15 text-status-yellow"
-                      : "bg-status-red/15 text-status-red"
-                  )}
-                >
-                  {completionRate}%
-                </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-base">
+          <ClipboardList className="h-5 w-5 text-primary" />
+          Assignment Overview
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b">
+                <th className="pb-3 text-left text-xs font-medium">
+                  <SortButton field="name">Assignment</SortButton>
+                </th>
+                <th className="pb-3 text-center text-xs font-medium">
+                  <SortButton field="completionRate">Completion</SortButton>
+                </th>
+                <th className="pb-3 text-center text-xs font-medium">
+                  <SortButton field="completed">Status</SortButton>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedAssignments.map((assignment, index) => {
+                const isExpanded = expandedAssignment === assignment.name;
 
-                {/* Assignment info */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-card-foreground truncate">
-                    {shortenName(assignment.name)}
-                  </p>
-                  <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <CheckCircle2 className="h-3 w-3 text-status-green" />
-                      {assignment.completed} completed
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <XCircle className="h-3 w-3 text-status-red" />
-                      {assignment.uncompleted} pending
-                    </span>
-                  </div>
-                </div>
-
-                {/* Progress bar */}
-                <div className="hidden sm:flex items-center gap-2 shrink-0">
-                  <div className="h-2 w-24 overflow-hidden rounded-full bg-secondary">
-                    <div
+                return (
+                  <>
+                    <tr
+                      key={index}
                       className={cn(
-                        "h-full rounded-full transition-all",
-                        completionRate === 100
-                          ? "bg-status-green"
-                          : completionRate >= 50
-                          ? "bg-status-yellow"
-                          : "bg-status-red"
+                        "border-b last:border-b-0 transition-colors cursor-pointer",
+                        isExpanded ? "bg-muted/30" : "hover:bg-muted/50"
                       )}
-                      style={{ width: `${completionRate}%` }}
-                    />
-                  </div>
-                </div>
+                      onClick={() => setExpandedAssignment(isExpanded ? null : assignment.name)}
+                    >
+                      <td className="py-3 pr-4">
+                        <div className="flex items-center gap-2">
+                          <ChevronDown
+                            className={cn(
+                              "h-4 w-4 text-muted-foreground transition-transform duration-200 shrink-0",
+                              isExpanded && "rotate-180"
+                            )}
+                          />
+                          <p className="text-sm font-medium text-card-foreground">
+                            {assignment.name}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="py-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
+                            <div
+                              className={cn(
+                                "h-full rounded-full transition-all",
+                                assignment.completionRate === 100
+                                  ? "bg-status-green"
+                                  : assignment.completionRate >= 50
+                                  ? "bg-status-yellow"
+                                  : "bg-status-red"
+                              )}
+                              style={{ width: `${assignment.completionRate}%` }}
+                            />
+                          </div>
+                          <span className="w-10 text-right text-xs font-medium text-muted-foreground">
+                            {assignment.completionRate}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="flex items-center gap-1 text-xs text-status-green">
+                            <CheckCircle2 className="h-3 w-3" />
+                            <span>{assignment.completed}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-status-red">
+                            <XCircle className="h-3 w-3" />
+                            <span>{assignment.uncompleted}</span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
 
-                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            );
-          })}
-        </CardContent>
-      </Card>
+                    {/* Expandable student list */}
+                    <tr key={`${index}-expanded`}>
+                      <td colSpan={3} className="p-0">
+                        <div
+                          className={cn(
+                            "grid transition-all duration-300 ease-in-out",
+                            isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                          )}
+                        >
+                          <div className="overflow-hidden">
+                            {isExpanded && (
+                              <div className="border-t-2 border-muted bg-muted/20 p-4">
+                                <h4 className="text-sm font-semibold text-card-foreground mb-3">
+                                  Uncompleted Students ({uncompletedStudents.length})
+                                </h4>
 
-      {/* Dialog: Students who haven't completed the assignment */}
-      <Dialog open={!!selectedAssignment} onOpenChange={() => setSelectedAssignment(null)}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-base">
-              <XCircle className="h-5 w-5 text-status-red" />
-              Uncompleted Students
-            </DialogTitle>
-            <DialogDescription className="text-xs">
-              {selectedAssignment && shortenName(selectedAssignment)}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="max-h-[400px] overflow-y-auto space-y-2">
-            {uncompletedStudents.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-8 text-center">
-                <CheckCircle2 className="h-10 w-10 text-status-green mb-2" />
-                <p className="text-sm font-medium text-card-foreground">All students completed!</p>
-                <p className="text-xs text-muted-foreground">Every student has finished this assignment</p>
-              </div>
-            ) : (
-              <>
-                <div className="flex items-center gap-2 pb-2 text-xs text-muted-foreground border-b">
-                  <Users className="h-3.5 w-3.5" />
-                  <span>{uncompletedStudents.length} student{uncompletedStudents.length > 1 ? "s" : ""} haven't completed</span>
-                </div>
-                {uncompletedStudents.map((student) => (
-                  <div
-                    key={student.name}
-                    className="flex items-center gap-3 rounded-md border px-3 py-2"
-                  >
-                    <Avatar className="h-8 w-8 shrink-0">
-                      <AvatarImage src={student.photoUrl} alt={student.name} />
-                      <AvatarFallback className="text-xs">
-                        {getInitials(student.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-card-foreground truncate">
-                        {student.name}
-                      </p>
-                      {student.university && (
-                        <p className="text-xs text-muted-foreground truncate">
-                          {student.university}
-                        </p>
-                      )}
-                    </div>
-                    {student.status && (
-                      <span
-                        className={cn(
-                          "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0",
-                          student.status === "Special Attention" && "bg-status-red/15 text-status-red",
-                          student.status === "Lagging" && "bg-status-yellow/15 text-status-yellow",
-                          student.status === "Ideal" && "bg-status-green/15 text-status-green",
-                          student.status === "Ahead" && "bg-status-blue/15 text-status-blue"
-                        )}
-                      >
-                        {student.status}
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </>
-            )}
+                                {uncompletedStudents.length === 0 ? (
+                                  <div className="flex items-center justify-center gap-2 py-4 text-sm text-status-green">
+                                    <CheckCircle2 className="h-4 w-4" />
+                                    All students have completed this assignment!
+                                  </div>
+                                ) : (
+                                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                                    {uncompletedStudents.map((student, idx) => (
+                                      <div
+                                        key={idx}
+                                        className="flex items-center justify-between rounded-md border bg-card p-2.5"
+                                      >
+                                        <span className="text-sm font-medium text-card-foreground truncate">
+                                          {student.name}
+                                        </span>
+                                        {student.status && (
+                                          <Badge
+                                            variant="outline"
+                                            className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
+                                          >
+                                            {student.status}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {stats.length === 0 && (
+          <p className="py-8 text-center text-sm text-muted-foreground">
+            No assignment data available
+          </p>
+        )}
+
+        <div className="mt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-3 w-3 text-status-green" />
+            <span>Completed</span>
           </div>
-        </DialogContent>
-      </Dialog>
-    </>
+          <div className="flex items-center gap-1.5">
+            <XCircle className="h-3 w-3 text-status-red" />
+            <span>Uncompleted</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
