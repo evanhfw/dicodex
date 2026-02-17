@@ -264,70 +264,68 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                         !student.status && "border-border"
                       )}>
                         {/* Profile Card */}
-                        <div className="rounded-lg border bg-card p-4 mt-2">
-                          <div className="flex items-start gap-4">
-                            <Avatar className="h-16 w-16 shrink-0 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
+                        <div className="rounded-lg border bg-card p-5 mt-2">
+                          <div className="flex flex-col items-center text-center gap-3">
+                            <Avatar className="h-24 w-24 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
                               <AvatarImage src={photoUrl} alt={student.name} className="object-cover" />
-                              <AvatarFallback className="text-lg font-semibold">
+                              <AvatarFallback className="text-2xl font-semibold">
                                 {getInitials(student.name)}
                               </AvatarFallback>
                             </Avatar>
-                            <div className="flex-1 min-w-0 space-y-2">
-                              <div>
-                                <h3 className="text-base font-semibold text-card-foreground">
-                                  {student.name}
-                                </h3>
-                                {student.status && (
-                                  <span
-                                    className={cn(
-                                      "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold mt-1",
-                                      getStatusBadgeStyles(student.status)
-                                    )}
-                                  >
-                                    <span className={cn("h-2 w-2 rounded-full", statusBgColor)} />
-                                    {getStatusLabel(student.status)}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="space-y-1">
-                                {student.profile?.university && (
-                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <GraduationCap className="h-3.5 w-3.5 shrink-0" />
-                                    <span className="truncate">{student.profile.university}</span>
-                                  </div>
-                                )}
-                                {student.profile?.major && (
-                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <BookOpen className="h-3.5 w-3.5 shrink-0" />
-                                    <span className="truncate">{student.profile.major}</span>
-                                  </div>
-                                )}
-                                {student.profile?.profileLink && (
-                                  <div className="flex items-center gap-2 text-sm">
-                                    <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                                    <a
-                                      href={`https://www.dicoding.com${student.profile.profileLink}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-primary hover:underline truncate"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      Dicoding Profile
-                                    </a>
-                                  </div>
-                                )}
-                              </div>
+                            <div className="space-y-1">
+                              <h3 className="text-lg font-semibold text-card-foreground">
+                                {student.name}
+                              </h3>
+                              {student.status && (
+                                <span
+                                  className={cn(
+                                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold",
+                                    getStatusBadgeStyles(student.status)
+                                  )}
+                                >
+                                  <span className={cn("h-2 w-2 rounded-full", statusBgColor)} />
+                                  {getStatusLabel(student.status)}
+                                </span>
+                              )}
                             </div>
-                            {/* Progress summary */}
-                            <div className="hidden sm:flex flex-col items-end gap-1 shrink-0">
-                              <div className="text-2xl font-bold text-card-foreground">
-                                {avgProgress}%
+                            <div className="space-y-1 w-full">
+                              {student.profile?.university && (
+                                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                                  <GraduationCap className="h-4 w-4 shrink-0" />
+                                  <span>{student.profile.university}</span>
+                                </div>
+                              )}
+                              {student.profile?.major && (
+                                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                                  <BookOpen className="h-4 w-4 shrink-0" />
+                                  <span>{student.profile.major}</span>
+                                </div>
+                              )}
+                              {student.profile?.profileLink && (
+                                <div className="flex items-center justify-center gap-2 text-sm mt-1">
+                                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                                  <a
+                                    href={`https://www.dicoding.com${student.profile.profileLink}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-primary hover:underline"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    Dicoding Profile
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                            {/* Progress summary bar */}
+                            <div className="flex items-center gap-4 pt-2 border-t w-full justify-center">
+                              <div className="text-center">
+                                <div className="text-xl font-bold text-card-foreground">{avgProgress}%</div>
+                                <div className="text-[11px] text-muted-foreground">Avg Progress</div>
                               </div>
-                              <div className="text-xs text-muted-foreground">
-                                avg progress
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {completedCourses}/{student.courses.length} completed
+                              <div className="h-8 w-px bg-border" />
+                              <div className="text-center">
+                                <div className="text-xl font-bold text-card-foreground">{completedCourses}/{student.courses.length}</div>
+                                <div className="text-[11px] text-muted-foreground">Completed</div>
                               </div>
                             </div>
                           </div>
