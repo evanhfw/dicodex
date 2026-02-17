@@ -43,6 +43,7 @@ class ScraperService:
         self,
         email: str | None = None,
         password: str | None = None,
+        on_progress: callable = None,
         progress_callback: Optional[Callable[[str, int, int], None]] = None,
     ) -> Dict[str, Any]:
         """
@@ -86,6 +87,10 @@ class ScraperService:
             WebDriverWait(driver, 30).until(lambda d: "/login" not in d.current_url)
             self._wait_for_page_ready(driver, wait)
 
+            # Extract mentor info immediately for notification
+            mentor_info = self._extract_mentor_from_dom(driver)
+            if on_progress:
+                on_progress("started", mentor_info)
             if progress_callback:
                 progress_callback("Expanding student list...", 15, 100)
 
@@ -118,6 +123,7 @@ class ScraperService:
                 "success": True,
                 "file": str(out_path.name),
                 "students": payload["metadata"]["student_total"],
+                "mentor": payload["mentor"],
             }
 
         finally:
