@@ -60,11 +60,21 @@ class DataTransformer:
                     "status": self.map_course_status(course.get("status", "Not Started"))
                 })
             
+            # Transform assignments
+            assignments_data = progress.get("assignments", {})
+            assignments = []
+            for assignment in assignments_data.get("items", []):
+                assignments.append({
+                    "name": assignment.get("assignment", ""),
+                    "status": assignment.get("status", "Uncompleted"),
+                })
+            
             # Build student object
             student = {
                 "name": profile.get("name", ""),
                 "status": self.map_status(profile.get("status_badge", "")),
                 "courses": courses,
+                "assignments": assignments,
                 # Optional: include additional data if needed
                 "profile": {
                     "university": profile.get("university", ""),

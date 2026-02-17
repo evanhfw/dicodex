@@ -181,8 +181,8 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
         name: s.name,
         status: s.status,
         courses: s.courses || [],
-        assignments: (s.progress?.assignments?.items || s.assignments || []).map((a: any) => ({
-          name: a.assignment || a.name || '',
+        assignments: (s.assignments || s.progress?.assignments?.items || []).map((a: any) => ({
+          name: a.name || a.assignment || '',
           status: a.status === 'Completed' ? 'Completed' as const : 'Uncompleted' as const,
         })),
         imageUrl: s.profile?.photo_url || s.imageUrl || '',
