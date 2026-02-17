@@ -35,7 +35,13 @@ class NotificationService:
             
             result = await session.exec(query)
             for class_name, count in result:
-                stats[class_name] = count
+                # Aggregate by prefix (e.g. CAC-19 -> CAC)
+                prefix = class_name.split("-")[0].strip().upper() if "-" in class_name else class_name
+                # Handle known prefixes or fallback
+                if prefix in ["CAC", "CDC", "CFC"]:
+                    stats[prefix] = stats.get(prefix, 0) + count
+                else:
+                    stats[class_name] = stats.get(class_name, 0) + count
             
             break # We only need one session yield
             

@@ -72,6 +72,9 @@ jobs:
             HOST_PORT=${{ secrets.HOST_PORT }}
             SELENIUM_PORT=${{ secrets.SELENIUM_PORT }}
             API_KEY=${{ secrets.API_KEY }}
+            CONN_PSQL=${{ secrets.CONN_PSQL }}
+            POSTGRES_TABLE_NAME=${{ secrets.POSTGRES_TABLE_NAME }}
+            DISCORD_STATS_WEBHOOK_URL=${{ secrets.DISCORD_STATS_WEBHOOK_URL }}
             EOF
             
             # Download docker-compose.prod.yml
