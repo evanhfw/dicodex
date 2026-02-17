@@ -10,6 +10,26 @@ export type CourseStatus = "Completed" | "In Progress" | "Not Started";
 
 export type AssignmentStatus = "Completed" | "Uncompleted";
 
+export type CheckinMood = "good" | "neutral" | "bad";
+
+export interface CheckinGoal {
+  title: string;   // course name
+  items: string[]; // topics learned
+}
+
+export interface DailyCheckin {
+  date: string;            // e.g. "Sat, Feb 14, 2026"
+  mood: CheckinMood;
+  goals: CheckinGoal[];
+  reflection: string;
+}
+
+export interface PointHistory {
+  date: string;
+  description: string;
+  points: number;
+}
+
 export interface Assignment {
   name: string;
   status: AssignmentStatus;
@@ -33,6 +53,8 @@ export interface ParsedStudent {
   status: ParsedStudentStatus | null;
   courses: Course[];
   assignments?: Assignment[];
+  dailyCheckins?: DailyCheckin[];
+  pointHistories?: PointHistory[];
   imageUrl?: string;
   profile?: StudentProfile;
 }
@@ -226,4 +248,99 @@ export const getAssignmentStats = (students: ParsedStudent[]) => {
       ? Math.round((stats.completed / stats.totalStudents) * 100)
       : 0,
   }));
+};
+
+// Helper: parse a check-in date string like "Sat, Feb 14, 2026" to a Date
+export const parseCheckinDate = (dateStr: string): Date => {
+  // Remove day-of-week prefix like "Sat, "
+  const cleaned = dateStr.replace(/^\w+,\s*/, '');
+  return new Date(cleaned);
+};
+
+// Helper function to get daily check-in statistics across all students
+export const getCheckinStats = (students: ParsedStudent[]) => {
+  let totalCheckins = 0;
+  let moodGood = 0;
+  let moodNeutral = 0;
+  let moodBad = 0;
+  const missingStudents: string[] = [];
+  const streaks: { name: string; streak: number }[] = [];
+
+  students.forEach(student => {
+    const checkins = student.dailyCheckins || [];
+    totalCheckins += checkins.length;
+
+    if (checkins.length === 0) {
+      missingStudents.push(student.name);
+      streaks.push({ name: student.name, streak: 0 });
+      return;
+    }
+
+    checkins.forEach(ci => {
+      if (ci.mood === 'good') moodGood++;
+      else if (ci.mood === 'neutral') moodNeutral++;
+      else moodBad++;
+    });
+
+    // Calculate streak (consecutive days from most recent)
+    const sortedDates = checkins
+      .map(ci => parseCheckinDate(ci.date).getTime())
+      .sort((a, b) => b - a); // newest first
+
+    let streak = 1;
+    for (let i = 1; i < sortedDates.length; i++) {
+      const diff = sortedDates[i - 1] - sortedDates[i];
+      if (diff <= 86400000 * 1.5) { // ~1.5 days to handle timezone variance
+        streak++;
+      } else {
+        break;
+      }
+    }
+    streaks.push({ name: student.name, streak });
+  });
+
+  streaks.sort((a, b) => b.streak - a.streak);
+
+  return {
+    totalCheckins,
+    moodGood,
+    moodNeutral,
+    moodBad,
+    missingStudents,
+    streaks,
+  };
+};
+
+// Helper function to get heatmap data for the check-in calendar
+export const getCheckinHeatmapData = (students: ParsedStudent[]) => {
+  // Collect all unique dates across all students
+  const dateSet = new Set<string>();
+  students.forEach(student => {
+    (student.dailyCheckins || []).forEach(ci => {
+      const d = parseCheckinDate(ci.date);
+      dateSet.add(d.toISOString().split('T')[0]); // YYYY-MM-DD
+    });
+  });
+
+  const allDates = Array.from(dateSet).sort();
+
+  // Build per-student row: for each date, did they check in? + mood
+  const rows = students.map(student => {
+    const checkinMap = new Map<string, CheckinMood>();
+    (student.dailyCheckins || []).forEach(ci => {
+      const d = parseCheckinDate(ci.date);
+      checkinMap.set(d.toISOString().split('T')[0], ci.mood);
+    });
+
+    return {
+      name: student.name,
+      cells: allDates.map(date => ({
+        date,
+        mood: checkinMap.get(date) || null,
+        hasCheckin: checkinMap.has(date),
+      })),
+    };
+  });
+
+  return { dates: allDates, rows };
 };

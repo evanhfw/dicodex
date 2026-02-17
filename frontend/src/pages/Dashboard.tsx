@@ -9,6 +9,7 @@ import KpiCards from "@/components/dashboard/KpiCards";
 import AllStudentsView from "@/components/dashboard/AllStudentsView";
 import CourseProgressTable from "@/components/dashboard/CourseProgressTable";
 import AssignmentOverview from "@/components/dashboard/AssignmentOverview";
+import DailyCheckinOverview from "@/components/dashboard/DailyCheckinOverview";
 
 const Dashboard = () => {
   const { studentData, clearStudentData, hasData, isLoading } = useStudentData();
@@ -99,7 +100,10 @@ const Dashboard = () => {
         {/* 4. Assignment Overview */}
         <AssignmentOverview students={studentData.students} />
 
-        {/* 5. All Students View */}
+        {/* 5. Daily Check-in Overview */}
+        <DailyCheckinOverview students={studentData.students} />
+
+        {/* 6. All Students View */}
         <AllStudentsView students={studentData.students} />
       </main>
     </div>

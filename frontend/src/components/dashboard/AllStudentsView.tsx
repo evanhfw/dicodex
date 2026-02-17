@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Users, Search, ChevronDown, GraduationCap, BookOpen, ExternalLink } from "lucide-react";
+import { Users, Search, ChevronDown, GraduationCap, BookOpen, ExternalLink, CalendarCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AllStudentsViewProps {
@@ -349,6 +349,11 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                 <div className="text-xl font-bold text-card-foreground">{completedCourses}/{student.courses.length}</div>
                                 <div className="text-[11px] text-muted-foreground">Completed</div>
                               </div>
+                              <div className="h-8 w-px bg-border" />
+                              <div className="text-center">
+                                <div className="text-xl font-bold text-card-foreground">{student.dailyCheckins?.length || 0}</div>
+                                <div className="text-[11px] text-muted-foreground">Check-ins</div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -418,6 +423,86 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                 </p>
                               </div>
                             ))}
+                          </div>
+                        )}
+
+                        {/* Daily Check-ins */}
+                        {student.dailyCheckins && student.dailyCheckins.length > 0 && (
+                          <div className="pb-2">
+                            <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                              <CalendarCheck className="h-3.5 w-3.5" />
+                              Daily Check-ins ({student.dailyCheckins.length} entries)
+                            </div>
+                            <div className="space-y-2 px-3">
+                              {student.dailyCheckins.map((ci, ciIdx) => (
+                                <div key={ciIdx} className="rounded-md border bg-muted/20 p-2.5 space-y-1.5">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-xs font-medium text-card-foreground">
+                                      {ci.date}
+                                    </span>
+                                    <span className="text-sm" title={ci.mood === "good" ? "Good mood" : ci.mood === "neutral" ? "Neutral mood" : "Bad mood"}>
+                                      {ci.mood === "good" ? "😊" : ci.mood === "neutral" ? "😐" : "😟"}
+                                    </span>
+                                  </div>
+                                  {/* Goals as pill tags */}
+                                  {ci.goals.map((goal, gIdx) => (
+                                    <div key={gIdx}>
+                                      <p className="text-[11px] font-medium text-muted-foreground mb-1">
+                                        📚 {goal.title}
+                                      </p>
+                                      <div className="flex flex-wrap gap-1">
+                                        {goal.items.slice(0, 5).map((item, iIdx) => (
+                                          <span
+                                            key={iIdx}
+                                            className="inline-flex items-center rounded-md bg-primary/5 border border-primary/10 px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                                          >
+                                            {item}
+                                          </span>
+                                        ))}
+                                        {goal.items.length > 5 && (
+                                          <span className="inline-flex items-center rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                                            +{goal.items.length - 5} more
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  ))}
+                                  {/* Reflection */}
+                                  {ci.reflection && (
+                                    <div className="rounded bg-muted/40 px-2.5 py-1.5 mt-1">
+                                      <p className="text-[11px] text-muted-foreground italic leading-relaxed line-clamp-3">
+                                        "{ci.reflection}"
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {student.dailyCheckins && student.dailyCheckins.length === 0 && (
+                          <div className="pb-2">
+                            <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                              <CalendarCheck className="h-3.5 w-3.5" />
+                              Daily Check-ins
+                            </div>
+                            <p className="px-3 text-xs text-muted-foreground italic">
+                              No check-in data available
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Point History */}
+                        {student.pointHistories && (
+                          <div className="pb-2">
+                            <div className="mb-1 px-3 py-1 text-xs font-medium text-muted-foreground">
+                              Point History — {student.pointHistories.reduce((sum, p) => sum + p.points, 0)} pts total
+                            </div>
+                            {student.pointHistories.length === 0 && (
+                              <p className="px-3 text-xs text-muted-foreground italic">
+                                No point history data yet
+                              </p>
+                            )}
                           </div>
                         )}
                       </div>
