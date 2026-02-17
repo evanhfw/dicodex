@@ -305,13 +305,13 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                 <div className="flex items-center justify-center gap-2 text-sm mt-1">
                                   <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                                   <a
-                                    href={`https://www.dicoding.com${student.profile.profileLink}`}
+                                    href={`https://codingcamp.dicoding.com${student.profile.profileLink}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-primary hover:underline"
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    Dicoding Profile
+                                    Coding Camp Profile
                                   </a>
                                 </div>
                               )}
