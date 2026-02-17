@@ -190,8 +190,16 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
         } : undefined,
       }));
 
+      // Extract mentor info if available (backend nests it under metadata.mentor)
+      const rawMentor = data.metadata?.mentor || data.mentor;
+      const mentorInfo = rawMentor ? {
+        group: rawMentor.group || '',
+        mentorCode: rawMentor.mentor_code || '',
+        name: rawMentor.name || '',
+      } : undefined;
+
       // Save to context (which auto-saves to localStorage)
-      setStudentData(parsedStudents);
+      setStudentData(parsedStudents, mentorInfo);
 
       toast({
         title: 'Scraping complete!',

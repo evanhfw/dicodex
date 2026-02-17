@@ -1,32 +1,56 @@
 import { useState } from "react";
-import { programTimeline, milestones } from "@/data/dashboardData";
 import { CalendarDays, ChevronDown, Flag, Calendar, CircleCheckBig } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MentorInfo } from "@/data/parsedData";
+import {
+  getLearningPath,
+  getTimelineForPath,
+  TimelineMilestone,
+  MilestoneType,
+} from "@/data/timelineData";
 
-const milestoneIconMap = {
+const milestoneIconMap: Record<MilestoneType, typeof Flag> = {
   deadline: Flag,
   event: Calendar,
   checkpoint: CircleCheckBig,
 };
 
-const milestoneColorMap = {
+const milestoneColorMap: Record<MilestoneType, string> = {
   deadline: "text-status-red bg-status-red/10",
   event: "text-status-blue bg-status-blue/10",
   checkpoint: "text-status-green bg-status-green/10",
 };
 
-const ProgramTimeline = () => {
+interface ProgramTimelineProps {
+  mentor?: MentorInfo;
+}
+
+const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
   const [expanded, setExpanded] = useState(false);
-  const { startDate, endDate, today, totalDays } = programTimeline;
+
+  const learningPath = getLearningPath(mentor?.group);
+  const timeline = getTimelineForPath(learningPath);
+  const { startDate, endDate, milestones } = timeline;
+
+  const today = new Date();
+  const totalDays = Math.floor(
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
   const elapsed = Math.floor(
     (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
   );
-  const progress = Math.round((elapsed / totalDays) * 100);
+  const progress = Math.max(0, Math.min(100, Math.round((elapsed / totalDays) * 100)));
 
   const formatDate = (d: Date) =>
     d.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" });
 
   const isPast = (d: Date) => d <= today;
+
+  // Learning path badge label
+  const pathLabel =
+    learningPath !== "unknown"
+      ? `${learningPath} Learning Path`
+      : "Program Timeline";
 
   return (
     <div
@@ -38,8 +62,13 @@ const ProgramTimeline = () => {
         <h2 className="text-lg font-semibold text-card-foreground">
           Program Timeline
         </h2>
+        {learningPath !== "unknown" && (
+          <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-xs font-semibold text-primary">
+            {learningPath}
+          </span>
+        )}
         <span className="ml-auto rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-          Day {elapsed} of {totalDays} — {progress}% Journey
+          Day {Math.max(0, elapsed)} of {totalDays} — {progress}% Journey
         </span>
         <ChevronDown
           className={cn(
@@ -82,15 +111,17 @@ const ProgramTimeline = () => {
         })}
 
         {/* Today marker */}
-        <div
-          className="absolute -top-1 flex flex-col items-center"
-          style={{ left: `${progress}%`, transform: "translateX(-50%)" }}
-        >
-          <div className="h-5 w-0.5 bg-primary" />
-          <span className="mt-0.5 text-[10px] font-semibold text-primary">
-            TODAY
-          </span>
-        </div>
+        {progress > 0 && progress < 100 && (
+          <div
+            className="absolute -top-1 flex flex-col items-center"
+            style={{ left: `${progress}%`, transform: "translateX(-50%)" }}
+          >
+            <div className="h-5 w-0.5 bg-primary" />
+            <span className="mt-0.5 text-[10px] font-semibold text-primary">
+              TODAY
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Date labels */}
