@@ -29,12 +29,42 @@ async def scrape_task(ctx: dict, email: str, password: str) -> dict:
     ARQ task: run the Dicoding scraper.
 
     Selenium is blocking, so we offload to a thread via asyncio.to_thread.
+    Instrumented with Prometheus metrics for monitoring.
     """
+    import time
+
+    from app.metrics import arq_job_duration_seconds, arq_jobs_total
     from app.services.scraper import ScraperService
 
-    scraper = ScraperService()
-    result = await asyncio.to_thread(scraper.run_scraper, email=email, password=password)
-    return result
+    start = time.monotonic()
+    try:
+        scraper = ScraperService()
+        result = await asyncio.to_thread(scraper.run_scraper, email=email, password=password)
+        arq_jobs_total.labels(status="success").inc()
+        return result
+    except Exception as e:
+        arq_jobs_total.labels(status="failed").inc()
+        
+        # Send Alert
+        try:
+            from app.services.monitoring import DiscordMonitor
+            # We don't need app state for simple alerting, just the env vars loaded in init
+            monitor = DiscordMonitor(None)
+            await monitor.send_alert(
+                title="Job Failed", 
+                details={
+                   "Job": "Scrape Task",
+                   "Email": email, 
+                   "Error": str(e)
+                }
+            )
+        except Exception as alert_err:
+             print(f"Failed to send alert: {alert_err}")
+             
+        raise
+    finally:
+        duration = time.monotonic() - start
+        arq_job_duration_seconds.observe(duration)
 
 
 class WorkerSettings:
