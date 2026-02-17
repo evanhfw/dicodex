@@ -2,6 +2,7 @@
 Student Dashboard API - FastAPI Backend
 Integrates with Dicoding Coding Camp scraper via ARQ task queue.
 """
+import asyncio
 import os
 from contextlib import asynccontextmanager
 
@@ -9,6 +10,7 @@ from arq import create_pool
 from arq.connections import RedisSettings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.api.routes import router
 
@@ -25,9 +27,27 @@ def _parse_redis_url(url: str) -> RedisSettings:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Manage ARQ Redis pool lifecycle."""
+    """Manage ARQ Redis pool lifecycle and background monitoring."""
+    import time
+    from app.services.monitoring import DiscordMonitor
+
+    app.state.start_time = time.time()
     app.state.arq_pool = await create_pool(_parse_redis_url(REDIS_URL))
+    
+    # Start Monitoring
+    monitor = DiscordMonitor(app.state)
+    monitor_task = asyncio.create_task(monitor.start())
+    app.state.monitor = monitor
+
     yield
+    
+    # Cleanup
+    monitor_task.cancel()
+    try:
+        await monitor_task
+    except asyncio.CancelledError:
+        pass
+    
     await app.state.arq_pool.aclose()
 
 
@@ -55,6 +75,9 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(router, prefix="/api")
+
+# Prometheus metrics (exposes /metrics endpoint)
+Instrumentator().instrument(app).expose(app)
 
 
 @app.get("/")
