@@ -87,7 +87,7 @@ const Dashboard = () => {
         </Card>
 
         {/* 1. Program Timeline */}
-        <ProgramTimeline />
+        <ProgramTimeline mentor={studentData.mentor} />
 
         {/* 2. KPI Summary */}
         <KpiCards students={studentData.students} />

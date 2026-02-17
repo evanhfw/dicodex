@@ -29,10 +29,17 @@ export interface ParsedStudent {
   profile?: StudentProfile;
 }
 
+export interface MentorInfo {
+  group: string;       // e.g. "CAC-19"
+  mentorCode: string;  // e.g. "facil-cac-19"
+  name: string;
+}
+
 export interface StudentData {
   students: ParsedStudent[];
   parsedAt: string; // ISO timestamp
   totalStudents: number;
+  mentor?: MentorInfo;
 }
 
 // Status mapping from HTML to app format
