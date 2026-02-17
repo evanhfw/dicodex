@@ -36,8 +36,13 @@ const getInitials = (name: string): string => {
 };
 
 const getStatusLabel = (status: ParsedStudentStatus | null): string => {
-  if (!status) return "Unknown";
-  return status;
+  switch (status) {
+    case "Special Attention": return "Need Special Attention";
+    case "Lagging": return "Lagging Behind";
+    case "Ideal": return "On Ideal Schedule";
+    case "Ahead": return "Ahead of Schedule";
+    default: return "Unknown";
+  }
 };
 
 const getStatusBadgeStyles = (status: ParsedStudentStatus | null) => {
