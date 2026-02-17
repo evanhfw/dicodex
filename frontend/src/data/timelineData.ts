@@ -127,7 +127,117 @@ const AI_TIMELINE: ProgramTimelineData = {
   milestones: aiMilestones.sort((a, b) => a.date.getTime() - b.date.getTime()),
 };
 
-// ─── Placeholder for DS (CDC) and FC (CFC) ──────────────────────────────────
+// ─── DS Learning Path (CDC) — Data Scientist ─────────────────────────────────
+
+const dsMilestones: TimelineMilestone[] = [
+  // Week 0 — Orientation
+  { date: new Date('2026-02-09'), label: 'Orientasi & Technical Briefing', type: 'event' },
+
+  // Week 0–1 Deadlines
+  { date: new Date('2026-02-16'), label: 'DS Class Deadline (Minggu 0)', type: 'deadline' },
+  { date: new Date('2026-02-18'), label: 'DS Class Deadline (Minggu 1-a)', type: 'deadline' },
+  { date: new Date('2026-02-20'), label: 'DS Class Deadline (Minggu 1-b)', type: 'deadline' },
+
+  // Week 2 — ILT 1
+  { date: new Date('2026-02-23'), label: 'Tech ILT 1: DS - Understanding the Basics of Python Programming', type: 'event' },
+  { date: new Date('2026-03-01'), label: 'Assignment SS 1 Deadline', type: 'deadline' },
+
+  // MA1 Cut-off
+  { date: new Date('2026-03-03'), label: 'MA1 Cut-off', type: 'checkpoint' },
+  { date: new Date('2026-03-05'), label: 'DS Class Deadline (Minggu 2)', type: 'deadline' },
+
+  // Week 3
+  // (courses: Memulai Pemrograman dengan Python s.d Lulus, Belajar ML Pemula s.d Regresi)
+
+  // Week 4
+  { date: new Date('2026-03-09'), label: '[Wajib] Financial Literacy #1', type: 'event' },
+  { date: new Date('2026-03-09'), label: 'Tech ILT 2: DS - Intro to Supervised Learning', type: 'event' },
+  { date: new Date('2026-03-15'), label: 'Assignment SS 2 Deadline', type: 'deadline' },
+
+  // Week 5 — Libur Lebaran
+  { date: new Date('2026-03-16'), label: 'Libur Lebaran dan Hari Raya Nyepi', type: 'event' },
+
+  // Week 6
+  { date: new Date('2026-03-23'), label: 'Belajar ML untuk Pemula (s.d Ujian Akhir)', type: 'checkpoint' },
+
+  // Week 7
+  { date: new Date('2026-03-30'), label: '[Wajib] Financial Literacy #2', type: 'event' },
+  { date: new Date('2026-04-08'), label: 'DS Class Deadline (Minggu 7)', type: 'deadline' },
+
+  // Week 8
+  { date: new Date('2026-04-06'), label: '[Wajib] Team Meeting #1', type: 'event' },
+  { date: new Date('2026-04-06'), label: 'Tech ILT 3: DS - Unsupervised Learning: Techniques & Practical Applications', type: 'event' },
+  { date: new Date('2026-04-12'), label: 'Assignment SS 3 Deadline', type: 'deadline' },
+
+  // Week 9
+  { date: new Date('2026-04-13'), label: '[Wajib] Financial Literacy #3', type: 'event' },
+  { date: new Date('2026-04-30'), label: 'DS Class Deadline (Minggu 9)', type: 'deadline' },
+
+  // MA2 Cut-off
+  { date: new Date('2026-04-14'), label: 'MA2 Cut-off', type: 'checkpoint' },
+
+  // Week 10 — Tech ILT 4
+  { date: new Date('2026-04-20'), label: 'Tech ILT 4: DS - Developing Projects for Data Analysis', type: 'event' },
+  { date: new Date('2026-04-26'), label: 'Assignment SS 4 Deadline', type: 'deadline' },
+
+  // MA3 — Kelas Tech
+  { date: new Date('2026-04-30'), label: 'MA3: Lulus Belajar Fundamental Analisis Data (submission)', type: 'checkpoint' },
+
+  // Week 11 — Capstone start
+  { date: new Date('2026-04-27'), label: 'Capstone dimulai', type: 'event' },
+
+  // Week 12
+  { date: new Date('2026-05-10'), label: 'Assignment SS 5 Deadline', type: 'deadline' },
+  { date: new Date('2026-05-04'), label: 'Tech ILT 5: DS - Data Processing Essentials', type: 'event' },
+  { date: new Date('2026-05-18'), label: 'DS Class Deadline (Minggu 12)', type: 'deadline' },
+
+  // Assignment Soft Skills Cut-off
+  { date: new Date('2026-05-19'), label: 'Assignment Soft Skills Cut-off', type: 'checkpoint' },
+
+  // Week 13
+  // (courses: Belajar Fundamental Pemrosesan Data s.d Lulus)
+
+  // Week 14
+  { date: new Date('2026-05-24'), label: 'Assignment SS 6 Deadline', type: 'deadline' },
+  { date: new Date('2026-05-18'), label: 'Tech ILT 6: DS - Applied Probability Through Data Exploration', type: 'event' },
+
+  // MA4
+  // Week 15
+  { date: new Date('2026-05-25'), label: '[Wajib] Team Meeting #2', type: 'event' },
+  { date: new Date('2026-06-08'), label: 'DS Class Deadline (Final)', type: 'deadline' },
+
+  // Week 16
+  { date: new Date('2026-06-01'), label: 'Tech ILT 7: DS - Statistics for Data Scientists', type: 'event' },
+  { date: new Date('2026-06-07'), label: 'Assignment SS 7 Deadline', type: 'deadline' },
+
+  // MA4 Cut-off
+  { date: new Date('2026-06-30'), label: 'MA4 Cut-off', type: 'checkpoint' },
+
+  // Week 18 — Penilaian Akhir
+  { date: new Date('2026-06-15'), label: 'Penilaian Akhir oleh Assessor', type: 'event' },
+
+  // Week 19-20 — Penilaian Juri
+  { date: new Date('2026-06-22'), label: 'Penilaian Akhir oleh Juri', type: 'event' },
+
+  // Week 22 — Pengolahan Nilai
+  { date: new Date('2026-07-13'), label: 'Pengolahan Nilai Transkrip Akhir', type: 'event' },
+
+  // Week 23 — Transkrip
+  { date: new Date('2026-07-20'), label: 'Transkrip Akhir', type: 'event' },
+
+  // Week 24 — Sertifikat
+  { date: new Date('2026-07-27'), label: 'Sertifikat', type: 'event' },
+];
+
+const DS_TIMELINE: ProgramTimelineData = {
+  learningPath: 'DS',
+  startDate: new Date('2026-02-09'),
+  endDate: new Date('2026-07-27'),
+  totalWeeks: 24,
+  milestones: dsMilestones.sort((a, b) => a.date.getTime() - b.date.getTime()),
+};
+
+// ─── Placeholder for FC (CFC) ───────────────────────────────────────────────
 // TODO: Add real data when available
 
 // ─── Exports ─────────────────────────────────────────────────────────────────
@@ -155,7 +265,8 @@ export const getTimelineForPath = (path: LearningPath): ProgramTimelineData => {
   switch (path) {
     case 'AI':
       return AI_TIMELINE;
-    // TODO: case 'DS': return DS_TIMELINE;
+    case 'DS':
+      return DS_TIMELINE;
     // TODO: case 'FC': return FC_TIMELINE;
     default:
       return AI_TIMELINE; // fallback
