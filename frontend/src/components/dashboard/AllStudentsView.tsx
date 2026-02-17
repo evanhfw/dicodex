@@ -1,5 +1,23 @@
 import { useState, useMemo } from "react";
 import { ParsedStudent, ParsedStudentStatus, calculateAverageProgress, getStatusColor } from "@/data/parsedData";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
+} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -427,60 +445,106 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                         )}
 
                         {/* Daily Check-ins */}
-                        {student.dailyCheckins && student.dailyCheckins.length > 0 && (
+
+                        {student.dailyCheckins && student.dailyCheckins.length > 0 ? (
                           <div className="pb-2">
                             <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground flex items-center gap-1.5">
                               <CalendarCheck className="h-3.5 w-3.5" />
                               Daily Check-ins ({student.dailyCheckins.length} entries)
                             </div>
-                            <div className="space-y-2 px-3">
-                              {student.dailyCheckins.map((ci, ciIdx) => (
-                                <div key={ciIdx} className="rounded-md border bg-muted/20 p-2.5 space-y-1.5">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-xs font-medium text-card-foreground">
-                                      {ci.date}
-                                    </span>
-                                    <span className="text-sm" title={ci.mood === "good" ? "Good mood" : ci.mood === "neutral" ? "Neutral mood" : "Bad mood"}>
-                                      {ci.mood === "good" ? "😊" : ci.mood === "neutral" ? "😐" : "😟"}
-                                    </span>
-                                  </div>
-                                  {/* Goals as pill tags */}
-                                  {ci.goals.map((goal, gIdx) => (
-                                    <div key={gIdx}>
-                                      <p className="text-[11px] font-medium text-muted-foreground mb-1">
-                                        📚 {goal.title}
-                                      </p>
-                                      <div className="flex flex-wrap gap-1">
-                                        {goal.items.slice(0, 5).map((item, iIdx) => (
-                                          <span
-                                            key={iIdx}
-                                            className="inline-flex items-center rounded-md bg-primary/5 border border-primary/10 px-1.5 py-0.5 text-[10px] text-muted-foreground"
-                                          >
-                                            {item}
-                                          </span>
-                                        ))}
-                                        {goal.items.length > 5 && (
-                                          <span className="inline-flex items-center rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                                            +{goal.items.length - 5} more
-                                          </span>
-                                        )}
-                                      </div>
-                                    </div>
-                                  ))}
-                                  {/* Reflection */}
-                                  {ci.reflection && (
-                                    <div className="rounded bg-muted/40 px-2.5 py-1.5 mt-1">
-                                      <p className="text-[11px] text-muted-foreground italic leading-relaxed line-clamp-3">
-                                        "{ci.reflection}"
-                                      </p>
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
+                            <div className="h-[200px] w-full px-2">
+                              <ResponsiveContainer width="100%" height="100%">
+                                <LineChart
+                                  data={[...student.dailyCheckins].reverse().map(ci => ({
+                                    date: ci.date,
+                                    parsedDate: new Date(ci.date.replace(/^\w+,\s*/, '')).getTime(),
+                                    moodLevel: ci.mood === 'good' ? 3 : ci.mood === 'neutral' ? 2 : 1,
+                                    mood: ci.mood,
+                                    goals: ci.goals,
+                                    reflection: ci.reflection
+                                  }))}
+                                  margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                                >
+                                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                                  <XAxis 
+                                    dataKey="date" 
+                                    hide 
+                                  />
+                                  <YAxis 
+                                    domain={[0, 4]} 
+                                    ticks={[1, 2, 3]}
+                                    tickFormatter={(val) => val === 3 ? "😊" : val === 2 ? "😐" : "😟"}
+                                    tick={{ fontSize: 16 }}
+                                    width={30}
+                                    axisLine={false}
+                                    tickLine={false}
+                                  />
+                                  <Tooltip
+                                    cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }}
+                                    content={({ active, payload }) => {
+                                      if (active && payload && payload.length) {
+                                        const data = payload[0].payload;
+                                        return (
+                                          <div className="rounded-md border bg-popover p-3 shadow-md max-w-[280px]">
+                                            <div className="flex items-center justify-between gap-2 border-b pb-2 mb-2">
+                                              <span className="text-xs font-medium text-muted-foreground">
+                                                {data.date}
+                                              </span>
+                                              <span className="text-lg">
+                                                {data.mood === 'good' ? "😊" : data.mood === 'neutral' ? "😐" : "😟"}
+                                              </span>
+                                            </div>
+                                            
+                                            {/* Goals */}
+                                            {data.goals && data.goals.length > 0 && (
+                                              <div className="mb-2 space-y-1">
+                                                <p className="text-[10px] uppercase font-bold text-muted-foreground">Goals</p>
+                                                {data.goals.map((g: any, i: number) => (
+                                                  <div key={i} className="text-xs">
+                                                    <span className="font-medium text-foreground">{g.title}</span>
+                                                    <div className="flex flex-wrap gap-1 mt-0.5">
+                                                      {g.items.slice(0, 3).map((item: string, j: number) => (
+                                                        <span key={j} className="inline-flex items-center rounded-sm bg-muted px-1 py-0 text-[10px] text-muted-foreground whitespace-nowrap">
+                                                          {item}
+                                                        </span>
+                                                      ))}
+                                                      {g.items.length > 3 && (
+                                                        <span className="text-[10px] text-muted-foreground pl-0.5">+{g.items.length - 3}</span>
+                                                      )}
+                                                    </div>
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            )}
+
+                                            {/* Reflection */}
+                                            {data.reflection && (
+                                              <div className="space-y-1">
+                                                <p className="text-[10px] uppercase font-bold text-muted-foreground">Reflection</p>
+                                                <p className="text-xs italic text-muted-foreground leading-relaxed line-clamp-4">
+                                                  "{data.reflection}"
+                                                </p>
+                                              </div>
+                                            )}
+                                          </div>
+                                        );
+                                      }
+                                      return null;
+                                    }}
+                                  />
+                                  <Line
+                                    type="monotone"
+                                    dataKey="moodLevel"
+                                    stroke="hsl(var(--primary))"
+                                    strokeWidth={2}
+                                    dot={{ r: 3, fill: "hsl(var(--primary))" }}
+                                    activeDot={{ r: 5, strokeWidth: 0 }}
+                                  />
+                                </LineChart>
+                              </ResponsiveContainer>
                             </div>
                           </div>
-                        )}
-                        {student.dailyCheckins && student.dailyCheckins.length === 0 && (
+                        ) : (
                           <div className="pb-2">
                             <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground flex items-center gap-1.5">
                               <CalendarCheck className="h-3.5 w-3.5" />
