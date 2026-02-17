@@ -139,6 +139,14 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
             if (status.result.success) {
               // Fetch the scraped data from backend and save to context
               fetchAndSaveData(status.result.file, status.result.students);
+            } else if (status.result.error_type === 'invalid_credentials') {
+              toast({
+                title: 'Invalid Credentials',
+                description: 'The email or password you entered is incorrect. Please check and try again.',
+                variant: 'destructive'
+              });
+              setProgress(0);
+              setStatusMessage('');
             } else {
               toast({
                 title: 'Scraping failed',
