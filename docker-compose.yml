@@ -21,6 +21,9 @@ services:
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       - API_KEY=${API_KEY}
       - REDIS_URL=redis://redis:6379
+      - CONN_PSQL=${CONN_PSQL}
+      - DISCORD_STATS_WEBHOOK_URL=${DISCORD_STATS_WEBHOOK_URL}
+      - POSTGRES_TABLE_NAME=${POSTGRES_TABLE_NAME}
     volumes:
       - scraped_data:/app/output
     depends_on:
@@ -38,6 +41,9 @@ services:
       - SELENIUM_URL=http://selenium:4444
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       - REDIS_URL=redis://redis:6379
+      - CONN_PSQL=${CONN_PSQL}
+      - DISCORD_STATS_WEBHOOK_URL=${DISCORD_STATS_WEBHOOK_URL}
+      - POSTGRES_TABLE_NAME=${POSTGRES_TABLE_NAME}
     volumes:
       - scraped_data:/app/output
     depends_on:

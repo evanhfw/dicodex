@@ -10,4 +10,7 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "pydantic[email]>=2.12.5",
     "arq>=0.26.0",
+    "sqlmodel>=0.0.16",
+    "asyncpg>=0.29.0",
+    "httpx>=0.27.0",
 ]

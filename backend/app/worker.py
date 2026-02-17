@@ -24,6 +24,62 @@ def _parse_redis_url(url: str) -> RedisSettings:
     return RedisSettings(host=host or "redis", port=port)
 
 
+from app.db import init_db, get_session
+from app.models import RequestLog
+from app.services.notification import NotificationService
+
+
+async def startup(ctx):
+    """Initialize DB on worker startup"""
+    await init_db()
+
+
+async def handle_scrape_event(event: str, data: dict, notification_service: NotificationService):
+    """Handle scraping events (logging + webhook)"""
+    facilitator = "Unknown"
+    group = "Unknown"
+    status = event
+    message = ""
+
+    if event == "started":
+        # Data is mentor_info
+        facilitator = data.get("name", "Unknown")
+        group = data.get("group", "Unknown")
+    elif event == "completed":
+        # Data is full result
+        mentor = data.get("mentor", {})
+        facilitator = mentor.get("name", "Unknown")
+        group = mentor.get("group", "Unknown")
+    elif event == "failed":
+        # Data might have error info
+        facilitator = data.get("facilitator", "Unknown") # Might not be available if failed early
+        group = data.get("group", "Unknown")
+        message = str(data.get("error", ""))
+
+    # Db Logging
+    try:
+        async for session in get_session():
+            log = RequestLog(
+                facilitator_name=facilitator,
+                class_name=group,
+                status=status,
+                message=message
+            )
+            session.add(log)
+            await session.commit()
+            break
+    except Exception as e:
+        print(f"Failed to log request to DB: {e}")
+
+    # Webhook
+    await notification_service.send_webhook(
+        facilitator_name=facilitator,
+        class_name=group,
+        status=status,
+        message=message
+    )
+
+
 async def scrape_task(ctx: dict, email: str, password: str) -> dict:
     """
     ARQ task: run the Dicoding scraper.
@@ -32,9 +88,32 @@ async def scrape_task(ctx: dict, email: str, password: str) -> dict:
     """
     from app.services.scraper import ScraperService
 
+    loop = asyncio.get_running_loop()
+    notification_service = NotificationService()
+
+    def on_progress(event, data):
+        asyncio.run_coroutine_threadsafe(
+            handle_scrape_event(event, data, notification_service), loop
+        )
+
     scraper = ScraperService()
-    result = await asyncio.to_thread(scraper.run_scraper, email=email, password=password)
-    return result
+    
+    try:
+        result = await asyncio.to_thread(
+            scraper.run_scraper, 
+            email=email, 
+            password=password, 
+            on_progress=on_progress
+        )
+        
+        # Handle completion
+        await handle_scrape_event("completed", result, notification_service)
+        return result
+        
+    except Exception as e:
+        # Handle failure
+        await handle_scrape_event("failed", {"error": str(e)}, notification_service)
+        raise e
 
 
 class WorkerSettings:
@@ -42,6 +121,8 @@ class WorkerSettings:
 
     functions = [scrape_task]
     redis_settings = _parse_redis_url(REDIS_URL)
+
+    on_startup = startup
 
     # Concurrency: max 5 scrape jobs at once (Selenium has SE_NODE_MAX_SESSIONS=5)
     max_jobs = 5

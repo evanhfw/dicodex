@@ -38,6 +38,8 @@ services:
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       - API_KEY=${API_KEY}
       - REDIS_URL=redis://redis:6379
+      - CONN_PSQL=${CONN_PSQL}
+      - DISCORD_STATS_WEBHOOK_URL=${DISCORD_STATS_WEBHOOK_URL}
     depends_on:
       - selenium
       - redis
@@ -57,6 +59,8 @@ services:
       - SELENIUM_URL=http://selenium:4444
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       - REDIS_URL=redis://redis:6379
+      - CONN_PSQL=${CONN_PSQL}
+      - DISCORD_STATS_WEBHOOK_URL=${DISCORD_STATS_WEBHOOK_URL}
     depends_on:
       - selenium
       - redis
