@@ -6,8 +6,6 @@ services:
     container_name: student-dashboard-frontend
     ports:
       - "8080:8080"
-    environment:
-      - VITE_API_URL=http://localhost:3000
     depends_on:
       - backend
     restart: unless-stopped
@@ -17,15 +15,11 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: student-dashboard-backend
-    ports:
-      - "3000:3000"
+    # No port exposed — accessed via Nginx reverse proxy on internal network
     environment:
       - SELENIUM_URL=http://selenium:4444
-      - DICODING_EMAIL=${DICODING_EMAIL}
-      - DICODING_PASSWORD=${DICODING_PASSWORD}
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       - API_KEY=${API_KEY}
-      - CORS_ORIGINS=${CORS_ORIGINS:-*}
       - REDIS_URL=redis://redis:6379
     volumes:
       - scraped_data:/app/output
@@ -42,8 +36,6 @@ services:
     command: uv run python -m app.run_worker
     environment:
       - SELENIUM_URL=http://selenium:4444
-      - DICODING_EMAIL=${DICODING_EMAIL}
-      - DICODING_PASSWORD=${DICODING_PASSWORD}
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       - REDIS_URL=redis://redis:6379
     volumes:
