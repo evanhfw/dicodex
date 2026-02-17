@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 
 from arq.connections import RedisSettings
+from arq.jobs import Job
 from dotenv import load_dotenv
 
 # Load environment variables (for local dev)
@@ -32,8 +33,67 @@ async def scrape_task(ctx: dict, email: str, password: str) -> dict:
     """
     from app.services.scraper import ScraperService
 
+    job_id = ctx["job_id"]
+    redis = ctx["redis"]
+
+    async def update_progress(message: str, current_step: int, total_steps: int):
+        """Callback to update progress in Redis."""
+        percent = int((current_step / total_steps) * 100)
+        await redis.setex(
+            f"job_progress:{job_id}",
+            3600,  # Expire in 1 hour
+            f"{percent}|{message}|{current_step}|{total_steps}",
+        )
+
+    # We need to run the scraper in a thread because it's blocking (Selenium).
+    # But the callback is async (Redis write), so we need a bridge.
+    # Actually, the scraper calls the callback synchronously.
+    # So we need a sync wrapper that schedules the async Redis write.
+    
+    # Better approach: The scraper is synchronous. The callback passed to it MUST be synchronous.
+    # So we define a sync callback that uses a loop to run the async redis call? 
+    # Or just use a synchronous Redis client? 
+    # ARQ uses aioredis.
+    
+    # Since we are running scraper in a separate thread, we can't easily wait for async redis calls in the main loop 
+    # from that thread without a new loop.
+    
+    # Alternative: The callback launches a fire-and-forget task in the main event loop?
+    # But we are in `asyncio.to_thread`, which runs in a separate thread.
+    
+    # Let's use a thread-safe way to communicate back to the main loop.
+    # or just use a sync redis client inside the thread?
+    # Using a sync redis client is cleaner for the threaded scraper.
+    
+    def sync_progress_callback(message: str, current_step: int, total_steps: int):
+        import redis as sync_redis
+        
+        # Create a new sync redis connection key just for this update (or reuse if we can)
+        # For simplicity and thread safety, let's create a ephemeral connection or use a global pool if avail.
+        # But we don't have a global sync pool.
+        
+        try:
+             # Parse REDIS_URL again or use the global one
+            r = sync_redis.from_url(REDIS_URL)
+            percent = int((current_step / total_steps) * 100)
+            r.setex(
+                f"job_progress:{job_id}",
+                3600,
+                f"{percent}|{message}|{current_step}|{total_steps}",
+            )
+            r.close()
+        except Exception as e:
+            print(f"Error updating progress: {e}")
+
     scraper = ScraperService()
-    result = await asyncio.to_thread(scraper.run_scraper, email=email, password=password)
+    
+    # We pass the SYNC callback to the scraper
+    result = await asyncio.to_thread(
+        scraper.run_scraper, 
+        email=email, 
+        password=password, 
+        progress_callback=sync_progress_callback
+    )
     return result
 
 
