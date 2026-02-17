@@ -100,26 +100,31 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
         });
         const status = await response.json();
 
-        // Update progress based on time elapsed
-        // Estimated 2-3 minutes for completion
-        const estimatedProgress = Math.min(10 + (attempts * 1.5), 95);
-        
         if (status.running) {
-          setProgress(estimatedProgress);
-          
-          // Update status messages based on ARQ status and progress
-          if (status.status === 'queued') {
-            setStatusMessage('Waiting in queue...');
-          } else if (estimatedProgress < 20) {
-            setStatusMessage('Logging in to Dicoding...');
-          } else if (estimatedProgress < 40) {
-            setStatusMessage('Loading student list...');
-          } else if (estimatedProgress < 60) {
-            setStatusMessage('Extracting student data...');
-          } else if (estimatedProgress < 80) {
-            setStatusMessage('Processing course progress...');
+          if (status.queue_position) {
+            setProgress(0);
+            setStatusMessage(`Waiting in queue (Position: ${status.queue_position})...`);
+          } else if (status.progress) {
+            setProgress(status.progress.percent);
+            setStatusMessage(status.progress.message);
           } else {
-            setStatusMessage('Finalizing data collection...');
+            // Fallback estimation logic
+            const estimatedProgress = Math.min(10 + (attempts * 1.5), 95);
+            setProgress(estimatedProgress);
+            
+            if (status.status === 'queued') {
+              setStatusMessage('Waiting in queue...');
+            } else if (estimatedProgress < 20) {
+               setStatusMessage('Logging in to Dicoding...');
+            } else if (estimatedProgress < 40) {
+               setStatusMessage('Loading student list...');
+            } else if (estimatedProgress < 60) {
+               setStatusMessage('Extracting student data...');
+            } else if (estimatedProgress < 80) {
+               setStatusMessage('Processing course progress...');
+            } else {
+               setStatusMessage('Finalizing data collection...');
+            }
           }
         }
 
