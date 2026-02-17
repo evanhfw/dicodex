@@ -19,7 +19,9 @@ on:
 # DEPLOY_PATH               - Path on VPS where app will be deployed
 # GF_SECURITY_ADMIN_PASSWORD - Grafana admin password
 # GF_SERVER_ROOT_URL         - Grafana root URL (e.g. https://yourdomain.com/grafana/)
-# DISCORD_WEBHOOK_URL        - Discord webhook URL for alerting
+# DISCORD_MONITOR_WEBHOOK_URL - Webhook for periodic health reports
+# DISCORD_ALERT_WEBHOOK_URL   - Webhook for critical alerts
+# MONITOR_INTERVAL            - Monitoring interval in seconds (default: 60)
 # ============================================
 
 jobs:
@@ -77,7 +79,10 @@ jobs:
             API_KEY=${{ secrets.API_KEY }}
             GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
             GF_SERVER_ROOT_URL=${{ secrets.GF_SERVER_ROOT_URL }}
-            DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}
+            GF_SERVER_ROOT_URL=${{ secrets.GF_SERVER_ROOT_URL }}
+            DISCORD_MONITOR_WEBHOOK_URL=${{ secrets.DISCORD_MONITOR_WEBHOOK_URL }}
+            DISCORD_ALERT_WEBHOOK_URL=${{ secrets.DISCORD_ALERT_WEBHOOK_URL }}
+            MONITOR_INTERVAL=${{ secrets.MONITOR_INTERVAL }}
             EOF
             
             # Download docker-compose.prod.yml

@@ -17,6 +17,9 @@ services:
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       - API_KEY=${API_KEY}
       - REDIS_URL=redis://redis:6379
+      - DISCORD_MONITOR_WEBHOOK_URL=${DISCORD_MONITOR_WEBHOOK_URL}
+      - DISCORD_ALERT_WEBHOOK_URL=${DISCORD_ALERT_WEBHOOK_URL}
+      - MONITOR_INTERVAL=${MONITOR_INTERVAL}
     volumes:
       - scraped_data:/app/output
     depends_on:
@@ -32,6 +35,9 @@ services:
       - SELENIUM_URL=http://selenium:4444
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       - REDIS_URL=redis://redis:6379
+      - DISCORD_MONITOR_WEBHOOK_URL=${DISCORD_MONITOR_WEBHOOK_URL}
+      - DISCORD_ALERT_WEBHOOK_URL=${DISCORD_ALERT_WEBHOOK_URL}
+      - MONITOR_INTERVAL=${MONITOR_INTERVAL}
     volumes:
       - scraped_data:/app/output
     depends_on:
@@ -125,11 +131,11 @@ services:
       - /bin/sh
       - -c
       - |
-        sed "s|DISCORD_WEBHOOK_URL_PLACEHOLDER|$$DISCORD_WEBHOOK_URL|g" \
+        sed "s|DISCORD_WEBHOOK_URL_PLACEHOLDER|$$DISCORD_ALERT_WEBHOOK_URL|g" \
           /etc/alertmanager/alertmanager.tmpl > /etc/alertmanager/alertmanager.yml && \
         /bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yml
     environment:
-      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      - DISCORD_ALERT_WEBHOOK_URL=${DISCORD_ALERT_WEBHOOK_URL}
     restart: unless-stopped
 
 volumes:
