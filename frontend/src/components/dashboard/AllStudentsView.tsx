@@ -463,19 +463,26 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                     goals: ci.goals,
                                     reflection: ci.reflection
                                   }))}
-                                  margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                                  margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
                                 >
-                                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
                                   <XAxis 
-                                    dataKey="date" 
-                                    hide 
+                                    dataKey="parsedDate" 
+                                    type="number"
+                                    domain={['auto', 'auto']}
+                                    tickFormatter={(time) => new Date(time).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                    tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    minTickGap={30}
+                                    dy={10}
                                   />
                                   <YAxis 
                                     domain={[0, 4]} 
                                     ticks={[1, 2, 3]}
-                                    tickFormatter={(val) => val === 3 ? "😊" : val === 2 ? "😐" : "😟"}
-                                    tick={{ fontSize: 16 }}
-                                    width={30}
+                                    tickFormatter={(val) => val === 3 ? "Good" : val === 2 ? "Neutral" : "Bad"}
+                                    tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                                    width={50}
                                     axisLine={false}
                                     tickLine={false}
                                   />
@@ -533,12 +540,30 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                     }}
                                   />
                                   <Line
-                                    type="monotone"
+                                    type="linear"
                                     dataKey="moodLevel"
                                     stroke="hsl(var(--primary))"
                                     strokeWidth={2}
-                                    dot={{ r: 3, fill: "hsl(var(--primary))" }}
-                                    activeDot={{ r: 5, strokeWidth: 0 }}
+                                    activeDot={{ r: 6, strokeWidth: 0, fill: "hsl(var(--foreground))" }}
+                                    dot={(props: any) => {
+                                      const { cx, cy, payload } = props;
+                                      let fill = "hsl(var(--primary))";
+                                      if (payload.mood === 'good') fill = "#10b981"; // emerald-500
+                                      if (payload.mood === 'neutral') fill = "#fbbf24"; // amber-400
+                                      if (payload.mood === 'bad') fill = "#f87171"; // red-400
+                                      
+                                      return (
+                                        <circle 
+                                          cx={cx} 
+                                          cy={cy} 
+                                          r={4} 
+                                          fill={fill} 
+                                          stroke="hsl(var(--background))" 
+                                          strokeWidth={2}
+                                          className="transition-all hover:r-6"
+                                        />
+                                      );
+                                    }}
                                   />
                                 </LineChart>
                               </ResponsiveContainer>
