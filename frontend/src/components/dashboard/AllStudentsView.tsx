@@ -495,6 +495,12 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                         return d.getTime();
                                       }
                                     ]}
+                                    ticks={[...Array(7)].map((_, i) => {
+                                      const d = new Date();
+                                      d.setDate(d.getDate() - (6 - i));
+                                      d.setHours(0, 0, 0, 0);
+                                      return d.getTime();
+                                    })}
                                     tickFormatter={(time) => {
                                       const date = new Date(time);
                                       const today = new Date();
@@ -503,18 +509,15 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                       const yesterday = new Date(today);
                                       yesterday.setDate(yesterday.getDate() - 1);
 
-                                      // Reset time components for comparison
-                                      const dTime = new Date(date).setHours(0,0,0,0);
-                                      
-                                      if (dTime === today.getTime()) return "Today";
-                                      if (dTime === yesterday.getTime()) return "Yesterday";
+                                      // Compare timestamps
+                                      if (time === today.getTime()) return "Today";
+                                      if (time === yesterday.getTime()) return "Yesterday";
                                       return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
                                     }}
                                     tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
                                     axisLine={false}
                                     tickLine={false}
                                     interval={0}
-                                    tickCount={7}
                                     dy={10}
                                   />
                                   <YAxis 
