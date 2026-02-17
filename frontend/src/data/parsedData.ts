@@ -348,19 +348,24 @@ export const getCheckinHeatmapData = (students: ParsedStudent[]) => {
 
   // 4. Build rows
   const rows = students.map(student => {
-    const checkinMap = new Map<string, CheckinMood>();
+    const checkinMap = new Map<string, DailyCheckin>();
     (student.dailyCheckins || []).forEach(ci => {
       const d = parseCheckinDate(ci.date);
-      checkinMap.set(d.toISOString().split('T')[0], ci.mood);
+      checkinMap.set(d.toISOString().split('T')[0], ci);
     });
 
     return {
       name: student.name,
-      cells: allDates.map(date => ({
-        date,
-        mood: checkinMap.get(date) || null,
-        hasCheckin: checkinMap.has(date),
-      })),
+      cells: allDates.map(date => {
+        const checkin = checkinMap.get(date);
+        return {
+          date,
+          hasCheckin: !!checkin,
+          mood: checkin?.mood || null,
+          goals: checkin?.goals || [],
+          reflection: checkin?.reflection || "",
+        };
+      }),
     };
   });
 

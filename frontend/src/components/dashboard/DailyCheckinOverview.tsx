@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { ParsedStudent, getCheckinStats, getCheckinHeatmapData, parseCheckinDate, CheckinMood } from "@/data/parsedData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { CalendarCheck, Flame, SmilePlus, UserX, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -173,19 +174,48 @@ const DailyCheckinOverview = ({ students }: DailyCheckinOverviewProps) => {
             </div>
           </div>
 
-           {/* Today's Mood */}
-           <div className="rounded-lg border bg-card p-4 space-y-1">
+           {/* Mood Distribution Today */}
+           <div className="rounded-lg border bg-card p-4 space-y-2">
             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-              <SmilePlus className="h-3.5 w-3.5 text-emerald-500" />
-              Good Mood Today
+              <SmilePlus className="h-3.5 w-3.5" />
+              Mood Distribution
             </div>
-            <div className="text-2xl font-bold text-card-foreground">
-              {todayStats.moodGoodCount}
+            
+            {/* Stacked bar */}
+            <div className="flex h-4 w-full overflow-hidden rounded-full bg-secondary">
+              {todayStats.moodGoodCount > 0 && (
+                <div
+                  className="h-full bg-emerald-500 transition-all"
+                  style={{ width: `${(todayStats.moodGoodCount / todayStats.checkedInCount) * 100}%` }}
+                />
+              )}
+              {todayStats.moodNeutralCount > 0 && (
+                <div
+                  className="h-full bg-amber-400 transition-all"
+                  style={{ width: `${(todayStats.moodNeutralCount / todayStats.checkedInCount) * 100}%` }}
+                />
+              )}
+               {todayStats.moodBadCount > 0 && (
+                <div
+                  className="h-full bg-red-400 transition-all"
+                  style={{ width: `${(todayStats.moodBadCount / todayStats.checkedInCount) * 100}%` }}
+                />
+              )}
             </div>
-            <div className="text-[11px] text-muted-foreground">
-              {todayStats.checkedInCount > 0 
-                ? `${Math.round((todayStats.moodGoodCount / todayStats.checkedInCount) * 100)}% of check-ins`
-                : "No check-ins yet"}
+
+            <div className="flex justify-between text-[10px] text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <div className="h-2 w-2 rounded-full bg-emerald-500" />
+                {todayStats.moodGoodCount}
+              </span>
+              <span className="flex items-center gap-1">
+                <div className="h-2 w-2 rounded-full bg-amber-400" />
+                {todayStats.moodNeutralCount}
+              </span>
+              <span className="flex items-center gap-1">
+                <div className="h-2 w-2 rounded-full bg-red-400" />
+                {todayStats.moodBadCount}
+              </span>
             </div>
           </div>
 
@@ -226,67 +256,119 @@ const DailyCheckinOverview = ({ students }: DailyCheckinOverviewProps) => {
         {heatmap.dates.length > 0 && (
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-card-foreground">Check-in Heatmap</h3>
-            <div className="overflow-x-auto">
-              <div className="min-w-fit">
-                {/* Date headers */}
-                <div className="flex items-center gap-0.5 mb-1 ml-[120px]">
-                  {heatmap.dates.map(date => (
-                    <div
-                      key={date}
-                      className="w-8 text-center text-[10px] text-muted-foreground"
-                      title={date}
-                    >
-                      {formatDateShort(date)}
-                    </div>
-                  ))}
-                </div>
-                {/* Rows */}
-                {heatmap.rows.map((row) => (
-                  <div key={row.name} className="flex items-center gap-0.5 mb-0.5">
-                    <div className="w-[120px] text-xs text-muted-foreground truncate pr-2 text-right shrink-0">
-                      {row.name.split(" ")[0]}
-                    </div>
-                    {row.cells.map((cell) => (
+            <TooltipProvider>
+              <div className="overflow-x-auto pb-2">
+                <div className="min-w-fit">
+                  {/* Date headers */}
+                  <div className="flex items-center gap-0.5 mb-1 ml-[120px]">
+                    {heatmap.dates.map(date => (
                       <div
-                        key={cell.date}
-                        className={cn(
-                          "h-7 w-8 rounded-sm border transition-colors flex items-center justify-center text-xs",
-                          cell.hasCheckin
-                            ? cell.mood === "good"
-                              ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-600"
-                              : cell.mood === "neutral"
-                              ? "bg-amber-400/20 border-amber-400/30 text-amber-500"
-                              : "bg-red-400/20 border-red-400/30 text-red-500"
-                            : "bg-muted/30 border-border text-transparent"
-                        )}
-                        title={`${row.name} — ${cell.date}: ${cell.hasCheckin ? moodLabel[cell.mood!] : "No check-in"}`}
+                        key={date}
+                        className="w-8 text-center text-[10px] text-muted-foreground"
+                        title={date}
                       >
-                        {cell.hasCheckin ? moodEmoji[cell.mood!] : ""}
+                        {formatDateShort(date)}
                       </div>
                     ))}
                   </div>
-                ))}
-                {/* Legend */}
-                <div className="flex items-center gap-4 mt-2 ml-[120px] text-[11px] text-muted-foreground">
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm bg-emerald-500/20 border border-emerald-500/30" />
-                    <span>Good</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm bg-amber-400/20 border border-amber-400/30" />
-                    <span>Neutral</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm bg-red-400/20 border border-red-400/30" />
-                    <span>Bad</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm bg-muted/30 border border-border" />
-                    <span>No check-in</span>
+                  {/* Rows */}
+                  {heatmap.rows.map((row) => (
+                    <div key={row.name} className="flex items-center gap-0.5 mb-0.5">
+                      <div className="w-[120px] text-xs text-muted-foreground truncate pr-2 text-right shrink-0">
+                        {row.name.split(" ")[0]}
+                      </div>
+                      {row.cells.map((cell) => (
+                        <Tooltip key={`${row.name}-${cell.date}`} delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <div
+                              className={cn(
+                                "h-7 w-8 rounded-sm border transition-all cursor-default",
+                                cell.hasCheckin
+                                  ? cell.mood === "good"
+                                    ? "bg-emerald-500 hover:bg-emerald-600 border-emerald-600"
+                                    : cell.mood === "neutral"
+                                    ? "bg-amber-400 hover:bg-amber-500 border-amber-500"
+                                    : "bg-red-400 hover:bg-red-500 border-red-500"
+                                  : "bg-muted/30 border-transparent hover:border-border"
+                              )}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent className="p-3 max-w-[280px]">
+                            <div className="space-y-2">
+                              {/* Header */}
+                              <div className="flex items-center justify-between gap-4 border-b pb-2">
+                                <div>
+                                  <p className="font-semibold">{row.name}</p>
+                                  <p className="text-xs text-muted-foreground">{cell.date}</p>
+                                </div>
+                                {cell.hasCheckin && (
+                                  <span className="text-lg">{moodEmoji[cell.mood!]}</span>
+                                )}
+                              </div>
+                              
+                              {/* Content */}
+                              {cell.hasCheckin ? (
+                                <div className="space-y-2">
+                                  {/* Goals */}
+                                  {cell.goals && cell.goals.length > 0 && (
+                                    <div className="space-y-1">
+                                      <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Goals</p>
+                                      {cell.goals.map((g, idx) => (
+                                        <div key={idx} className="text-xs">
+                                          <span className="font-medium text-foreground">{g.title}</span>
+                                          <div className="flex flex-wrap gap-1 mt-0.5">
+                                            {g.items.map((item, iIdx) => (
+                                              <span key={iIdx} className="inline-flex items-center rounded-sm bg-muted px-1 py-0 text-[10px] text-muted-foreground">
+                                                {item}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                  
+                                  {/* Reflection */}
+                                  {cell.reflection && (
+                                    <div className="space-y-1">
+                                      <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Reflection</p>
+                                      <p className="text-xs italic text-muted-foreground leading-relaxed">
+                                        "{cell.reflection}"
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <p className="text-xs text-muted-foreground italic">No check-in for this day.</p>
+                              )}
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      ))}
+                    </div>
+                  ))}
+                  {/* Legend */}
+                  <div className="flex items-center gap-4 mt-2 ml-[120px] text-[11px] text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm bg-emerald-500 border border-emerald-600" />
+                      <span>Good</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm bg-amber-400 border border-amber-500" />
+                      <span>Neutral</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm bg-red-400 border border-red-500" />
+                      <span>Bad</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm bg-muted/30 border border-transparent" />
+                      <span>No check-in</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </TooltipProvider>
           </div>
         )}
 
