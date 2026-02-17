@@ -455,26 +455,52 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                             <div className="h-[200px] w-full px-2">
                               <ResponsiveContainer width="100%" height="100%">
                                 <LineChart
-                                  data={[...student.dailyCheckins].reverse().map(ci => ({
-                                    date: ci.date,
-                                    parsedDate: new Date(ci.date.replace(/^\w+,\s*/, '')).getTime(),
-                                    moodLevel: ci.mood === 'good' ? 3 : ci.mood === 'neutral' ? 2 : 1,
-                                    mood: ci.mood,
-                                    goals: ci.goals,
-                                    reflection: ci.reflection
-                                  }))}
+                                  data={[...student.dailyCheckins]
+                                    .reverse()
+                                    .map(ci => ({
+                                      ...ci,
+                                      parsedDate: new Date(ci.date.replace(/^\w+,\s*/, '')).getTime()
+                                    }))
+                                    .filter(ci => {
+                                      const sevenDaysAgo = new Date();
+                                      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+                                      sevenDaysAgo.setHours(0, 0, 0, 0);
+                                      return ci.parsedDate >= sevenDaysAgo.getTime();
+                                    })
+                                    .map(ci => ({
+                                      date: ci.date,
+                                      parsedDate: ci.parsedDate,
+                                      moodLevel: ci.mood === 'good' ? 3 : ci.mood === 'neutral' ? 2 : 1,
+                                      mood: ci.mood,
+                                      goals: ci.goals,
+                                      reflection: ci.reflection
+                                    }))
+                                  }
                                   margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
                                 >
                                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
                                   <XAxis 
                                     dataKey="parsedDate" 
                                     type="number"
-                                    domain={['auto', 'auto']}
+                                    domain={[
+                                      () => {
+                                        const d = new Date();
+                                        d.setDate(d.getDate() - 6);
+                                        d.setHours(0,0,0,0);
+                                        return d.getTime();
+                                      },
+                                      () => {
+                                        const d = new Date();
+                                        d.setHours(23,59,59,999);
+                                        return d.getTime();
+                                      }
+                                    ]}
                                     tickFormatter={(time) => new Date(time).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                     tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
                                     axisLine={false}
                                     tickLine={false}
-                                    minTickGap={30}
+                                    interval={0}
+                                    tickCount={7}
                                     dy={10}
                                   />
                                   <YAxis 
