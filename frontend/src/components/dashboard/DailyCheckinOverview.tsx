@@ -88,11 +88,62 @@ const DailyCheckinOverview = ({ students }: DailyCheckinOverviewProps) => {
     );
   }
 
+  // Calculate Today's Stats
+  const todayStats = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
+
+    let checkedInCount = 0;
+    let moodGoodCount = 0;
+    let moodNeutralCount = 0;
+    let moodBadCount = 0;
+    const checkedInStudentNames = new Set<string>();
+
+    students.forEach(s => {
+      const todayCheckin = (s.dailyCheckins || []).find(ci => {
+        const d = parseCheckinDate(ci.date);
+        d.setHours(0, 0, 0, 0);
+        return d.getTime() === todayTime;
+      });
+
+      if (todayCheckin) {
+        checkedInCount++;
+        checkedInStudentNames.add(s.name);
+        if (todayCheckin.mood === 'good') moodGoodCount++;
+        else if (todayCheckin.mood === 'neutral') moodNeutralCount++;
+        else moodBadCount++;
+      }
+    });
+
+    return {
+      checkedInCount,
+      moodGoodCount,
+      moodNeutralCount,
+      moodBadCount,
+      missingCount: students.length - checkedInCount,
+    };
+  }, [students]);
+
+  if (stats.totalCheckins === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <CalendarCheck className="h-5 w-5 text-primary" />
+            Daily Check-ins
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="py-8 text-center text-sm text-muted-foreground">
+            No daily check-in data available yet.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const topStreak = stats.streaks[0];
-  const totalMoods = stats.moodGood + stats.moodNeutral + stats.moodBad;
-  const moodGoodPct = totalMoods > 0 ? Math.round((stats.moodGood / totalMoods) * 100) : 0;
-  const moodNeutralPct = totalMoods > 0 ? Math.round((stats.moodNeutral / totalMoods) * 100) : 0;
-  const moodBadPct = totalMoods > 0 ? 100 - moodGoodPct - moodNeutralPct : 0;
 
   return (
     <Card>
@@ -103,23 +154,42 @@ const DailyCheckinOverview = ({ students }: DailyCheckinOverviewProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* KPI Mini Cards */}
+        {/* KPI Mini Cards - Focused on TODAY */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {/* Total Check-ins */}
+          {/* Checked In Today */}
           <div className="rounded-lg border bg-card p-4 space-y-1">
             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
               <CalendarCheck className="h-3.5 w-3.5" />
-              Total Check-ins
+              Checked In Today
             </div>
             <div className="text-2xl font-bold text-card-foreground">
-              {stats.totalCheckins}
+              {todayStats.checkedInCount}
+              <span className="text-muted-foreground text-sm font-normal ml-1">/ {students.length}</span>
             </div>
             <div className="text-[11px] text-muted-foreground">
-              across {students.length} students
+              {todayStats.checkedInCount === students.length 
+                ? "All students checked in! 🎉"
+                : `${Math.round((todayStats.checkedInCount / students.length) * 100)}% attendance`}
             </div>
           </div>
 
-          {/* Top Streak */}
+           {/* Today's Mood */}
+           <div className="rounded-lg border bg-card p-4 space-y-1">
+            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+              <SmilePlus className="h-3.5 w-3.5 text-emerald-500" />
+              Good Mood Today
+            </div>
+            <div className="text-2xl font-bold text-card-foreground">
+              {todayStats.moodGoodCount}
+            </div>
+            <div className="text-[11px] text-muted-foreground">
+              {todayStats.checkedInCount > 0 
+                ? `${Math.round((todayStats.moodGoodCount / todayStats.checkedInCount) * 100)}% of check-ins`
+                : "No check-ins yet"}
+            </div>
+          </div>
+
+          {/* Top Streak (Kept for motivation) */}
           <div className="rounded-lg border bg-card p-4 space-y-1">
             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
               <Flame className="h-3.5 w-3.5 text-orange-500" />
@@ -134,59 +204,20 @@ const DailyCheckinOverview = ({ students }: DailyCheckinOverviewProps) => {
             </div>
           </div>
 
-          {/* Mood Distribution */}
-          <div className="rounded-lg border bg-card p-4 space-y-1.5">
-            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-              <SmilePlus className="h-3.5 w-3.5" />
-              Mood Distribution
-            </div>
-            {/* Stacked bar */}
-            <div className="flex h-3 w-full overflow-hidden rounded-full bg-secondary">
-              {moodGoodPct > 0 && (
-                <div
-                  className="h-full bg-emerald-500 transition-all"
-                  style={{ width: `${moodGoodPct}%` }}
-                  title={`Good: ${moodGoodPct}%`}
-                />
-              )}
-              {moodNeutralPct > 0 && (
-                <div
-                  className="h-full bg-amber-400 transition-all"
-                  style={{ width: `${moodNeutralPct}%` }}
-                  title={`Neutral: ${moodNeutralPct}%`}
-                />
-              )}
-              {moodBadPct > 0 && (
-                <div
-                  className="h-full bg-red-400 transition-all"
-                  style={{ width: `${moodBadPct}%` }}
-                  title={`Bad: ${moodBadPct}%`}
-                />
-              )}
-            </div>
-            <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-              <span>😊 {stats.moodGood}</span>
-              <span>😐 {stats.moodNeutral}</span>
-              {stats.moodBad > 0 && <span>😟 {stats.moodBad}</span>}
-            </div>
-          </div>
-
-          {/* Missing Students */}
+          {/* Missing Today */}
           <div className="rounded-lg border bg-card p-4 space-y-1">
             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
               <UserX className="h-3.5 w-3.5 text-red-400" />
-              No Check-ins
+              Missing Today
             </div>
             <div className={cn(
               "text-2xl font-bold",
-              stats.missingStudents.length > 0 ? "text-status-red" : "text-status-green"
+              todayStats.missingCount > 0 ? "text-status-red" : "text-status-green"
             )}>
-              {stats.missingStudents.length}
+              {todayStats.missingCount}
             </div>
             <div className="text-[11px] text-muted-foreground">
-              {stats.missingStudents.length > 0
-                ? "students never checked in"
-                : "all students checked in! 🎉"}
+              students haven't checked in
             </div>
           </div>
         </div>

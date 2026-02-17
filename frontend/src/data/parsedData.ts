@@ -313,18 +313,40 @@ export const getCheckinStats = (students: ParsedStudent[]) => {
 
 // Helper function to get heatmap data for the check-in calendar
 export const getCheckinHeatmapData = (students: ParsedStudent[]) => {
-  // Collect all unique dates across all students
-  const dateSet = new Set<string>();
+  // 1. Collect all actual check-in dates
+  const checkinDates = new Set<string>();
+  let minDateVal = new Date().getTime(); // Start with today
+
   students.forEach(student => {
     (student.dailyCheckins || []).forEach(ci => {
       const d = parseCheckinDate(ci.date);
-      dateSet.add(d.toISOString().split('T')[0]); // YYYY-MM-DD
+      const time = d.getTime();
+      checkinDates.add(d.toISOString().split('T')[0]); // YYYY-MM-DD
+      if (time < minDateVal) minDateVal = time;
     });
   });
 
-  const allDates = Array.from(dateSet).sort();
+  // 2. Determine range: Min(earliest checkin, today) to Today
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const maxDateVal = today.getTime();
+  
+  // Ensure minDate is not in the future (fallback to 2 weeks ago if no data)
+  if (minDateVal > maxDateVal) {
+    minDateVal = maxDateVal - (14 * 24 * 60 * 60 * 1000); 
+  }
 
-  // Build per-student row: for each date, did they check in? + mood
+  // 3. Generate continuous date array
+  const allDates: string[] = [];
+  const currentDate = new Date(minDateVal);
+  currentDate.setHours(0, 0, 0, 0);
+
+  while (currentDate.getTime() <= maxDateVal) {
+    allDates.push(currentDate.toISOString().split('T')[0]);
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  // 4. Build rows
   const rows = students.map(student => {
     const checkinMap = new Map<string, CheckinMood>();
     (student.dailyCheckins || []).forEach(ci => {
