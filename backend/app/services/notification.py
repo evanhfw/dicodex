@@ -47,7 +47,14 @@ class NotificationService:
             
         return stats
 
-    async def send_webhook(self, facilitator_name: str, class_name: str, status: str, message: str = ""):
+    async def send_webhook(
+        self,
+        facilitator_name: str,
+        class_name: str,
+        status: str,
+        message: str = "",
+        error_type: str = "",
+    ):
         """Send Discord webhook"""
         if not self.webhook_url:
             print("DISCORD_STATS_WEBHOOK_URL not set, skipping notification")
@@ -55,17 +62,21 @@ class NotificationService:
 
         # Get stats for the "dashboard" part of the message
         stats = await self.get_daily_stats()
-        
+
         # Determine color and title based on status
         color = 0x3498db  # Blue (Started)
         title = "🚀 Scraping Started"
-        
+
         if status == "completed":
             color = 0x2ecc71  # Green (Completed)
             title = "✅ Scraping Completed"
         elif status == "failed":
-            color = 0xe74c3c  # Red (Failed)
-            title = "❌ Scraping Failed"
+            if error_type == "invalid_credentials":
+                color = 0xe67e22  # Orange (Auth error)
+                title = "🔐 Login Failed — Invalid Credentials"
+            else:
+                color = 0xe74c3c  # Red (Failed)
+                title = "❌ Scraping Failed"
 
         # Build stats field text
         stats_lines = []
@@ -73,41 +84,52 @@ class NotificationService:
         for c in ["CFC", "CDC", "CAC"]:
             count = stats.get(c, 0)
             stats_lines.append(f"**{c}**: {count}")
-            
+
         # Other classes
         for c, count in stats.items():
             if c not in ["CFC", "CDC", "CAC"]:
                 stats_lines.append(f"**{c}**: {count}")
-        
+
         stats_value = "\n".join(stats_lines) if stats_lines else "No data yet"
+
+        # Build embed fields
+        fields = []
+
+        if error_type == "invalid_credentials":
+            fields.append({
+                "name": "Reason",
+                "value": "The provided email or password was rejected by Dicoding.",
+                "inline": False,
+            })
+        else:
+            fields.append({
+                "name": "Facilitator",
+                "value": facilitator_name or "Unknown",
+                "inline": True,
+            })
+            fields.append({
+                "name": "Class",
+                "value": class_name or "Unknown",
+                "inline": True,
+            })
+
+        fields.append({
+            "name": "Daily Stats (WIB)",
+            "value": stats_value,
+            "inline": False,
+        })
 
         # Build embed
         embed = {
             "title": title,
             "color": color,
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "fields": [
-                {
-                    "name": "Facilitator",
-                    "value": facilitator_name,
-                    "inline": True
-                },
-                {
-                    "name": "Class",
-                    "value": class_name,
-                    "inline": True
-                },
-                {
-                    "name": "Daily Stats (WIB)",
-                    "value": stats_value,
-                    "inline": False
-                }
-            ],
+            "fields": fields,
             "footer": {
                 "text": "Student Dashboard Scraper"
-            }
+            },
         }
-        
+
         if message:
             embed["description"] = f"**Message**: {message}"
 

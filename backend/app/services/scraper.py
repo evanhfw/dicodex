@@ -13,7 +13,12 @@ from pathlib import Path
 from typing import Dict, Any, Callable, Optional
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import (
+    InvalidSessionIdException,
+    NoSuchElementException,
+    TimeoutException,
+    WebDriverException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -29,6 +34,11 @@ SELENIUM_URL = os.getenv("SELENIUM_URL", "http://selenium:4444")
 OUTPUT_DIR = Path("/app/output")
 MAX_PAGINATION_STEPS = 300
 INTERACTION_TIMEOUT_SECONDS = 20
+
+
+class InvalidCredentialsError(Exception):
+    """Raised when login credentials are rejected by the site."""
+    pass
 
 
 class ScraperService:
@@ -83,8 +93,18 @@ class ScraperService:
                 progress_callback("Logging in...", 10, 100)
             self._login_with_email_password(driver, wait, scraper_email, scraper_password)
 
-            # Wait for redirect after login
-            WebDriverWait(driver, 30).until(lambda d: "/login" not in d.current_url)
+            # Wait for redirect after login, detecting invalid credentials
+            try:
+                WebDriverWait(driver, 30).until(
+                    lambda d: self._check_login_result(d)
+                )
+            except InvalidCredentialsError:
+                raise
+            except (TimeoutException, InvalidSessionIdException, WebDriverException) as exc:
+                raise InvalidCredentialsError(
+                    "Login failed. The email or password may be incorrect."
+                ) from exc
+
             self._wait_for_page_ready(driver, wait)
 
             # Extract mentor info immediately for notification
@@ -224,6 +244,49 @@ class ScraperService:
                 continue
 
         raise NoSuchElementException("Link 'your password' not found")
+
+    @staticmethod
+    def _check_login_error(driver) -> str | None:
+        """Check the page for login error messages. Returns the error text if found, None otherwise."""
+        error_selectors = [
+            "[role='alert']",
+            ".alert-danger",
+            ".error-message",
+            ".toast-error",
+            "[data-testid='error']",
+        ]
+        for selector in error_selectors:
+            elements = driver.find_elements(By.CSS_SELECTOR, selector)
+            for el in elements:
+                if el.is_displayed() and el.text.strip():
+                    return el.text.strip()
+
+        error_keywords = ["invalid", "incorrect", "wrong", "salah", "gagal", "failed"]
+        try:
+            page_text = driver.find_element(By.TAG_NAME, "body").text.lower()
+            for keyword in error_keywords:
+                if keyword in page_text and "/login" in driver.current_url:
+                    return f"Login page shows an error (detected keyword: '{keyword}')"
+        except Exception:
+            pass
+
+        return None
+
+    def _check_login_result(self, driver) -> bool:
+        """
+        Condition for WebDriverWait: returns True when login succeeded (redirected away from /login).
+        Raises InvalidCredentialsError early if an error message is detected on the page.
+        """
+        if "/login" not in driver.current_url:
+            return True
+
+        error_msg = self._check_login_error(driver)
+        if error_msg:
+            raise InvalidCredentialsError(
+                f"Login failed — the site returned an error: {error_msg}"
+            )
+
+        return False
 
     def _login_with_email_password(self, driver, wait, email: str, password: str):
         wait.until(

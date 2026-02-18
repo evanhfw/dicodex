@@ -8,7 +8,6 @@ import os
 from pathlib import Path
 
 from arq.connections import RedisSettings
-from arq.jobs import Job
 from dotenv import load_dotenv
 
 # Load environment variables (for local dev)
@@ -28,6 +27,7 @@ def _parse_redis_url(url: str) -> RedisSettings:
 from app.db import init_db, get_session
 from app.models import RequestLog
 from app.services.notification import NotificationService
+from app.services.scraper import InvalidCredentialsError
 
 
 async def startup(ctx):
@@ -41,6 +41,7 @@ async def handle_scrape_event(event: str, data: dict, notification_service: Noti
     group = "Unknown"
     status = event
     message = ""
+    error_type = data.get("error_type", "")
 
     if event == "started":
         # Data is mentor_info
@@ -53,7 +54,7 @@ async def handle_scrape_event(event: str, data: dict, notification_service: Noti
         group = mentor.get("group", "Unknown")
     elif event == "failed":
         # Data might have error info
-        facilitator = data.get("facilitator", "Unknown") # Might not be available if failed early
+        facilitator = data.get("facilitator", "Unknown")
         group = data.get("group", "Unknown")
         message = str(data.get("error", ""))
 
@@ -77,7 +78,8 @@ async def handle_scrape_event(event: str, data: dict, notification_service: Noti
         facilitator_name=facilitator,
         class_name=group,
         status=status,
-        message=message
+        message=message,
+        error_type=error_type,
     )
 
 
@@ -88,9 +90,6 @@ async def scrape_task(ctx: dict, email: str, password: str) -> dict:
     Selenium is blocking, so we offload to a thread via asyncio.to_thread.
     Instrumented with Prometheus metrics for monitoring.
     """
-    import time
-
-    from app.metrics import arq_job_duration_seconds, arq_jobs_total
     from app.services.scraper import ScraperService
 
     loop = asyncio.get_running_loop()
@@ -102,114 +101,29 @@ async def scrape_task(ctx: dict, email: str, password: str) -> dict:
         )
 
     scraper = ScraperService()
-    
+
     try:
         result = await asyncio.to_thread(
-            scraper.run_scraper, 
-            email=email, 
-            password=password, 
-            on_progress=on_progress
+            scraper.run_scraper,
+            email=email,
+            password=password,
+            on_progress=on_progress,
         )
-        
-        # Handle completion
+
         await handle_scrape_event("completed", result, notification_service)
         return result
-        
-    except Exception as e:
-        # Handle failure
-        await handle_scrape_event("failed", {"error": str(e)}, notification_service)
-        raise e
-    start = time.monotonic()
-    try:
-        scraper = ScraperService()
-        result = await asyncio.to_thread(scraper.run_scraper, email=email, password=password)
-        arq_jobs_total.labels(status="success").inc()
-        return result
-    except Exception as e:
-        arq_jobs_total.labels(status="failed").inc()
-        
-        # Send Alert
-        try:
-            from app.services.monitoring import DiscordMonitor
-            # We don't need app state for simple alerting, just the env vars loaded in init
-            monitor = DiscordMonitor(None)
-            await monitor.send_alert(
-                title="Job Failed", 
-                details={
-                   "Job": "Scrape Task",
-                   "Email": email, 
-                   "Error": str(e)
-                }
-            )
-        except Exception as alert_err:
-             print(f"Failed to send alert: {alert_err}")
-             
-        raise
-    finally:
-        duration = time.monotonic() - start
-        arq_job_duration_seconds.observe(duration)
-    job_id = ctx["job_id"]
-    redis = ctx["redis"]
 
-    async def update_progress(message: str, current_step: int, total_steps: int):
-        """Callback to update progress in Redis."""
-        percent = int((current_step / total_steps) * 100)
-        await redis.setex(
-            f"job_progress:{job_id}",
-            3600,  # Expire in 1 hour
-            f"{percent}|{message}|{current_step}|{total_steps}",
+    except InvalidCredentialsError as e:
+        await handle_scrape_event(
+            "failed",
+            {"error": str(e), "error_type": "invalid_credentials"},
+            notification_service,
         )
+        return {"success": False, "error": str(e), "error_type": "invalid_credentials"}
 
-    # We need to run the scraper in a thread because it's blocking (Selenium).
-    # But the callback is async (Redis write), so we need a bridge.
-    # Actually, the scraper calls the callback synchronously.
-    # So we need a sync wrapper that schedules the async Redis write.
-    
-    # Better approach: The scraper is synchronous. The callback passed to it MUST be synchronous.
-    # So we define a sync callback that uses a loop to run the async redis call? 
-    # Or just use a synchronous Redis client? 
-    # ARQ uses aioredis.
-    
-    # Since we are running scraper in a separate thread, we can't easily wait for async redis calls in the main loop 
-    # from that thread without a new loop.
-    
-    # Alternative: The callback launches a fire-and-forget task in the main event loop?
-    # But we are in `asyncio.to_thread`, which runs in a separate thread.
-    
-    # Let's use a thread-safe way to communicate back to the main loop.
-    # or just use a sync redis client inside the thread?
-    # Using a sync redis client is cleaner for the threaded scraper.
-    
-    def sync_progress_callback(message: str, current_step: int, total_steps: int):
-        import redis as sync_redis
-        
-        # Create a new sync redis connection key just for this update (or reuse if we can)
-        # For simplicity and thread safety, let's create a ephemeral connection or use a global pool if avail.
-        # But we don't have a global sync pool.
-        
-        try:
-             # Parse REDIS_URL again or use the global one
-            r = sync_redis.from_url(REDIS_URL)
-            percent = int((current_step / total_steps) * 100)
-            r.setex(
-                f"job_progress:{job_id}",
-                3600,
-                f"{percent}|{message}|{current_step}|{total_steps}",
-            )
-            r.close()
-        except Exception as e:
-            print(f"Error updating progress: {e}")
-
-    scraper = ScraperService()
-    
-    # We pass the SYNC callback to the scraper
-    result = await asyncio.to_thread(
-        scraper.run_scraper, 
-        email=email, 
-        password=password, 
-        progress_callback=sync_progress_callback
-    )
-    return result
+    except Exception as e:
+        await handle_scrape_event("failed", {"error": str(e)}, notification_service)
+        raise
 
 
 class WorkerSettings:
