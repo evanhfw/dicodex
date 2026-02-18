@@ -61,13 +61,22 @@ services:
   selenium:
     image: selenium/standalone-chrome:latest
     container_name: student-dashboard-selenium
-    ports:
-      - "${SELENIUM_PORT:-4444}:4444"
-      - "${SELENIUM_VNC_PORT:-7900}:7900"  # VNC server for debugging
-    shm_size: 2gb
+    # No ports exposed — only backend/worker access via Docker internal network
+    shm_size: 512m
     environment:
-      - SE_NODE_MAX_SESSIONS=5
-      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_SESSION_TIMEOUT=120
+      - SE_SESSION_REQUEST_TIMEOUT=60
+      - SE_SESSION_RETRY_INTERVAL=2
+      - JAVA_OPTS=-Xmx256m
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1g
+        reservations:
+          cpus: "0.5"
+          memory: 512m
     restart: unless-stopped
 
   # ===================================

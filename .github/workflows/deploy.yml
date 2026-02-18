@@ -13,7 +13,6 @@ on:
 # USERNAME                     - VPS SSH username
 # VPS_PASSWORD                 - VPS SSH password
 # HOST_PORT                    - Frontend port (default: 8080)
-# SELENIUM_PORT                - Selenium server port (default: 4444)
 # API_KEY                      - API key for backend authentication
 # VITE_API_KEY                 - API key passed to frontend at build time (must match API_KEY)
 # DEPLOY_PATH                  - Path on VPS where app will be deployed
@@ -78,7 +77,6 @@ jobs:
             cat > .env << 'EOF'
             DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
             HOST_PORT=${{ secrets.HOST_PORT }}
-            SELENIUM_PORT=${{ secrets.SELENIUM_PORT }}
             API_KEY=${{ secrets.API_KEY }}
             CONN_PSQL=${{ secrets.CONN_PSQL }}
             POSTGRES_TABLE_NAME=${{ secrets.POSTGRES_TABLE_NAME }}
