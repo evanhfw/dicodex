@@ -85,10 +85,10 @@ services:
     ports:
       - "4444:4444"
       - "7900:7900"  # VNC server for debugging (http://localhost:7900, password: secret)
-    shm_size: 2gb
+    shm_size: 512m
     environment:
-      - SE_NODE_MAX_SESSIONS=5
-      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_SESSION_TIMEOUT=120
 
   # ===================================
   # Monitoring Stack (dev overrides)

@@ -134,8 +134,8 @@ class WorkerSettings:
 
     on_startup = startup
 
-    # Concurrency: max 5 scrape jobs at once (Selenium has SE_NODE_MAX_SESSIONS=5)
-    max_jobs = 5
+    # Concurrency: max 3 scrape jobs at once (Selenium has SE_NODE_MAX_SESSIONS=3)
+    max_jobs = 3
 
     # Timeout: 10 minutes per scrape job
     job_timeout = 600
