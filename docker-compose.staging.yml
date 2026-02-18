@@ -1,0 +1,89 @@
+# Staging Environment Docker Compose
+# Uses shared selenium container from production to save resources
+# Prerequisites: Production must be running first to create the shared network
+
+services:
+  frontend-staging:
+    image: ${DOCKER_USERNAME}/cohort-dashboard-frontend:staging
+    container_name: student-dashboard-frontend-staging
+    ports:
+      - "${STAGING_HOST_PORT:-8081}:8080"
+    depends_on:
+      - backend-staging
+    restart: unless-stopped
+    networks:
+      - dashboard-staging-network
+      - dashboard-shared
+
+  backend-staging:
+    image: ${DOCKER_USERNAME}/cohort-dashboard-backend:staging
+    container_name: student-dashboard-backend-staging
+    environment:
+      # Connect to prod's selenium via shared network
+      - SELENIUM_URL=http://student-dashboard-selenium:4444
+      - CODINGCAMP_URL=https://codingcamp.dicoding.com
+      - API_KEY=${STAGING_API_KEY}
+      # Use staging's own redis
+      - REDIS_URL=redis://redis-staging:6379
+      - CONN_PSQL=${STAGING_CONN_PSQL}
+      - POSTGRES_TABLE_NAME=${STAGING_POSTGRES_TABLE_NAME}
+      - DISCORD_STATS_WEBHOOK_URL=${STAGING_DISCORD_STATS_WEBHOOK_URL:-}
+      - DISCORD_MONITOR_WEBHOOK_URL=${STAGING_DISCORD_MONITOR_WEBHOOK_URL:-}
+      - DISCORD_ALERT_WEBHOOK_URL=${STAGING_DISCORD_ALERT_WEBHOOK_URL:-}
+      - MONITOR_INTERVAL=${STAGING_MONITOR_INTERVAL:-300}
+    volumes:
+      - scraped_data_staging:/app/output
+    depends_on:
+      - redis-staging
+    restart: unless-stopped
+    networks:
+      - dashboard-staging-network
+      - dashboard-shared
+
+  worker-staging:
+    image: ${DOCKER_USERNAME}/cohort-dashboard-backend:staging
+    container_name: student-dashboard-worker-staging
+    command: uv run python -m app.run_worker
+    environment:
+      # Connect to prod's selenium via shared network
+      - SELENIUM_URL=http://student-dashboard-selenium:4444
+      - CODINGCAMP_URL=https://codingcamp.dicoding.com
+      # Use staging's own redis
+      - REDIS_URL=redis://redis-staging:6379
+      - CONN_PSQL=${STAGING_CONN_PSQL}
+      - POSTGRES_TABLE_NAME=${STAGING_POSTGRES_TABLE_NAME}
+      - DISCORD_STATS_WEBHOOK_URL=${STAGING_DISCORD_STATS_WEBHOOK_URL:-}
+      - DISCORD_MONITOR_WEBHOOK_URL=${STAGING_DISCORD_MONITOR_WEBHOOK_URL:-}
+      - DISCORD_ALERT_WEBHOOK_URL=${STAGING_DISCORD_ALERT_WEBHOOK_URL:-}
+      - MONITOR_INTERVAL=${STAGING_MONITOR_INTERVAL:-300}
+    volumes:
+      - scraped_data_staging:/app/output
+    depends_on:
+      - redis-staging
+    restart: unless-stopped
+    networks:
+      - dashboard-staging-network
+      - dashboard-shared
+
+  redis-staging:
+    image: redis:alpine
+    container_name: student-dashboard-redis-staging
+    volumes:
+      - redis_data_staging:/data
+    restart: unless-stopped
+    networks:
+      - dashboard-staging-network
+
+volumes:
+  scraped_data_staging:
+    name: student_dashboard_data_staging
+  redis_data_staging:
+    name: student_dashboard_redis_staging
+
+networks:
+  dashboard-staging-network:
+    name: dashboard-staging-network
+    driver: bridge
+  dashboard-shared:
+    external: true
+    name: dashboard-shared-network

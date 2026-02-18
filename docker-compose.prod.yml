@@ -7,6 +7,9 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+    networks:
+      - dashboard-network
+      - dashboard-shared
 
   backend:
     image: ${DOCKER_USERNAME}/cohort-dashboard-backend:latest
@@ -29,6 +32,9 @@ services:
       - selenium
       - redis
     restart: unless-stopped
+    networks:
+      - dashboard-network
+      - dashboard-shared
 
   worker:
     image: ${DOCKER_USERNAME}/cohort-dashboard-backend:latest
@@ -50,6 +56,9 @@ services:
       - selenium
       - redis
     restart: unless-stopped
+    networks:
+      - dashboard-network
+      - dashboard-shared
 
   redis:
     image: redis:alpine
@@ -57,6 +66,9 @@ services:
     volumes:
       - redis_data:/data
     restart: unless-stopped
+    networks:
+      - dashboard-network
+      - dashboard-shared
 
   selenium:
     image: selenium/standalone-chrome:latest
@@ -78,6 +90,8 @@ services:
           cpus: "0.5"
           memory: 512m
     restart: unless-stopped
+    networks:
+      - dashboard-shared
 
   # ===================================
   # Monitoring Stack
@@ -97,6 +111,9 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+    networks:
+      - dashboard-network
+      - dashboard-shared
 
   grafana:
     image: grafana/grafana:latest
@@ -112,6 +129,9 @@ services:
     depends_on:
       - prometheus
     restart: unless-stopped
+    networks:
+      - dashboard-network
+      - dashboard-shared
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -127,6 +147,9 @@ services:
     devices:
       - /dev/kmsg
     restart: unless-stopped
+    networks:
+      - dashboard-network
+      - dashboard-shared
 
   redis-exporter:
     image: oliver006/redis_exporter:latest
@@ -136,6 +159,9 @@ services:
     depends_on:
       - redis
     restart: unless-stopped
+    networks:
+      - dashboard-network
+      - dashboard-shared
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -153,6 +179,9 @@ services:
     environment:
       - DISCORD_ALERT_WEBHOOK_URL=${DISCORD_ALERT_WEBHOOK_URL}
     restart: unless-stopped
+    networks:
+      - dashboard-network
+      - dashboard-shared
 
 volumes:
   scraped_data:
@@ -163,3 +192,11 @@ volumes:
     name: student_dashboard_prometheus_prod
   grafana_data:
     name: student_dashboard_grafana_prod
+
+networks:
+  dashboard-network:
+    name: dashboard-prod-network
+    driver: bridge
+  dashboard-shared:
+    name: dashboard-shared-network
+    driver: bridge
