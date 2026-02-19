@@ -141,6 +141,7 @@ const UploadPage = () => {
               photoUrl: profile.photo_url || '',
               profileLink: profile.profile_link || '',
             },
+            lastUpdatedDicoding: progress.course_progress?.last_updated || '',
           };
         });
 

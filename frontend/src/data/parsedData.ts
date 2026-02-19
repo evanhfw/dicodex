@@ -57,6 +57,7 @@ export interface ParsedStudent {
   pointHistories?: PointHistory[];
   imageUrl?: string;
   profile?: StudentProfile;
+  lastUpdatedDicoding?: string;
 }
 
 export interface MentorInfo {
