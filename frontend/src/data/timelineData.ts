@@ -1,4 +1,4 @@
-// Real curriculum timeline data for DBS Coding Camp 2026 H1
+// Real curriculum timeline data for DBS diCodex 2026 H1
 // Extracted from the official curriculum spreadsheet
 
 export type MilestoneType = 'deadline' | 'event' | 'checkpoint';
