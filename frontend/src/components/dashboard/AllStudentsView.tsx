@@ -351,7 +351,7 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                     className="text-primary hover:underline"
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    diCodex Profile
+                                    CodingCamp Profile
                                   </a>
                                 </div>
                               )}
