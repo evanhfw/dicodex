@@ -240,13 +240,13 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
                 return (
                   <div
                     key={i}
-                    className="absolute top-1/2 z-10 flex flex-col items-center"
+                    className="group absolute top-1/2 z-10 flex cursor-pointer flex-col items-center hover:z-50"
                     style={{ left: `${pos}%`, transform: "translate(-50%, -50%)" }}
                   >
                     {/* The Dot */}
                     <div 
                       className={cn(
-                        "relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 bg-background shadow-sm transition-transform duration-200 hover:scale-125 hover:z-50 cursor-crosshair", 
+                        "relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 bg-background shadow-sm transition-transform duration-200 group-hover:scale-125", 
                         isItemPast ? "border-primary" : "border-muted-foreground/50",
                       )}
                       title={m.label}
@@ -256,17 +256,29 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
 
                     {/* Vertical connector line */}
                      <div className={cn(
-                        "absolute w-[2px] bg-border transition-colors group-hover/timeline:bg-border/60",
+                        "absolute w-[2px] bg-border transition-all duration-300",
                         isTop ? "bottom-full mb-2 h-6" : "top-full mt-2 h-6",
-                        isItemPast ? "bg-primary/30" : ""
+                        isItemPast ? "bg-primary/30" : "",
+                        // If all zoom, hide line by default and show on hover
+                        zoomLevel === 'all' && "opacity-0 group-hover:opacity-100 group-hover:bg-border/60"
                      )} />
 
-                    {/* Information Card (Always Visible) */}
+                    {/* Information Card */}
                     <div
                       className={cn(
-                        "absolute left-1/2 w-48 -translate-x-1/2 rounded border bg-card p-2 text-card-foreground shadow focus-within:z-50 hover:z-50 transition-shadow hover:shadow-md",
-                        isItemPast && "bg-muted/30 border-muted opacity-80 hover:opacity-100",
-                        isTop ? "bottom-full mb-8" : "top-full mt-8"
+                        "absolute left-1/2 w-48 -translate-x-1/2 rounded border bg-card p-2 text-card-foreground shadow focus-within:z-50 hover:shadow-md transition-all duration-300 pointer-events-none group-hover:pointer-events-auto",
+                        isItemPast && "bg-muted/30 border-muted",
+                        isTop ? "bottom-full mb-8" : "top-full mt-8",
+                        // Visibility logic
+                        zoomLevel === 'all'
+                          ? cn(
+                              "opacity-0 group-hover:opacity-100",
+                              isTop ? "translate-y-2 group-hover:translate-y-0" : "-translate-y-2 group-hover:translate-y-0"
+                            )
+                          : cn(
+                              "opacity-100",
+                              isItemPast && "opacity-80 hover:opacity-100"
+                            )
                       )}
                     >
                       <div className="flex items-center gap-1.5 mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
