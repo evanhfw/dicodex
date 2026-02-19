@@ -9,23 +9,27 @@ import {
   TimelineMilestone,
   MilestoneType,
 } from "@/data/timelineData";
+import { Video } from "lucide-react";
 
-const milestoneIconMap: Record<MilestoneType, typeof Flag> = {
+const milestoneIconMap: Record<MilestoneType, any> = {
   deadline: Flag,
   event: Calendar,
   checkpoint: CircleCheckBig,
+  ilt: Video,
 };
 
 const milestoneColorMap: Record<MilestoneType, string> = {
   deadline: "text-status-red bg-status-red/10 border-status-red",
   event: "text-status-blue bg-status-blue/10 border-status-blue",
   checkpoint: "text-status-green bg-status-green/10 border-status-green",
+  ilt: "text-purple-600 bg-purple-600/10 border-purple-600",
 };
 
 const milestoneBgMap: Record<MilestoneType, string> = {
   deadline: "bg-status-red",
   event: "bg-status-blue",
   checkpoint: "bg-status-green",
+  ilt: "bg-purple-600",
 };
 
 type ZoomLevel = 'week' | 'month' | 'all';
