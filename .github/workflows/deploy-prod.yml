@@ -70,6 +70,11 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
+            set -euo pipefail
+
+            COMPOSE_PROJECT_NAME=cohort-dashboard-prod
+            COMPOSE_FILE=docker-compose.prod.yml
+
             mkdir -p ${{ secrets.DEPLOY_PATH }}
             cd ${{ secrets.DEPLOY_PATH }}
             
@@ -87,8 +92,18 @@ jobs:
             MONITOR_INTERVAL=${{ secrets.MONITOR_INTERVAL }}
             EOF
             sed -i 's/^[[:space:]]*//' .env
+
+            # Fail fast if required production secrets are missing/empty
+            required_vars="DOCKER_USERNAME API_KEY CONN_PSQL POSTGRES_TABLE_NAME"
+            for var in $required_vars; do
+              value="$(grep -E "^${var}=" .env | head -n1 | cut -d= -f2-)"
+              if [ -z "$value" ]; then
+                echo "ERROR: Required production variable '$var' is empty or not set."
+                exit 1
+              fi
+            done
             
-            curl -o docker-compose.prod.yml https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.prod.yml
+            curl -o "$COMPOSE_FILE" https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.prod.yml
             
             REPO_RAW=https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}
             mkdir -p monitoring/prometheus monitoring/alertmanager/templates monitoring/grafana/provisioning/datasources monitoring/grafana/provisioning/dashboards monitoring/grafana/dashboards
@@ -102,9 +117,41 @@ jobs:
             curl -o monitoring/grafana/dashboards/application.json $REPO_RAW/monitoring/grafana/dashboards/application.json
             curl -o monitoring/grafana/dashboards/redis.json $REPO_RAW/monitoring/grafana/dashboards/redis.json
             
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml down
-            docker compose -f docker-compose.prod.yml up -d
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" config > /tmp/prod-compose-rendered.yml
+            if grep -qE 'CONN_PSQL: ""|API_KEY: ""' /tmp/prod-compose-rendered.yml; then
+              echo "ERROR: Resolved compose contains empty CONN_PSQL/API_KEY."
+              exit 1
+            fi
+
+            # Ensure old production containers with fixed names are removed
+            docker rm -f \
+              student-dashboard-frontend \
+              student-dashboard-backend \
+              student-dashboard-worker \
+              student-dashboard-redis \
+              student-dashboard-selenium \
+              student-dashboard-prometheus \
+              student-dashboard-grafana \
+              student-dashboard-cadvisor \
+              student-dashboard-redis-exporter \
+              student-dashboard-alertmanager \
+              2>/dev/null || true
+
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" down --remove-orphans || true
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" pull
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" up -d
+
+            # Post-deploy sanity checks for API key propagation
+            frontend_key_len=$(docker exec student-dashboard-frontend sh -lc 'printf %s "$API_KEY" | wc -c' | tr -d ' ')
+            backend_key_len=$(docker exec student-dashboard-backend sh -lc 'printf %s "$API_KEY" | wc -c' | tr -d ' ')
+            if [ "$frontend_key_len" -eq 0 ] || [ "$backend_key_len" -eq 0 ] || [ "$frontend_key_len" -ne "$backend_key_len" ]; then
+              echo "ERROR: API_KEY length mismatch or empty (frontend=$frontend_key_len backend=$backend_key_len)"
+              exit 1
+            fi
+
+            docker exec student-dashboard-frontend sh -lc \
+              'grep -n "proxy_set_header X-API-Key" /etc/nginx/conf.d/default.conf'
+
             docker image prune -f
             docker ps
 

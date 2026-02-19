@@ -11,8 +11,13 @@ server {
 
     # Reverse proxy to backend (internal Docker network)
     location /api/ {
-        proxy_pass http://backend:3000/api/;
-        proxy_set_header X-API-Key "$http_x_api_key";
+        set $upstream_api_key "${API_KEY}";
+        if ($http_x_api_key != "") {
+            set $upstream_api_key $http_x_api_key;
+        }
+
+        proxy_pass http://${BACKEND_HOST}:3000/api/;
+        proxy_set_header X-API-Key $upstream_api_key;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -23,7 +28,7 @@ server {
 
     # Reverse proxy to Grafana (internal Docker network)
     location /grafana/ {
-        proxy_pass http://grafana:3000/;
+        proxy_pass http://${GRAFANA_HOST}:3000/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

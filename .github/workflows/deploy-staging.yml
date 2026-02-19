@@ -72,6 +72,11 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
+            set -euo pipefail
+
+            COMPOSE_PROJECT_NAME=cohort-dashboard-staging
+            COMPOSE_FILE=docker-compose.staging.yml
+
             if ! docker network inspect dashboard-shared-network > /dev/null 2>&1; then
               echo "ERROR: dashboard-shared-network not found!"
               echo "Production must be deployed first to create the shared network."
@@ -93,12 +98,49 @@ jobs:
             STAGING_MONITOR_INTERVAL=${{ secrets.STAGING_MONITOR_INTERVAL }}
             EOF
             sed -i 's/^[[:space:]]*//' .env
+
+            # Fail fast if required staging secrets are missing/empty
+            required_vars="DOCKER_USERNAME STAGING_API_KEY STAGING_CONN_PSQL STAGING_POSTGRES_TABLE_NAME"
+            for var in $required_vars; do
+              value="$(grep -E "^${var}=" .env | head -n1 | cut -d= -f2-)"
+              if [ -z "$value" ]; then
+                echo "ERROR: Required staging variable '$var' is empty or not set."
+                exit 1
+              fi
+            done
             
-            curl -o docker-compose.staging.yml https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.staging.yml
-            
-            docker compose -f docker-compose.staging.yml pull
-            docker compose -f docker-compose.staging.yml down
-            docker compose -f docker-compose.staging.yml up -d
+            curl -o "$COMPOSE_FILE" https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.staging.yml
+
+            # Rendered compose should show concrete values for critical env vars
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" config > /tmp/staging-compose-rendered.yml
+            if grep -qE 'CONN_PSQL: ""|API_KEY: ""' /tmp/staging-compose-rendered.yml; then
+              echo "ERROR: Resolved compose contains empty CONN_PSQL/API_KEY."
+              exit 1
+            fi
+
+            # Ensure old staging containers with fixed names are removed
+            docker rm -f \
+              student-dashboard-frontend-staging \
+              student-dashboard-backend-staging \
+              student-dashboard-worker-staging \
+              student-dashboard-redis-staging \
+              2>/dev/null || true
+
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" down --remove-orphans || true
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" pull
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" up -d
+
+            # Post-deploy sanity checks for API key propagation
+            frontend_key_len=$(docker exec student-dashboard-frontend-staging sh -lc 'printf %s "$API_KEY" | wc -c' | tr -d ' ')
+            backend_key_len=$(docker exec student-dashboard-backend-staging sh -lc 'printf %s "$API_KEY" | wc -c' | tr -d ' ')
+            if [ "$frontend_key_len" -eq 0 ] || [ "$backend_key_len" -eq 0 ] || [ "$frontend_key_len" -ne "$backend_key_len" ]; then
+              echo "ERROR: API_KEY length mismatch or empty (frontend=$frontend_key_len backend=$backend_key_len)"
+              exit 1
+            fi
+
+            docker exec student-dashboard-frontend-staging sh -lc \
+              'grep -n "proxy_set_header X-API-Key" /etc/nginx/conf.d/default.conf'
+
             docker image prune -f
             docker ps | grep staging
 

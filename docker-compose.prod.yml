@@ -1,9 +1,13 @@
 services:
   frontend:
-    image: ${DOCKER_USERNAME}/cohort-dashboard-frontend:latest
+    image: ${DOCKER_USERNAME:?DOCKER_USERNAME is required}/cohort-dashboard-frontend:latest
     container_name: student-dashboard-frontend
     ports:
       - "${HOST_PORT:-8080}:8080"
+    environment:
+      - BACKEND_HOST=backend
+      - GRAFANA_HOST=grafana
+      - API_KEY=${API_KEY:?API_KEY is required}
     depends_on:
       - backend
     restart: unless-stopped
@@ -12,16 +16,16 @@ services:
       - dashboard-shared
 
   backend:
-    image: ${DOCKER_USERNAME}/cohort-dashboard-backend:latest
+    image: ${DOCKER_USERNAME:?DOCKER_USERNAME is required}/cohort-dashboard-backend:latest
     container_name: student-dashboard-backend
     # No port exposed — accessed via Nginx reverse proxy on internal network
     environment:
       - SELENIUM_URL=http://selenium:4444
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
-      - API_KEY=${API_KEY}
+      - API_KEY=${API_KEY:?API_KEY is required}
       - REDIS_URL=redis://redis:6379
-      - CONN_PSQL=${CONN_PSQL}
-      - POSTGRES_TABLE_NAME=${POSTGRES_TABLE_NAME}
+      - CONN_PSQL=${CONN_PSQL:?CONN_PSQL is required}
+      - POSTGRES_TABLE_NAME=${POSTGRES_TABLE_NAME:?POSTGRES_TABLE_NAME is required}
       - DISCORD_STATS_WEBHOOK_URL=${DISCORD_STATS_WEBHOOK_URL}
       - DISCORD_MONITOR_WEBHOOK_URL=${DISCORD_MONITOR_WEBHOOK_URL}
       - DISCORD_ALERT_WEBHOOK_URL=${DISCORD_ALERT_WEBHOOK_URL}
@@ -37,15 +41,15 @@ services:
       - dashboard-shared
 
   worker:
-    image: ${DOCKER_USERNAME}/cohort-dashboard-backend:latest
+    image: ${DOCKER_USERNAME:?DOCKER_USERNAME is required}/cohort-dashboard-backend:latest
     container_name: student-dashboard-worker
     command: uv run python -m app.run_worker
     environment:
       - SELENIUM_URL=http://selenium:4444
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       - REDIS_URL=redis://redis:6379
-      - CONN_PSQL=${CONN_PSQL}
-      - POSTGRES_TABLE_NAME=${POSTGRES_TABLE_NAME}
+      - CONN_PSQL=${CONN_PSQL:?CONN_PSQL is required}
+      - POSTGRES_TABLE_NAME=${POSTGRES_TABLE_NAME:?POSTGRES_TABLE_NAME is required}
       - DISCORD_STATS_WEBHOOK_URL=${DISCORD_STATS_WEBHOOK_URL}
       - DISCORD_MONITOR_WEBHOOK_URL=${DISCORD_MONITOR_WEBHOOK_URL}
       - DISCORD_ALERT_WEBHOOK_URL=${DISCORD_ALERT_WEBHOOK_URL}
