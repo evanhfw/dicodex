@@ -188,7 +188,7 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
         {/* Timeline Container */}
         <div 
           ref={scrollContainerRef}
-          className="group/timeline relative w-full overflow-x-auto overflow-y-hidden pb-44 pt-28 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border/60 hover:[&::-webkit-scrollbar-thumb]:bg-border"
+          className="group/timeline relative w-full overflow-x-auto overflow-y-hidden pb-44 pt-44 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border/60 hover:[&::-webkit-scrollbar-thumb]:bg-border"
         >
           {/* Timeline width is proportional to the number of visible items or just wide to spread them out */}
           <div className="relative h-2 min-w-[1200px]" style={{ width: zoomLevel === 'all' ? '250%' : zoomLevel === 'month' ? '150%' : '100%' }}>
