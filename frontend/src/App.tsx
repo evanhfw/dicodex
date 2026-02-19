@@ -7,29 +7,26 @@ import { StudentDataProvider } from "@/contexts/StudentDataContext";
 import UploadPage from "./pages/UploadPage";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
-import { ThemeProvider } from "@/components/theme-provider";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ThemeProvider defaultTheme="system" storageKey="dicodex-ui-theme">
-    <QueryClientProvider client={queryClient}>
-      <StudentDataProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<UploadPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </StudentDataProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
+  <QueryClientProvider client={queryClient}>
+    <StudentDataProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<UploadPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </StudentDataProvider>
+  </QueryClientProvider>
 );
 
 export default App;
