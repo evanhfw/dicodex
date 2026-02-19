@@ -10,12 +10,10 @@ import { useStudentData } from '@/contexts/StudentDataContext';
 import { parseStudentHTML, readFileAsText, validateFileSize } from '@/lib/htmlParser';
 import { ParsedStudent, MentorInfo, mapStatus } from '@/data/parsedData';
 import { CredentialsForm } from '@/components/dashboard/CredentialsForm';
-import { ThemeToggle } from '@/components/theme-toggle';
 
 const UploadPage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [pastedHtml, setPastedHtml] = useState('');
-  const [activeTab, setActiveTab] = useState('credentials');
   const [isLoading, setIsLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -143,7 +141,6 @@ const UploadPage = () => {
               photoUrl: profile.photo_url || '',
               profileLink: profile.profile_link || '',
             },
-            lastUpdatedDicoding: progress.course_progress?.last_updated || '',
           };
         });
 
@@ -211,16 +208,16 @@ const UploadPage = () => {
   const canParse = (selectedFile !== null || pastedHtml.trim().length > 0) && !isLoading;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/30 transition-colors duration-500">
-      <header className="border-b bg-background/60 backdrop-blur-xl px-6 py-4 flex justify-between items-center sticky top-0 z-50 border-border/50 shadow-sm">
-        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-          diCodex <span className="text-card-foreground text-lg ml-1 font-semibold">— Upload Student Data</span>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b bg-card px-6 py-4">
+        <h1 className="text-xl font-bold text-card-foreground">
+          <span className="text-primary">Coding Camp</span> — Upload Student Data
         </h1>
-        <ThemeToggle />
       </header>
 
       <main className="mx-auto max-w-4xl p-6">
-        <Card className="shadow-lg border-primary/10 hover:border-primary/20 transition-all duration-300">
+        <Card>
           <CardHeader>
             <CardTitle>Get Student Data</CardTitle>
             <CardDescription>
@@ -228,7 +225,7 @@ const UploadPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs defaultValue="credentials" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="credentials">Auto Scrape</TabsTrigger>
                 <TabsTrigger value="upload">Upload File</TabsTrigger>
@@ -252,10 +249,10 @@ const UploadPage = () => {
               {/* Tab 3: Upload File */}
               <TabsContent value="upload" className="space-y-4">
                 <div
-                  className={`relative rounded-xl border-2 border-dashed p-10 text-center transition-all duration-300 ${
+                  className={`relative rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
                     isDragging
-                      ? 'border-primary bg-primary/10 scale-[1.02] shadow-md'
-                      : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/5 hover:scale-[1.01]'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-muted-foreground/25 hover:border-muted-foreground/50'
                   }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -320,28 +317,26 @@ const UploadPage = () => {
             </Tabs>
 
             {/* Parse Button */}
-            {activeTab !== 'credentials' && (
-              <div className="mt-6 flex justify-end">
-                <Button
-                  onClick={handleParse}
-                  disabled={!canParse}
-                  className="min-w-[200px] shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
-                  size="lg"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Parsing...
-                    </>
-                  ) : (
-                    <>
-                      <FileText className="mr-2 h-4 w-4" />
-                      Parse & View Dashboard
-                    </>
-                  )}
-                </Button>
-              </div>
-            )}
+            <div className="mt-6 flex justify-end">
+              <Button
+                onClick={handleParse}
+                disabled={!canParse}
+                className="min-w-[200px]"
+                size="lg"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Parsing...
+                  </>
+                ) : (
+                  <>
+                    <FileText className="mr-2 h-4 w-4" />
+                    Parse & View Dashboard
+                  </>
+                )}
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
@@ -364,7 +359,7 @@ const UploadPage = () => {
               <div>
                 <h4 className="font-medium text-foreground mb-2">Option 2: Manual Upload</h4>
                 <ol className="list-decimal space-y-1 pl-5">
-                  <li>Upload an HTML file or paste HTML content from the diCodex page</li>
+                  <li>Upload an HTML file or paste HTML content from the Dicoding Coding Camp page</li>
                   <li>Click "Parse & View Dashboard" to process the data</li>
                   <li>You will be automatically redirected to the dashboard</li>
                 </ol>
