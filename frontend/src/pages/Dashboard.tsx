@@ -81,12 +81,29 @@ const Dashboard = () => {
         {/* Data Info Banner */}
         <Card className="border-primary/20 bg-primary/5 shadow-sm">
           <CardContent className="flex items-center justify-between py-3">
-            <p className="text-sm text-muted-foreground">
-              Viewing data parsed on{' '}
-              <span className="font-medium text-foreground">
-                {new Date(studentData.parsedAt).toLocaleString()}
-              </span>
-            </p>
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
+              <p className="text-sm text-muted-foreground">
+                Viewing data parsed on{' '}
+                <span className="font-medium text-foreground">
+                  {new Date(studentData.parsedAt).toLocaleString()}
+                </span>
+              </p>
+              {studentData.students?.[0]?.lastUpdatedDicoding && (
+                <>
+                  <div className="hidden h-4 w-px bg-border sm:block" />
+                  <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    </span>
+                    Last updated in Dicoding:{' '}
+                    <span className="font-medium text-foreground">
+                      {studentData.students[0].lastUpdatedDicoding}
+                    </span>
+                  </p>
+                </>
+              )}
+            </div>
           </CardContent>
         </Card>
 
