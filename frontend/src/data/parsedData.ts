@@ -250,11 +250,112 @@ export const getAssignmentStats = (students: ParsedStudent[]) => {
   }));
 };
 
-// Helper: parse a check-in date string like "Sat, Feb 14, 2026" to a Date
+const isValidDate = (date: Date): boolean => !Number.isNaN(date.getTime());
+
+const INDONESIAN_MONTH_MAP: Record<string, number> = {
+  jan: 0,
+  januari: 0,
+  feb: 1,
+  februari: 1,
+  mar: 2,
+  maret: 2,
+  apr: 3,
+  april: 3,
+  mei: 4,
+  jun: 5,
+  juni: 5,
+  jul: 6,
+  juli: 6,
+  agu: 7,
+  agt: 7,
+  ags: 7,
+  agustus: 7,
+  aug: 7,
+  sep: 8,
+  sept: 8,
+  september: 8,
+  okt: 9,
+  oktober: 9,
+  oct: 9,
+  nov: 10,
+  november: 10,
+  des: 11,
+  desember: 11,
+  dec: 11,
+  december: 11,
+};
+
+const toLocalDateOnly = (date: Date): Date => {
+  const local = new Date(date);
+  local.setHours(0, 0, 0, 0);
+  return local;
+};
+
+export const getLocalDateKey = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const parseDateByParts = (raw: string): Date | null => {
+  // Formats: "20 Feb 2026", "20 February 2026", "Feb 20, 2026"
+  const dayFirst = raw.match(/^(\d{1,2})[.\-/\s]+([A-Za-z]+)[.\-/\s,]+(\d{4})$/);
+  if (dayFirst) {
+    const day = Number(dayFirst[1]);
+    const month = INDONESIAN_MONTH_MAP[dayFirst[2].toLowerCase()];
+    const year = Number(dayFirst[3]);
+    if (month !== undefined) return new Date(year, month, day);
+  }
+
+  const monthFirst = raw.match(/^([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})$/);
+  if (monthFirst) {
+    const month = INDONESIAN_MONTH_MAP[monthFirst[1].toLowerCase()];
+    const day = Number(monthFirst[2]);
+    const year = Number(monthFirst[3]);
+    if (month !== undefined) return new Date(year, month, day);
+  }
+
+  const isoLike = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoLike) {
+    return new Date(Number(isoLike[1]), Number(isoLike[2]) - 1, Number(isoLike[3]));
+  }
+
+  return null;
+};
+
+// Helper: parse check-in date robustly across timezone-sensitive and localized formats.
 export const parseCheckinDate = (dateStr: string): Date => {
-  // Remove day-of-week prefix like "Sat, "
-  const cleaned = dateStr.replace(/^\w+,\s*/, '');
-  return new Date(cleaned);
+  const raw = (dateStr || '').trim();
+  if (!raw) return new Date(NaN);
+
+  const lowered = raw.toLowerCase();
+  if (lowered === 'today' || lowered === 'hari ini') {
+    return toLocalDateOnly(new Date());
+  }
+  if (lowered === 'yesterday' || lowered === 'kemarin') {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return toLocalDateOnly(yesterday);
+  }
+
+  // Drop weekday prefix only for formats like "Thu, Feb 20, 2026"
+  const commaCount = (raw.match(/,/g) || []).length;
+  const cleaned = commaCount >= 2 ? raw.substring(raw.indexOf(',') + 1).trim() : raw;
+
+  const parsedNative = new Date(cleaned);
+  if (isValidDate(parsedNative)) return parsedNative;
+
+  const parsedByParts = parseDateByParts(cleaned) || parseDateByParts(raw);
+  if (parsedByParts && isValidDate(parsedByParts)) return parsedByParts;
+
+  return new Date(NaN);
+};
+
+export const getCheckinDateKey = (dateStr: string): string | null => {
+  const parsed = parseCheckinDate(dateStr);
+  if (!isValidDate(parsed)) return null;
+  return getLocalDateKey(toLocalDateOnly(parsed));
 };
 
 // Helper function to get daily check-in statistics across all students
@@ -283,9 +384,19 @@ export const getCheckinStats = (students: ParsedStudent[]) => {
     });
 
     // Calculate streak (consecutive days from most recent)
-    const sortedDates = checkins
-      .map(ci => parseCheckinDate(ci.date).getTime())
-      .sort((a, b) => b - a); // newest first
+    const sortedDates = Array.from(
+      new Set(
+        checkins
+          .map(ci => parseCheckinDate(ci.date))
+          .filter(isValidDate)
+          .map(d => toLocalDateOnly(d).getTime())
+      )
+    ).sort((a, b) => b - a); // newest first
+
+    if (sortedDates.length === 0) {
+      streaks.push({ name: student.name, streak: 0 });
+      return;
+    }
 
     let streak = 1;
     for (let i = 1; i < sortedDates.length; i++) {
@@ -313,23 +424,18 @@ export const getCheckinStats = (students: ParsedStudent[]) => {
 
 // Helper function to get heatmap data for the check-in calendar
 export const getCheckinHeatmapData = (students: ParsedStudent[]) => {
-  // 1. Collect all actual check-in dates
-  const checkinDates = new Set<string>();
-  let minDateVal = new Date().getTime(); // Start with today
+  const today = toLocalDateOnly(new Date());
+  const maxDateVal = today.getTime();
+  let minDateVal = maxDateVal;
 
   students.forEach(student => {
     (student.dailyCheckins || []).forEach(ci => {
       const d = parseCheckinDate(ci.date);
-      const time = d.getTime();
-      checkinDates.add(d.toISOString().split('T')[0]); // YYYY-MM-DD
+      if (!isValidDate(d)) return;
+      const time = toLocalDateOnly(d).getTime();
       if (time < minDateVal) minDateVal = time;
     });
   });
-
-  // 2. Determine range: Min(earliest checkin, today) to Today
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const maxDateVal = today.getTime();
   
   // Ensure minDate is not in the future (fallback to 2 weeks ago if no data)
   if (minDateVal > maxDateVal) {
@@ -342,7 +448,7 @@ export const getCheckinHeatmapData = (students: ParsedStudent[]) => {
   currentDate.setHours(0, 0, 0, 0);
 
   while (currentDate.getTime() <= maxDateVal) {
-    allDates.push(currentDate.toISOString().split('T')[0]);
+    allDates.push(getLocalDateKey(currentDate));
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
@@ -350,8 +456,9 @@ export const getCheckinHeatmapData = (students: ParsedStudent[]) => {
   const rows = students.map(student => {
     const checkinMap = new Map<string, DailyCheckin>();
     (student.dailyCheckins || []).forEach(ci => {
-      const d = parseCheckinDate(ci.date);
-      checkinMap.set(d.toISOString().split('T')[0], ci);
+      const dateKey = getCheckinDateKey(ci.date);
+      if (!dateKey) return;
+      checkinMap.set(dateKey, ci);
     });
 
     return {
