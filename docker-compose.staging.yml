@@ -11,6 +11,7 @@ services:
     environment:
       - BACKEND_HOST=backend-staging
       - GRAFANA_HOST=grafana
+      - API_KEY=${STAGING_API_KEY}
     depends_on:
       - backend-staging
     restart: unless-stopped

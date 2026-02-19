@@ -35,7 +35,7 @@ COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
 
 # Create entrypoint script to substitute env vars and start nginx
 RUN echo '#!/bin/sh\n\
-envsubst "\$BACKEND_HOST \$GRAFANA_HOST" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf\n\
+envsubst "\$BACKEND_HOST \$GRAFANA_HOST \$API_KEY" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf\n\
 nginx -g "daemon off;"' > /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
 
 # Expose port

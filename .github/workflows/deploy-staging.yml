@@ -93,8 +93,25 @@ jobs:
             STAGING_MONITOR_INTERVAL=${{ secrets.STAGING_MONITOR_INTERVAL }}
             EOF
             sed -i 's/^[[:space:]]*//' .env
+
+            # Fail fast if required staging secrets are missing/empty
+            required_vars="DOCKER_USERNAME STAGING_API_KEY STAGING_CONN_PSQL STAGING_POSTGRES_TABLE_NAME"
+            for var in $required_vars; do
+              value="$(grep -E "^${var}=" .env | head -n1 | cut -d= -f2-)"
+              if [ -z "$value" ]; then
+                echo "ERROR: Required staging variable '$var' is empty or not set."
+                exit 1
+              fi
+            done
             
             curl -o docker-compose.staging.yml https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.staging.yml
+
+            # Rendered compose should show concrete values for critical env vars
+            docker compose -f docker-compose.staging.yml config > /tmp/staging-compose-rendered.yml
+            if grep -qE 'CONN_PSQL: ""|API_KEY: ""' /tmp/staging-compose-rendered.yml; then
+              echo "ERROR: Resolved compose contains empty CONN_PSQL/API_KEY."
+              exit 1
+            fi
             
             docker compose -f docker-compose.staging.yml pull
             docker compose -f docker-compose.staging.yml down

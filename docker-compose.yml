@@ -6,6 +6,10 @@ services:
     container_name: student-dashboard-frontend
     ports:
       - "8080:8080"
+    environment:
+      - BACKEND_HOST=backend
+      - GRAFANA_HOST=grafana
+      - API_KEY=${API_KEY}
     depends_on:
       - backend
     restart: unless-stopped
