@@ -4,14 +4,14 @@
 
 services:
   frontend-staging:
-    image: ${DOCKER_USERNAME}/cohort-dashboard-frontend:staging
+    image: ${DOCKER_USERNAME:?DOCKER_USERNAME is required}/cohort-dashboard-frontend:staging
     container_name: student-dashboard-frontend-staging
     ports:
       - "${STAGING_HOST_PORT:-8081}:8080"
     environment:
       - BACKEND_HOST=backend-staging
       - GRAFANA_HOST=grafana
-      - API_KEY=${STAGING_API_KEY}
+      - API_KEY=${STAGING_API_KEY:?STAGING_API_KEY is required}
     depends_on:
       - backend-staging
     restart: unless-stopped
@@ -20,17 +20,17 @@ services:
       - dashboard-shared
 
   backend-staging:
-    image: ${DOCKER_USERNAME}/cohort-dashboard-backend:staging
+    image: ${DOCKER_USERNAME:?DOCKER_USERNAME is required}/cohort-dashboard-backend:staging
     container_name: student-dashboard-backend-staging
     environment:
       # Connect to prod's selenium via shared network
       - SELENIUM_URL=http://student-dashboard-selenium:4444
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
-      - API_KEY=${STAGING_API_KEY}
+      - API_KEY=${STAGING_API_KEY:?STAGING_API_KEY is required}
       # Use staging's own redis
       - REDIS_URL=redis://redis-staging:6379
-      - CONN_PSQL=${STAGING_CONN_PSQL}
-      - POSTGRES_TABLE_NAME=${STAGING_POSTGRES_TABLE_NAME}
+      - CONN_PSQL=${STAGING_CONN_PSQL:?STAGING_CONN_PSQL is required}
+      - POSTGRES_TABLE_NAME=${STAGING_POSTGRES_TABLE_NAME:?STAGING_POSTGRES_TABLE_NAME is required}
       - DISCORD_STATS_WEBHOOK_URL=${STAGING_DISCORD_STATS_WEBHOOK_URL:-}
       - DISCORD_MONITOR_WEBHOOK_URL=${STAGING_DISCORD_MONITOR_WEBHOOK_URL:-}
       - DISCORD_ALERT_WEBHOOK_URL=${STAGING_DISCORD_ALERT_WEBHOOK_URL:-}
@@ -45,7 +45,7 @@ services:
       - dashboard-shared
 
   worker-staging:
-    image: ${DOCKER_USERNAME}/cohort-dashboard-backend:staging
+    image: ${DOCKER_USERNAME:?DOCKER_USERNAME is required}/cohort-dashboard-backend:staging
     container_name: student-dashboard-worker-staging
     command: uv run python -m app.run_worker
     environment:
@@ -54,8 +54,8 @@ services:
       - CODINGCAMP_URL=https://codingcamp.dicoding.com
       # Use staging's own redis
       - REDIS_URL=redis://redis-staging:6379
-      - CONN_PSQL=${STAGING_CONN_PSQL}
-      - POSTGRES_TABLE_NAME=${STAGING_POSTGRES_TABLE_NAME}
+      - CONN_PSQL=${STAGING_CONN_PSQL:?STAGING_CONN_PSQL is required}
+      - POSTGRES_TABLE_NAME=${STAGING_POSTGRES_TABLE_NAME:?STAGING_POSTGRES_TABLE_NAME is required}
       - DISCORD_STATS_WEBHOOK_URL=${STAGING_DISCORD_STATS_WEBHOOK_URL:-}
       - DISCORD_MONITOR_WEBHOOK_URL=${STAGING_DISCORD_MONITOR_WEBHOOK_URL:-}
       - DISCORD_ALERT_WEBHOOK_URL=${STAGING_DISCORD_ALERT_WEBHOOK_URL:-}

@@ -116,6 +116,18 @@ jobs:
             docker compose -f docker-compose.staging.yml pull
             docker compose -f docker-compose.staging.yml down
             docker compose -f docker-compose.staging.yml up -d
+
+            # Post-deploy sanity checks for API key propagation
+            frontend_key_len=$(docker exec student-dashboard-frontend-staging sh -lc 'printf %s "$API_KEY" | wc -c' | tr -d ' ')
+            backend_key_len=$(docker exec student-dashboard-backend-staging sh -lc 'printf %s "$API_KEY" | wc -c' | tr -d ' ')
+            if [ "$frontend_key_len" -eq 0 ] || [ "$backend_key_len" -eq 0 ] || [ "$frontend_key_len" -ne "$backend_key_len" ]; then
+              echo "ERROR: API_KEY length mismatch or empty (frontend=$frontend_key_len backend=$backend_key_len)"
+              exit 1
+            fi
+
+            docker exec student-dashboard-frontend-staging sh -lc \
+              'grep -n "proxy_set_header X-API-Key" /etc/nginx/conf.d/default.conf'
+
             docker image prune -f
             docker ps | grep staging
 

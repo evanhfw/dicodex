@@ -11,8 +11,13 @@ server {
 
     # Reverse proxy to backend (internal Docker network)
     location /api/ {
+        set $upstream_api_key "${API_KEY}";
+        if ($http_x_api_key != "") {
+            set $upstream_api_key $http_x_api_key;
+        }
+
         proxy_pass http://${BACKEND_HOST}:3000/api/;
-        proxy_set_header X-API-Key "${API_KEY}";
+        proxy_set_header X-API-Key $upstream_api_key;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
