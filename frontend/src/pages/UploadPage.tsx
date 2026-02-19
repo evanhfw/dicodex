@@ -357,7 +357,7 @@ const UploadPage = () => {
                 <ol className="list-decimal space-y-1 pl-5">
                   <li>Enter your Dicoding email and password</li>
                   <li>Click "Start Scraping" to automatically fetch the latest data</li>
-                  <li>Wait 2-5 minutes for the scraping to complete</li>
+                  <li>Wait ~30 second for the scraping to complete</li>
                   <li>You will be automatically redirected to the dashboard</li>
                 </ol>
               </div>
