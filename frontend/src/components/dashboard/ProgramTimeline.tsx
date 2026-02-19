@@ -243,21 +243,21 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
                     className="group absolute top-1/2 z-10 flex cursor-pointer flex-col items-center hover:z-50"
                     style={{ left: `${pos}%`, transform: "translate(-50%, -50%)" }}
                   >
-                    {/* The Dot */}
+                    {/* The Icon */}
                     <div 
                       className={cn(
-                        "relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 bg-background shadow-sm transition-transform duration-200 group-hover:scale-125", 
+                        "relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 bg-background shadow-sm transition-transform duration-200 group-hover:scale-125", 
                         isItemPast ? "border-primary" : "border-muted-foreground/50",
                       )}
                       title={m.label}
                     >
-                       <div className={cn("h-1.5 w-1.5 rounded-full", isItemPast ? "bg-primary" : "bg-muted-foreground/30")} />
+                       <Icon className={cn("h-3.5 w-3.5", isItemPast ? "text-primary" : "text-muted-foreground/80")} />
                     </div>
 
                     {/* Vertical connector line */}
                      <div className={cn(
                         "absolute w-[2px] bg-border transition-all duration-300",
-                        isTop ? "bottom-full mb-2 h-6" : "top-full mt-2 h-6",
+                        isTop ? "bottom-full mb-3 h-5" : "top-full mt-3 h-5",
                         isItemPast ? "bg-primary/30" : "",
                         // If all zoom, hide line by default and show on hover
                         zoomLevel === 'all' && "opacity-0 group-hover:opacity-100 group-hover:bg-border/60"
