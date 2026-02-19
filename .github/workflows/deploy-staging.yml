@@ -72,6 +72,11 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
+            set -euo pipefail
+
+            COMPOSE_PROJECT_NAME=cohort-dashboard-staging
+            COMPOSE_FILE=docker-compose.staging.yml
+
             if ! docker network inspect dashboard-shared-network > /dev/null 2>&1; then
               echo "ERROR: dashboard-shared-network not found!"
               echo "Production must be deployed first to create the shared network."
@@ -104,18 +109,26 @@ jobs:
               fi
             done
             
-            curl -o docker-compose.staging.yml https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.staging.yml
+            curl -o "$COMPOSE_FILE" https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.staging.yml
 
             # Rendered compose should show concrete values for critical env vars
-            docker compose -f docker-compose.staging.yml config > /tmp/staging-compose-rendered.yml
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" config > /tmp/staging-compose-rendered.yml
             if grep -qE 'CONN_PSQL: ""|API_KEY: ""' /tmp/staging-compose-rendered.yml; then
               echo "ERROR: Resolved compose contains empty CONN_PSQL/API_KEY."
               exit 1
             fi
-            
-            docker compose -f docker-compose.staging.yml pull
-            docker compose -f docker-compose.staging.yml down
-            docker compose -f docker-compose.staging.yml up -d
+
+            # Ensure old staging containers with fixed names are removed
+            docker rm -f \
+              student-dashboard-frontend-staging \
+              student-dashboard-backend-staging \
+              student-dashboard-worker-staging \
+              student-dashboard-redis-staging \
+              2>/dev/null || true
+
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" down --remove-orphans || true
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" pull
+            docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" up -d
 
             # Post-deploy sanity checks for API key propagation
             frontend_key_len=$(docker exec student-dashboard-frontend-staging sh -lc 'printf %s "$API_KEY" | wc -c' | tr -d ' ')
