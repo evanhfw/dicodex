@@ -68,6 +68,15 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
 
   const today = new Date();
 
+  // Progress calculations
+  const totalDays = Math.floor(
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
+  const elapsed = Math.floor(
+    (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
+  const overallProgress = Math.max(0, Math.min(100, Math.round((elapsed / totalDays) * 100)));
+
   // Filter based on zoom level
   let displayStartDate = startDate;
   let displayEndDate = endDate;
@@ -96,7 +105,7 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
   const isPast = (d: Date) => d <= today;
 
   const formatDate = (d: Date) =>
-    d.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" });
+    d.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", weekday: zoomLevel !== 'all' ? 'short' : undefined });
     
   const scrollToToday = () => {
     if (scrollContainerRef.current) {
@@ -123,7 +132,7 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
   return (
     <div className="rounded-lg border bg-card p-5 shadow-sm">
       <div className="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <CalendarDays className="h-5 w-5 text-primary" />
           <h2 className="text-lg font-semibold text-card-foreground">
             Program Timeline
@@ -133,6 +142,9 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
               {learningPath}
             </span>
           )}
+          <span className="ml-0 sm:ml-4 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary whitespace-nowrap">
+            Day {Math.max(0, elapsed)} of {totalDays} — {overallProgress}% Journey
+          </span>
         </div>
         
         <div className="flex flex-wrap items-center gap-2">
@@ -166,19 +178,20 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
             </button>
           </div>
           
-          <Button variant="outline" size="sm" onClick={scrollToToday} className="h-8 text-xs">
+          <Button variant="outline" size="sm" onClick={scrollToToday} className="h-8 text-xs shrink-0">
             Today
           </Button>
         </div>
       </div>
 
-      <div className="relative mt-4">
+      <div className="relative mt-4 overflow-hidden rounded-md border border-border/50 bg-accent/20">
         {/* Timeline Container */}
         <div 
           ref={scrollContainerRef}
-          className="group/timeline relative w-full overflow-x-auto overflow-y-hidden pb-32 pt-16 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border"
+          className="group/timeline relative w-full overflow-x-auto overflow-y-hidden pb-44 pt-28 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border/60 hover:[&::-webkit-scrollbar-thumb]:bg-border"
         >
-          <div className="relative min-w-[800px] h-4" style={{ width: zoomLevel === 'all' ? '200%' : '100%' }}>
+          {/* Timeline width is proportional to the number of visible items or just wide to spread them out */}
+          <div className="relative h-2 min-w-[1200px]" style={{ width: zoomLevel === 'all' ? '250%' : zoomLevel === 'month' ? '150%' : '100%' }}>
             
             {/* The main continuous line */}
             <div className="absolute left-0 top-1/2 h-1.5 w-full -translate-y-1/2 rounded-full bg-secondary">
@@ -195,23 +208,23 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
             {/* Today Marker Line */}
             {today.getTime() >= viewStartMs && today.getTime() <= viewEndMs && (
               <div
-                className="absolute top-1/2 z-0 flex flex-col items-center -translate-y-1/2"
+                className="absolute top-1/2 flex flex-col items-center -translate-y-1/2 z-0"
                 style={{
                   left: `${((today.getTime() - viewStartMs) / viewTotalMs) * 100}%`,
                   transform: "translate(-50%, -50%)",
-                  height: "80px"
+                  height: "120px"
                 }}
               >
-                <div className="rounded border bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground shadow-sm ring-2 ring-background absolute -top-4">
+                <div className="rounded border bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground shadow-sm ring-2 ring-background absolute -top-5">
                   TODAY
                 </div>
-                <div className="h-full w-0.5 border-l-2 border-dashed border-primary" />
+                <div className="h-full w-0.5 border-l-2 border-dashed border-primary/60" />
               </div>
             )}
 
             {/* Milestones rendering */}
             {visibleMilestones.length === 0 ? (
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-8 text-sm text-muted-foreground">
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                 No milestones for this period
               </div>
             ) : (
@@ -220,54 +233,54 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
                 const pos = ((m.date.getTime() - viewStartMs) / viewTotalMs) * 100;
                 const Icon = milestoneIconMap[m.type];
                 const colorTheme = milestoneColorMap[m.type];
-                const bgTheme = milestoneBgMap[m.type];
                 
-                // Alternate tooltip position (top/bottom) slightly to avoid collision if they are close
+                // Stagger up/down
                 const isTop = i % 2 === 0;
 
                 return (
                   <div
                     key={i}
-                    className="group absolute top-1/2 z-10 flex cursor-pointer flex-col items-center"
+                    className="absolute top-1/2 z-10 flex flex-col items-center"
                     style={{ left: `${pos}%`, transform: "translate(-50%, -50%)" }}
                   >
                     {/* The Dot */}
                     <div 
                       className={cn(
-                        "relative flex h-5 w-5 items-center justify-center rounded-full border-2 bg-background shadow-sm transition-transform duration-200 group-hover:scale-150", 
-                        isItemPast ? "border-primary" : "border-muted-foreground"
+                        "relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 bg-background shadow-sm transition-transform duration-200 hover:scale-125 hover:z-50 cursor-crosshair", 
+                        isItemPast ? "border-primary" : "border-muted-foreground/50",
                       )}
+                      title={m.label}
                     >
-                       <div className={cn("h-2 w-2 rounded-full", isItemPast ? "bg-primary" : "bg-muted-foreground/30", "group-hover:" + bgTheme)} />
+                       <div className={cn("h-1.5 w-1.5 rounded-full", isItemPast ? "bg-primary" : "bg-muted-foreground/30")} />
                     </div>
 
-                    {/* Small vertical connector line on hover */}
+                    {/* Vertical connector line */}
                      <div className={cn(
-                        "absolute w-px bg-border opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                        isTop ? "bottom-full h-4" : "top-full h-4"
+                        "absolute w-[2px] bg-border transition-colors group-hover/timeline:bg-border/60",
+                        isTop ? "bottom-full mb-2 h-6" : "top-full mt-2 h-6",
+                        isItemPast ? "bg-primary/30" : ""
                      )} />
 
-                    {/* Tooltip Card */}
+                    {/* Information Card (Always Visible) */}
                     <div
                       className={cn(
-                        "absolute left-1/2 w-48 -translate-x-1/2 rounded-md border bg-popover p-3 text-popover-foreground shadow-lg opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:z-50 pointer-events-none",
-                        isTop ? "bottom-full mb-3 translate-y-2 group-hover:translate-y-0" : "top-full mt-3 -translate-y-2 group-hover:translate-y-0"
+                        "absolute left-1/2 w-48 -translate-x-1/2 rounded border bg-card p-2 text-card-foreground shadow focus-within:z-50 hover:z-50 transition-shadow hover:shadow-md",
+                        isItemPast && "bg-muted/30 border-muted opacity-80 hover:opacity-100",
+                        isTop ? "bottom-full mb-8" : "top-full mt-8"
                       )}
                     >
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <div className={cn("flex items-center justify-center rounded-sm p-1", colorTheme)}>
+                      <div className="flex items-center gap-1.5 mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        <div className={cn("flex items-center justify-center rounded-sm p-0.5", colorTheme)}>
                           <Icon className="h-3 w-3" />
                         </div>
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                          {m.type}
-                        </span>
+                        <span className="truncate">{m.type}</span>
+                        {isItemPast && <CircleCheckBig className="ml-auto h-3 w-3 text-status-green" />}
                       </div>
-                      <p className="text-xs font-medium leading-tight mb-1.5">
+                      <p className={cn("text-xs font-medium leading-snug line-clamp-2", isItemPast && "text-muted-foreground font-normal")}>
                         {m.label}
                       </p>
-                      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                        <span>{formatDate(m.date)}</span>
-                        {isItemPast && <CircleCheckBig className="h-3 w-3 text-status-green" />}
+                      <div className="mt-1.5 text-[10px] text-muted-foreground/80 font-medium">
+                        {formatDate(m.date)}
                       </div>
                     </div>
                   </div>
@@ -275,12 +288,6 @@ const ProgramTimeline = ({ mentor }: ProgramTimelineProps) => {
               })
             )}
           </div>
-        </div>
-        
-        {/* Helper text */}
-        <div className="absolute bottom-0 right-0 flex items-center gap-1.5 text-xs text-muted-foreground pointer-events-none">
-          <MousePointerClick className="h-3.5 w-3.5" />
-          <span>Hover points for details. Scroll horizontally.</span>
         </div>
       </div>
     </div>
