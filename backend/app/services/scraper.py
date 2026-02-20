@@ -116,7 +116,10 @@ class ScraperService:
 
             # Expand all student data
             self._expand_all_student_data(driver)
-            time.sleep(0.8)
+            self._wait_until(
+                lambda: len(driver.find_elements(By.CSS_SELECTOR, "section.daily-checkins")) > 0,
+                timeout=8,
+            )
 
             if progress_callback:
                 progress_callback("Extracting student data...", 20, 100)
@@ -390,11 +393,14 @@ class ScraperService:
         ]
 
         self._click_from_locators(driver, student_input_locators, "Input student's name or ID")
-        time.sleep(1)
+        self._wait_for_any_locator(driver, select_all_locators, timeout=5)
         self._click_from_locators(driver, select_all_locators, "Select All")
-        time.sleep(1)
+        self._wait_for_any_locator(driver, expand_all_locators, timeout=5)
         self._click_from_locators(driver, expand_all_locators, "Expand All")
-        time.sleep(2)
+        self._wait_until(
+            lambda: len(driver.find_elements(By.CSS_SELECTOR, "section.point-histories")) > 0,
+            timeout=8,
+        )
 
     def _click_from_locators(self, driver, locators, action_label):
         deadline = time.time() + INTERACTION_TIMEOUT_SECONDS
@@ -410,7 +416,7 @@ class ScraperService:
                     return
                 except Exception as error:
                     last_error = error
-            time.sleep(0.4)
+            time.sleep(0.1)
 
         message = f"Failed to click '{action_label}'"
         if last_error:
@@ -430,7 +436,6 @@ class ScraperService:
         show_all_assignments_clicked = self._click_all_buttons_by_keyword(
             driver, "show all assignments"
         )
-        time.sleep(0.6)
 
         source = driver.page_source
         blocks = self._student_blocks(source)
@@ -518,8 +523,63 @@ class ScraperService:
                 break
             self._click_element(driver, target)
             clicked += 1
-            time.sleep(0.2)
+            time.sleep(0.05)
         return clicked
+
+    def _wait_for_any_locator(self, driver, locators, timeout: float = 5.0) -> bool:
+        """Wait until any locator in list becomes visible."""
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            element = self._find_first_visible(driver, locators)
+            if element is not None:
+                return True
+            time.sleep(0.08)
+        return False
+
+    def _wait_until(self, condition: Callable[[], bool], timeout: float = 5.0) -> bool:
+        """Wait until condition is true."""
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            try:
+                if condition():
+                    return True
+            except Exception:
+                pass
+            time.sleep(0.08)
+        return False
+
+    def _section_signature(self, driver, selector: str, section_index: int) -> str:
+        """Return a compact signature for section content to detect page changes."""
+        return driver.execute_script(
+            r"""
+            const selector = arguments[0];
+            const index = arguments[1];
+            const sections = document.querySelectorAll(selector);
+            if (!sections || sections.length <= index) return "";
+            const section = sections[index];
+            const text = (section.textContent || "").replace(/\s+/g, " ").trim();
+            return text.slice(0, 4000);
+            """,
+            selector,
+            section_index,
+        ) or ""
+
+    def _wait_for_section_change(
+        self,
+        driver,
+        selector: str,
+        section_index: int,
+        previous_signature: str,
+        timeout: float = 4.0,
+    ) -> bool:
+        """Wait until section content changes after pagination click."""
+        return self._wait_until(
+            lambda: (
+                (current := self._section_signature(driver, selector, section_index))
+                and current != previous_signature
+            ),
+            timeout=timeout,
+        )
 
     def _parse_student(self, block_html: str) -> dict:
         """Parse student data from HTML block"""
@@ -656,6 +716,9 @@ class ScraperService:
             if student_index >= len(sections):
                 break
             section = sections[student_index]
+            previous_signature = self._section_signature(
+                driver, "section.daily-checkins", student_index
+            )
 
             entries = driver.execute_script(
                 r"""
@@ -733,7 +796,13 @@ class ScraperService:
                 break
 
             self._click_element(driver, next_button)
-            time.sleep(0.35)
+            self._wait_for_section_change(
+                driver,
+                "section.daily-checkins",
+                student_index,
+                previous_signature,
+                timeout=3.0,
+            )
 
         return items
 
@@ -751,6 +820,9 @@ class ScraperService:
             if student_index >= len(sections):
                 break
             section = sections[student_index]
+            previous_signature = self._section_signature(
+                driver, "section.point-histories", student_index
+            )
 
             payload = driver.execute_script(
                 r"""
@@ -823,7 +895,13 @@ class ScraperService:
                 break
 
             self._click_element(driver, next_button)
-            time.sleep(0.35)
+            self._wait_for_section_change(
+                driver,
+                "section.point-histories",
+                student_index,
+                previous_signature,
+                timeout=3.0,
+            )
 
         return {
             "last_updated": last_updated,
