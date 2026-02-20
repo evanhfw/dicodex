@@ -107,19 +107,19 @@ const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="pb-3 text-left text-xs font-medium">
+                <th className="pb-3 text-left text-xs font-medium whitespace-nowrap">
                   <SortButton field="name">Course Name</SortButton>
                 </th>
-                <th className="pb-3 text-center text-xs font-medium">
+                <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">
                   <SortButton field="totalEnrolled">Enrolled</SortButton>
                 </th>
-                <th className="pb-3 text-center text-xs font-medium">
+                <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">
                   <SortButton field="completionRate">Completion Rate</SortButton>
                 </th>
-                <th className="pb-3 text-center text-xs font-medium">
+                <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">
                   <SortButton field="averageProgress">Avg Progress</SortButton>
                 </th>
-                <th className="pb-3 text-center text-xs font-medium">Status</th>
+                <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -136,7 +136,7 @@ const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
                       )}
                       onClick={() => setExpandedCourse(isExpanded ? null : course.name)}
                     >
-                      <td className="py-3 pr-4">
+                      <td className="py-3 pr-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <ChevronDown 
                             className={cn(
@@ -251,7 +251,7 @@ const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
                                     return (
                                       <div
                                         key={idx}
-                                        className="flex items-center justify-between rounded-md border bg-card p-2.5"
+                                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 rounded-md border bg-card p-2.5"
                                       >
                                         <div className="flex items-center gap-3 flex-1 min-w-0">
                                           <span className="text-sm font-medium text-card-foreground truncate">
@@ -264,7 +264,7 @@ const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
                                             {studentData.courseStatus}
                                           </Badge>
                                         </div>
-                                        <div className="flex items-center gap-2 shrink-0">
+                                        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto w-full sm:w-auto mt-1 sm:mt-0">
                                           <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
                                             <div
                                               className={cn(

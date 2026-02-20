@@ -3,8 +3,13 @@ API Routes for Student Dashboard
 All endpoints are protected by API Key authentication (when API_KEY is configured).
 Job management is backed by ARQ + Redis.
 """
-from fastapi import APIRouter, Depends, HTTPException, Request
+import asyncio
+import json
+import time
 from typing import Dict, Any
+
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, EmailStr
 from arq.jobs import Job, JobStatus
 
@@ -22,6 +27,98 @@ class ScrapeRequest(BaseModel):
 router = APIRouter(dependencies=[Depends(require_api_key)])
 file_handler = FileHandler()
 transformer = DataTransformer()
+
+
+async def _decode_progress(arq_pool, job_id: str) -> Dict[str, Any] | None:
+    """Decode progress payload from Redis (supports JSON + legacy pipe format)."""
+    progress_data = await arq_pool.get(f"job_progress:{job_id}")
+    if not progress_data:
+        return None
+
+    decoded = progress_data.decode()
+
+    try:
+        payload = json.loads(decoded)
+        return {
+            "percent": int(payload.get("percent", 0)),
+            "message": str(payload.get("message", "")),
+            "current_step": int(payload.get("current_step", 0)),
+            "total_steps": int(payload.get("total_steps", 100)),
+            "updated_at": payload.get("updated_at"),
+        }
+    except (ValueError, TypeError, json.JSONDecodeError):
+        pass
+
+    # Legacy format: "percent|message|current|total"
+    try:
+        percent, msg, current, total = decoded.split("|")
+        return {
+            "percent": int(percent),
+            "message": msg,
+            "current_step": int(current),
+            "total_steps": int(total),
+            "updated_at": None,
+        }
+    except Exception:
+        return None
+
+
+async def _build_job_status(job_id: str, request: Request) -> Dict[str, Any]:
+    """Build a unified job status payload for polling and SSE."""
+    arq_pool = request.app.state.arq_pool
+    job = Job(job_id=job_id, redis=arq_pool)
+    status = await job.status()
+
+    response: Dict[str, Any] = {
+        "job_id": job_id,
+        "status": status.value,
+    }
+
+    if status == JobStatus.queued:
+        response["running"] = True
+        response["message"] = "Job is queued, waiting for available worker slot."
+        try:
+            queued_jobs = await arq_pool.queued_jobs()
+            position = next((i for i, j in enumerate(queued_jobs) if j.job_id == job_id), None)
+            if position is not None:
+                response["queue_position"] = position + 1
+        except Exception:
+            pass
+
+    elif status == JobStatus.in_progress:
+        response["running"] = True
+        response["message"] = "Scraping in progress..."
+        try:
+            progress = await _decode_progress(arq_pool, job_id)
+            if progress:
+                response["progress"] = progress
+                response["message"] = progress.get("message") or response["message"]
+        except Exception:
+            pass
+
+    elif status == JobStatus.complete:
+        response["running"] = False
+        info = await job.info()
+        if info and info.result is not None:
+            response["result"] = info.result
+            response["progress"] = {
+                "percent": 100,
+                "message": "Complete",
+                "current_step": 100,
+                "total_steps": 100,
+                "updated_at": None,
+            }
+        elif info and info.result is None:
+            response["result"] = {"success": False, "error": "Job completed with no result"}
+
+    elif status == JobStatus.not_found:
+        response["running"] = False
+        response["result"] = None
+        response["message"] = "Job not found or expired."
+    else:
+        response["running"] = False
+
+    return response
 
 
 @router.get("/students")
@@ -108,68 +205,61 @@ async def get_job_status(job_id: str, request: Request) -> Dict[str, Any]:
 
     Possible statuses: queued, in_progress, complete, not_found, deferred
     """
-    arq_pool = request.app.state.arq_pool
-    job = Job(job_id=job_id, redis=arq_pool)
-    status = await job.status()
+    return await _build_job_status(job_id, request)
 
-    response: Dict[str, Any] = {
-        "job_id": job_id,
-        "status": status.value,
+
+@router.get("/scrape/stream/{job_id}")
+async def stream_job_status(job_id: str, request: Request) -> StreamingResponse:
+    """
+    Stream realtime job status updates via SSE.
+    """
+    async def event_stream():
+        last_payload: str | None = None
+        last_heartbeat = time.monotonic()
+
+        while True:
+            if await request.is_disconnected():
+                break
+
+            status_payload = await _build_job_status(job_id, request)
+            status_name = str(status_payload.get("status"))
+            result_obj = status_payload.get("result")
+            result_success = result_obj.get("success") if isinstance(result_obj, dict) else None
+            if status_name == "complete":
+                event_name = "complete"
+            elif status_name == "not_found":
+                event_name = "error"
+            elif result_success is False:
+                event_name = "error"
+            elif status_payload.get("progress"):
+                event_name = "progress"
+            else:
+                event_name = "status"
+
+            serialized = json.dumps(status_payload, ensure_ascii=False)
+            if serialized != last_payload:
+                yield f"event: {event_name}\ndata: {serialized}\n\n"
+                last_payload = serialized
+
+            now = time.monotonic()
+            if now - last_heartbeat >= 15:
+                heartbeat = {"job_id": job_id, "ts": int(time.time())}
+                yield f"event: heartbeat\ndata: {json.dumps(heartbeat)}\n\n"
+                last_heartbeat = now
+
+            if status_name in {"complete", "not_found"}:
+                break
+            if result_success is False:
+                break
+
+            await asyncio.sleep(0.5)
+
+    headers = {
+        "Cache-Control": "no-cache, no-transform",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
     }
-
-    # Map ARQ status to our "running" boolean for frontend compatibility
-    if status == JobStatus.queued:
-        response["running"] = True
-        response["message"] = "Job is queued, waiting for available worker slot."
-        
-        # Calculate queue position
-        try:
-            queued_jobs = await arq_pool.queued_jobs()
-            # queued_jobs is a list of JobDef
-            # Find index of current job
-            position = next((i for i, j in enumerate(queued_jobs) if j.job_id == job_id), None)
-            if position is not None:
-                response["queue_position"] = position + 1
-        except Exception:
-            pass
-
-    elif status == JobStatus.in_progress:
-        response["running"] = True
-        response["message"] = "Scraping in progress..."
-        
-        # Fetch progress from Redis
-        try:
-            progress_data = await arq_pool.get(f"job_progress:{job_id}")
-            if progress_data:
-                # Format: "percent|message|current|total"
-                percent, msg, current, total = progress_data.decode().split("|")
-                response["progress"] = {
-                    "percent": int(percent),
-                    "message": msg,
-                    "current_step": int(current),
-                    "total_steps": int(total)
-                }
-                # Update top-level message for backward compatibility
-                response["message"] = msg
-        except Exception:
-            pass
-
-    elif status == JobStatus.complete:
-        response["running"] = False
-        info = await job.info()
-        if info and info.result is not None:
-            response["result"] = info.result
-            response["progress"] = {"percent": 100, "message": "Complete", "current_step": 100, "total_steps": 100}
-        elif info and info.result is None:
-            response["result"] = {"success": False, "error": "Job completed with no result"}
-    elif status == JobStatus.not_found:
-        response["running"] = False
-        response["result"] = None
-        response["message"] = "Job not found or expired."
-    else:
-        response["running"] = False
-
-    return response
+    return StreamingResponse(event_stream(), media_type="text/event-stream", headers=headers)
 
 
 @router.get("/files")

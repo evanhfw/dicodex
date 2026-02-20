@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ParsedStudent, getCheckinStats, getCheckinHeatmapData, parseCheckinDate, CheckinMood } from "@/data/parsedData";
+import { ParsedStudent, getCheckinStats, getCheckinHeatmapData, parseCheckinDate, CheckinMood, getCheckinDateKey, getLocalDateKey } from "@/data/parsedData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -71,46 +71,22 @@ const DailyCheckinOverview = ({ students }: DailyCheckinOverviewProps) => {
     return feed;
   }, [students]);
 
-  if (stats.totalCheckins === 0) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <CalendarCheck className="h-5 w-5 text-primary" />
-            Daily Check-ins
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            No daily check-in data available
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   // Calculate Today's Stats
   const todayStats = useMemo(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayTime = today.getTime();
+    const todayKey = getLocalDateKey(new Date());
 
     let checkedInCount = 0;
     let moodGoodCount = 0;
     let moodNeutralCount = 0;
     let moodBadCount = 0;
-    const checkedInStudentNames = new Set<string>();
 
     students.forEach(s => {
       const todayCheckin = (s.dailyCheckins || []).find(ci => {
-        const d = parseCheckinDate(ci.date);
-        d.setHours(0, 0, 0, 0);
-        return d.getTime() === todayTime;
+        return getCheckinDateKey(ci.date) === todayKey;
       });
 
       if (todayCheckin) {
         checkedInCount++;
-        checkedInStudentNames.add(s.name);
         if (todayCheckin.mood === 'good') moodGoodCount++;
         else if (todayCheckin.mood === 'neutral') moodNeutralCount++;
         else moodBadCount++;
