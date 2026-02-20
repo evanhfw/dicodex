@@ -55,20 +55,6 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
       }));
   }, [expandedAssignment, students]);
 
-  // Students who have completed the expanded assignment
-  const completedStudents = useMemo(() => {
-    if (!expandedAssignment) return [];
-    return students
-      .filter(s => {
-        const a = (s.assignments || []).find(a => a.name === expandedAssignment);
-        return a && a.status === "Completed";
-      })
-      .map(s => ({
-        name: s.name,
-        status: s.status,
-      }));
-  }, [expandedAssignment, students]);
-
   if (stats.length === 0) return null;
 
   const handleSort = (field: SortField) => {
@@ -115,13 +101,13 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="pb-3 text-left text-xs font-medium whitespace-nowrap">
+                <th className="pb-3 text-left text-xs font-medium">
                   <SortButton field="name">Assignment</SortButton>
                 </th>
-                <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">
+                <th className="pb-3 text-center text-xs font-medium">
                   <SortButton field="completionRate">Completion</SortButton>
                 </th>
-                <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">
+                <th className="pb-3 text-center text-xs font-medium">
                   <SortButton field="completed">Status</SortButton>
                 </th>
               </tr>
@@ -140,7 +126,7 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
                       )}
                       onClick={() => setExpandedAssignment(isExpanded ? null : assignment.name)}
                     >
-                      <td className="py-3 pr-4 whitespace-nowrap">
+                      <td className="py-3 pr-4">
                         <div className="flex items-center gap-2">
                           <ChevronDown
                             className={cn(
@@ -148,7 +134,7 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
                               isExpanded && "rotate-180"
                             )}
                           />
-                          <p className="text-sm font-medium text-card-foreground truncate max-w-[200px] sm:max-w-none">
+                          <p className="text-sm font-medium text-card-foreground">
                             {assignment.name}
                           </p>
                         </div>
@@ -198,77 +184,38 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
                         >
                           <div className="overflow-hidden">
                             {isExpanded && (
-                              <div className="border-t-2 border-muted bg-muted/20 p-4 flex flex-col md:flex-row gap-6">
-                                {/* Uncompleted Students */}
-                                <div className="flex-1">
-                                  <h4 className="text-sm font-semibold text-status-red mb-3 flex items-center gap-2">
-                                    <XCircle className="h-4 w-4" />
-                                    Uncompleted ({uncompletedStudents.length})
-                                  </h4>
+                              <div className="border-t-2 border-muted bg-muted/20 p-4">
+                                <h4 className="text-sm font-semibold text-card-foreground mb-3">
+                                  Uncompleted Students ({uncompletedStudents.length})
+                                </h4>
 
-                                  {uncompletedStudents.length === 0 ? (
-                                    <div className="flex items-center justify-center gap-2 py-4 text-sm text-status-green border rounded-md bg-card/50">
-                                      <CheckCircle2 className="h-4 w-4" />
-                                      All clear!
-                                    </div>
-                                  ) : (
-                                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-                                      {uncompletedStudents.map((student, idx) => (
-                                        <div
-                                          key={`uncompleted-${idx}`}
-                                          className="flex items-center justify-between rounded-md border bg-card p-2.5 shadow-sm"
-                                        >
-                                          <span className="text-sm font-medium text-card-foreground truncate">
-                                            {student.name}
-                                          </span>
-                                          {student.status && (
-                                            <Badge
-                                              variant="outline"
-                                              className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
-                                            >
-                                              {student.status}
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-
-                                {/* Completed Students */}
-                                <div className="flex-1">
-                                  <h4 className="text-sm font-semibold text-status-green mb-3 flex items-center gap-2">
+                                {uncompletedStudents.length === 0 ? (
+                                  <div className="flex items-center justify-center gap-2 py-4 text-sm text-status-green">
                                     <CheckCircle2 className="h-4 w-4" />
-                                    Completed ({completedStudents.length})
-                                  </h4>
-
-                                  {completedStudents.length === 0 ? (
-                                    <div className="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground border rounded-md bg-card/50">
-                                      No students have completed this yet.
-                                    </div>
-                                  ) : (
-                                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-                                      {completedStudents.map((student, idx) => (
-                                        <div
-                                          key={`completed-${idx}`}
-                                          className="flex items-center justify-between rounded-md border bg-card p-2.5 shadow-sm"
-                                        >
-                                          <span className="text-sm font-medium text-card-foreground truncate">
-                                            {student.name}
-                                          </span>
-                                          {student.status && (
-                                            <Badge
-                                              variant="outline"
-                                              className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
-                                            >
-                                              {student.status}
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
+                                    All students have completed this assignment!
+                                  </div>
+                                ) : (
+                                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                                    {uncompletedStudents.map((student, idx) => (
+                                      <div
+                                        key={idx}
+                                        className="flex items-center justify-between rounded-md border bg-card p-2.5"
+                                      >
+                                        <span className="text-sm font-medium text-card-foreground truncate">
+                                          {student.name}
+                                        </span>
+                                        {student.status && (
+                                          <Badge
+                                            variant="outline"
+                                            className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
+                                          >
+                                            {student.status}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
