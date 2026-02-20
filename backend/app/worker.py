@@ -4,10 +4,8 @@ ARQ Worker — runs scraping jobs from the Redis queue.
 Start with:  arq app.worker.WorkerSettings
 """
 import asyncio
-import json
 import os
 from pathlib import Path
-from datetime import datetime, timezone
 
 from arq.connections import RedisSettings
 from dotenv import load_dotenv
@@ -96,55 +94,26 @@ async def scrape_task(ctx: dict, email: str, password: str) -> dict:
 
     loop = asyncio.get_running_loop()
     notification_service = NotificationService()
-    redis = ctx["redis"]
-    job_id = ctx.get("job_id") or "unknown"
-    progress_key = f"job_progress:{job_id}"
-
-    async def write_progress(
-        percent: int,
-        message: str,
-        current_step: int,
-        total_steps: int,
-    ) -> None:
-        payload = {
-            "percent": max(0, min(100, int(percent))),
-            "message": message,
-            "current_step": int(current_step),
-            "total_steps": int(total_steps),
-            "updated_at": datetime.now(timezone.utc).isoformat(),
-        }
-        await redis.set(progress_key, json.dumps(payload).encode("utf-8"), ex=7200)
 
     def on_progress(event, data):
         asyncio.run_coroutine_threadsafe(
             handle_scrape_event(event, data, notification_service), loop
         )
 
-    def on_step_progress(message: str, current_step: int, total_steps: int):
-        percent = int((current_step / max(total_steps, 1)) * 100)
-        asyncio.run_coroutine_threadsafe(
-            write_progress(percent, message, current_step, total_steps), loop
-        )
-
     scraper = ScraperService()
 
     try:
-        await write_progress(1, "Initializing scraper...", 1, 100)
-
         result = await asyncio.to_thread(
             scraper.run_scraper,
             email=email,
             password=password,
             on_progress=on_progress,
-            progress_callback=on_step_progress,
         )
 
-        await write_progress(100, "Complete", 100, 100)
         await handle_scrape_event("completed", result, notification_service)
         return result
 
     except InvalidCredentialsError as e:
-        await write_progress(100, str(e), 100, 100)
         await handle_scrape_event(
             "failed",
             {"error": str(e), "error_type": "invalid_credentials"},
@@ -153,7 +122,6 @@ async def scrape_task(ctx: dict, email: str, password: str) -> dict:
         return {"success": False, "error": str(e), "error_type": "invalid_credentials"}
 
     except Exception as e:
-        await write_progress(100, f"Failed: {str(e)}", 100, 100)
         await handle_scrape_event("failed", {"error": str(e)}, notification_service)
         raise
 
