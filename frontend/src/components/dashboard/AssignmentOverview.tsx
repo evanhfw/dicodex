@@ -269,30 +269,6 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
                                     </div>
                                   )}
                                 </div>
-                                    All students have completed this assignment!
-                                  </div>
-                                ) : (
-                                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-                                    {uncompletedStudents.map((student, idx) => (
-                                      <div
-                                        key={idx}
-                                        className="flex items-center justify-between gap-3 rounded-md border bg-card p-2.5"
-                                      >
-                                        <span className="text-sm font-medium text-card-foreground truncate flex-1 min-w-0">
-                                          {student.name}
-                                        </span>
-                                        {student.status && (
-                                          <Badge
-                                            variant="outline"
-                                            className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
-                                          >
-                                            {student.status}
-                                          </Badge>
-                                        )}
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
                               </div>
                             )}
                           </div>
