@@ -115,13 +115,13 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="pb-3 text-left text-xs font-medium">
+                <th className="pb-3 text-left text-xs font-medium whitespace-nowrap">
                   <SortButton field="name">Assignment</SortButton>
                 </th>
-                <th className="pb-3 text-center text-xs font-medium">
+                <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">
                   <SortButton field="completionRate">Completion</SortButton>
                 </th>
-                <th className="pb-3 text-center text-xs font-medium">
+                <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">
                   <SortButton field="completed">Status</SortButton>
                 </th>
               </tr>
@@ -140,7 +140,7 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
                       )}
                       onClick={() => setExpandedAssignment(isExpanded ? null : assignment.name)}
                     >
-                      <td className="py-3 pr-4">
+                      <td className="py-3 pr-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <ChevronDown
                             className={cn(
@@ -148,7 +148,7 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
                               isExpanded && "rotate-180"
                             )}
                           />
-                          <p className="text-sm font-medium text-card-foreground">
+                          <p className="text-sm font-medium text-card-foreground truncate max-w-[200px] sm:max-w-none">
                             {assignment.name}
                           </p>
                         </div>
@@ -269,6 +269,30 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
                                     </div>
                                   )}
                                 </div>
+                                    All students have completed this assignment!
+                                  </div>
+                                ) : (
+                                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                                    {uncompletedStudents.map((student, idx) => (
+                                      <div
+                                        key={idx}
+                                        className="flex items-center justify-between gap-3 rounded-md border bg-card p-2.5"
+                                      >
+                                        <span className="text-sm font-medium text-card-foreground truncate flex-1 min-w-0">
+                                          {student.name}
+                                        </span>
+                                        {student.status && (
+                                          <Badge
+                                            variant="outline"
+                                            className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
+                                          >
+                                            {student.status}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>

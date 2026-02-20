@@ -47,31 +47,31 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/30 transition-colors duration-500 pb-12">
       {/* Top bar */}
-      <header className="border-b bg-background/60 backdrop-blur-xl px-6 py-4 sticky top-0 z-50 shadow-sm border-border/50">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <header className="border-b bg-background/60 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 sticky top-0 z-50 shadow-sm border-border/50">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Link to="/">
-              <Button variant="ghost" size="sm" className="hover:-translate-x-1 transition-transform">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Upload
+              <Button variant="ghost" size="sm" className="hover:-translate-x-1 transition-transform px-2 sm:px-3">
+                <ArrowLeft className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Back to Upload</span>
               </Button>
             </Link>
             <div className="h-6 w-px bg-border" />
-            <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-              diCodex <span className="text-card-foreground text-lg ml-1 font-semibold">— Cohort Dashboard</span>
+            <h1 className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 truncate">
+              diCodex <span className="text-card-foreground text-sm sm:text-lg ml-1 font-semibold hidden md:inline">— Cohort Dashboard</span>
             </h1>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 self-end sm:self-auto">
             <ThemeToggle />
-            <div className="flex items-center gap-2 rounded-md bg-muted px-3 py-1.5">
-              <Users className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">
-                {studentData.totalStudents} Students
+            <div className="flex items-center gap-1.5 sm:gap-2 rounded-md bg-muted px-2 sm:px-3 py-1.5">
+              <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+              <span className="text-xs sm:text-sm font-medium">
+                {studentData.totalStudents} <span className="hidden sm:inline">Students</span>
               </span>
             </div>
-            <Button variant="destructive" size="sm" onClick={handleClearData}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              Clear Data
+            <Button variant="destructive" size="sm" onClick={handleClearData} className="px-2 sm:px-3 w-8 sm:w-auto">
+              <Trash2 className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Clear Data</span>
             </Button>
           </div>
         </div>
