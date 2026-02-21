@@ -457,6 +457,8 @@ This project is open source and available under the [MIT License](LICENSE).
 
 - [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
 - [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
+- Dicoding scraper logic in `backend/app/services/scraper.py` is adapted from [LightDani/diCodex](https://github.com/LightDani/diCodex) (original author: [@LightDani](https://github.com/LightDani))
+- See [NOTICE](NOTICE) for attribution details
 - All our contributors and supporters
 
 ---
