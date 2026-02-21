@@ -34,6 +34,8 @@ SELENIUM_URL = os.getenv("SELENIUM_URL", "http://selenium:4444")
 OUTPUT_DIR = Path("/app/output")
 MAX_PAGINATION_STEPS = 300
 INTERACTION_TIMEOUT_SECONDS = 20
+ASYNC_SCRIPT_TIMEOUT_SECONDS = 240
+FAST_PAGINATION_DELAY_MS = 120
 
 
 class InvalidCredentialsError(Exception):
@@ -168,6 +170,7 @@ class ScraperService:
             command_executor=SELENIUM_URL,
             options=options,
         )
+        driver.set_script_timeout(ASYNC_SCRIPT_TIMEOUT_SECONDS)
 
         return driver
 
@@ -444,13 +447,29 @@ class ScraperService:
             raise NoSuchElementException("No student blocks found")
 
         students = [self._parse_student(block) for block in blocks]
+        fast_daily_by_student: list[list[dict]] | None = None
+        fast_point_by_student: list[dict] | None = None
+
+        if progress_callback:
+            progress_callback("Collecting daily check-ins in bulk...", 25, 100)
+        try:
+            fast_daily_by_student = self._extract_daily_checkins_all_students_fast(driver)
+        except Exception:
+            fast_daily_by_student = None
+
+        if progress_callback:
+            progress_callback("Collecting point histories in bulk...", 30, 100)
+        try:
+            fast_point_by_student = self._extract_point_histories_all_students_fast(driver)
+        except Exception:
+            fast_point_by_student = None
 
         total_students = len(students)
         # Extract additional data for each student
         for idx in range(total_students):
             if progress_callback:
                 # Map student processing to 25% - 95% range
-                percent = 25 + int((idx / total_students) * 70)
+                percent = 35 + int((idx / total_students) * 60)
                 student_name = students[idx]["profile"]["name"]
                 progress_callback(
                     f"Processing student {idx + 1}/{total_students}: {student_name}",
@@ -458,12 +477,21 @@ class ScraperService:
                     100,
                 )
 
-            students[idx]["progress"]["daily_checkins"] = {
-                "items": self._extract_daily_checkins_all_pages(driver, idx)
-            }
-            students[idx]["progress"]["point_histories"] = (
-                self._extract_point_histories_all_pages(driver, idx)
-            )
+            if fast_daily_by_student and idx < len(fast_daily_by_student):
+                students[idx]["progress"]["daily_checkins"] = {
+                    "items": fast_daily_by_student[idx]
+                }
+            else:
+                students[idx]["progress"]["daily_checkins"] = {
+                    "items": self._extract_daily_checkins_all_pages(driver, idx)
+                }
+
+            if fast_point_by_student and idx < len(fast_point_by_student):
+                students[idx]["progress"]["point_histories"] = fast_point_by_student[idx]
+            else:
+                students[idx]["progress"]["point_histories"] = (
+                    self._extract_point_histories_all_pages(driver, idx)
+                )
 
         return {
             "metadata": {
@@ -505,26 +533,293 @@ class ScraperService:
     def _click_all_buttons_by_keyword(self, driver, keyword: str, max_clicks: int = 500) -> int:
         """Click all buttons containing a keyword"""
         keyword = keyword.lower()
-        clicked = 0
-        xpath = (
-            "//button[contains("
-            "translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), "
-            f"'{keyword}'"
-            ")]"
+        payload = driver.execute_async_script(
+            """
+            const keyword = arguments[0];
+            const maxClicks = arguments[1];
+            const done = arguments[arguments.length - 1];
+            const text = (el) => (el?.textContent || "").replace(/\\s+/g, " ").trim().toLowerCase();
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+            (async () => {
+              let clicked = 0;
+              for (let round = 0; round < 30; round += 1) {
+                const buttons = Array.from(document.querySelectorAll("button"))
+                  .filter((el) => {
+                    const visible = !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+                    const disabled = el.hasAttribute("disabled");
+                    return visible && !disabled && text(el).includes(keyword);
+                  });
+
+                if (buttons.length === 0 || clicked >= maxClicks) {
+                  break;
+                }
+
+                for (const button of buttons) {
+                  if (clicked >= maxClicks) {
+                    break;
+                  }
+                  button.click();
+                  clicked += 1;
+                }
+
+                await sleep(60);
+              }
+
+              done({ ok: true, clicked });
+            })().catch((error) => done({ ok: false, error: String(error) }));
+            """,
+            keyword,
+            max_clicks,
         )
-        while clicked < max_clicks:
-            buttons = driver.find_elements(By.XPATH, xpath)
-            target = None
-            for button in buttons:
-                if button.is_displayed():
-                    target = button
+        if not payload or not payload.get("ok"):
+            clicked = 0
+            xpath = (
+                "//button[contains("
+                "translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), "
+                f"'{keyword}'"
+                ")]"
+            )
+            while clicked < max_clicks:
+                buttons = driver.find_elements(By.XPATH, xpath)
+                target = None
+                for button in buttons:
+                    if button.is_displayed():
+                        target = button
+                        break
+                if not target:
                     break
-            if not target:
-                break
-            self._click_element(driver, target)
-            clicked += 1
-            time.sleep(0.05)
-        return clicked
+                self._click_element(driver, target)
+                clicked += 1
+                time.sleep(0.05)
+            return clicked
+        return int(payload.get("clicked", 0))
+
+    def _extract_daily_checkins_all_students_fast(self, driver) -> list[list[dict]]:
+        """Extract daily check-ins for all students with one async browser script."""
+        payload = driver.execute_async_script(
+            r"""
+            const delayMs = Number(arguments[0] || 80);
+            const done = arguments[arguments.length - 1];
+            const text = (el) => (el?.textContent || "").replace(/\s+/g, " ").trim();
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            const maxSteps = 300;
+
+            const readEntries = (section) => {
+              const cards = Array.from(section.querySelectorAll("div.border-b.p-6"));
+              return cards.map((card) => {
+                const mood = text(card.querySelector("p.text-lg"));
+                const date = text(card.querySelector("p.text-sm.text-gray-500"));
+
+                const reflectionHeading = Array.from(card.querySelectorAll("p.text-md.font-semibold"))
+                  .find((el) => /reflection/i.test(text(el)));
+                let reflection = "";
+                if (reflectionHeading) {
+                  reflection = text(reflectionHeading.parentElement?.querySelector("p.text-sm.text-gray-700"));
+                }
+
+                const goalsHeading = Array.from(card.querySelectorAll("p.text-md.font-semibold"))
+                  .find((el) => /goals/i.test(text(el)));
+                let goals = [];
+                if (goalsHeading) {
+                  const goalsRoot = goalsHeading.parentElement;
+                  const groups = Array.from(goalsRoot.querySelectorAll("div.mb-3, div.last\\:mb-0"));
+                  if (groups.length === 0) {
+                    const fallbackItems = Array.from(goalsRoot.querySelectorAll("li")).map((el) => text(el)).filter(Boolean);
+                    if (fallbackItems.length > 0) {
+                      goals.push({ title: "", items: fallbackItems });
+                    }
+                  } else {
+                    goals = groups.map((group) => ({
+                      title: text(group.querySelector("p.text-sm.font-semibold")),
+                      items: Array.from(group.querySelectorAll("li")).map((el) => text(el)).filter(Boolean),
+                    }));
+                  }
+                }
+
+                return { mood, date, reflection, goals };
+              });
+            };
+
+            const nextButton = (section) => {
+              const buttons = Array.from(section.querySelectorAll("button"));
+              return (
+                buttons.find((btn) => /^next$/i.test(text(btn))) ||
+                buttons.find((btn) => /next/i.test(text(btn))) ||
+                null
+              );
+            };
+
+            const isDisabled = (button) => {
+              if (!button) {
+                return true;
+              }
+              const disabledAttr = button.hasAttribute("disabled");
+              const ariaDisabled = (button.getAttribute("aria-disabled") || "").toLowerCase().trim();
+              return disabledAttr || ariaDisabled === "true" || !button.isConnected;
+            };
+
+            const keyForEntry = (entry) =>
+              JSON.stringify({
+                mood: entry.mood || "",
+                date: entry.date || "",
+                reflection: entry.reflection || "",
+                goals: entry.goals || [],
+              });
+
+            (async () => {
+              const sections = Array.from(document.querySelectorAll("section.daily-checkins"));
+              const allItems = [];
+
+              for (const section of sections) {
+                const items = [];
+                const seen = new Set();
+                let staleRounds = 0;
+
+                for (let step = 0; step < maxSteps; step += 1) {
+                  const entries = readEntries(section);
+                  const before = seen.size;
+
+                  for (const entry of entries) {
+                    const key = keyForEntry(entry);
+                    if (seen.has(key)) {
+                      continue;
+                    }
+                    seen.add(key);
+                    items.push(JSON.parse(key));
+                  }
+
+                  staleRounds = seen.size === before ? staleRounds + 1 : 0;
+                  const next = nextButton(section);
+                  if (!next || isDisabled(next) || staleRounds >= 2) {
+                    break;
+                  }
+
+                  next.click();
+                  await sleep(delayMs);
+                }
+
+                allItems.push(items);
+              }
+
+              done({ ok: true, items: allItems });
+            })().catch((error) => done({ ok: false, error: String(error) }));
+            """,
+            FAST_PAGINATION_DELAY_MS,
+        )
+
+        if not payload or not payload.get("ok"):
+            message = payload.get("error") if isinstance(payload, dict) else payload
+            raise RuntimeError(f"Fast extraction daily-checkins failed: {message}")
+        return payload.get("items", [])
+
+    def _extract_point_histories_all_students_fast(self, driver) -> list[dict]:
+        """Extract point histories for all students with one async browser script."""
+        payload = driver.execute_async_script(
+            r"""
+            const delayMs = Number(arguments[0] || 80);
+            const done = arguments[arguments.length - 1];
+            const text = (el) => (el?.textContent || "").replace(/\s+/g, " ").trim();
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            const maxSteps = 300;
+
+            const nextButton = (section) => {
+              const buttons = Array.from(section.querySelectorAll("button"));
+              return (
+                buttons.find((btn) => /^next$/i.test(text(btn))) ||
+                buttons.find((btn) => /next/i.test(text(btn))) ||
+                null
+              );
+            };
+
+            const isDisabled = (button) => {
+              if (!button) {
+                return true;
+              }
+              const disabledAttr = button.hasAttribute("disabled");
+              const ariaDisabled = (button.getAttribute("aria-disabled") || "").toLowerCase().trim();
+              return disabledAttr || ariaDisabled === "true" || !button.isConnected;
+            };
+
+            (async () => {
+              const sections = Array.from(document.querySelectorAll("section.point-histories"));
+              const allItems = [];
+
+              for (const section of sections) {
+                let lastUpdated = "";
+                let totalPoint = "";
+                let fallbackText = "";
+                const items = [];
+                const seen = new Set();
+                let staleRounds = 0;
+
+                for (let step = 0; step < maxSteps; step += 1) {
+                  const lastUpdatedRaw = text(section.querySelector("[data-element='point-histories-last-update']"));
+                  if (lastUpdatedRaw) {
+                    lastUpdated = lastUpdatedRaw.replace(/^Last updated:\s*/i, "");
+                  }
+
+                  const totalBlock = Array.from(
+                    section.querySelectorAll("div.flex.justify-between.items-center.border-b.p-6")
+                  ).find((el) => /total point/i.test(text(el)));
+                  if (totalBlock) {
+                    totalPoint = text(totalBlock.querySelector("p.text-lg, p.text-xl"));
+                  }
+
+                  const noneText = text(section.querySelector("[data-element='point-histories-none']"));
+                  if (noneText) {
+                    fallbackText = noneText;
+                  }
+
+                  const rows = Array.from(section.querySelectorAll("div.space-y-0 > div"))
+                    .map((row) => {
+                      const values = Array.from(row.querySelectorAll("p,span")).map((el) => text(el)).filter(Boolean);
+                      const rawText = text(row);
+                      return { values, raw_text: rawText };
+                    })
+                    .filter((row) => row.raw_text && !/you have no point histories data/i.test(row.raw_text));
+
+                  const before = seen.size;
+                  for (const row of rows) {
+                    const key = JSON.stringify({
+                      raw_text: row.raw_text || "",
+                      values: row.values || [],
+                    });
+                    if (seen.has(key)) {
+                      continue;
+                    }
+                    seen.add(key);
+                    items.push(JSON.parse(key));
+                  }
+
+                  staleRounds = seen.size === before ? staleRounds + 1 : 0;
+                  const next = nextButton(section);
+                  if (!next || isDisabled(next) || staleRounds >= 2) {
+                    break;
+                  }
+
+                  next.click();
+                  await sleep(delayMs);
+                }
+
+                allItems.push({
+                  last_updated: lastUpdated,
+                  total_point: totalPoint,
+                  items,
+                  fallback_text_if_empty: fallbackText,
+                });
+              }
+
+              done({ ok: true, items: allItems });
+            })().catch((error) => done({ ok: false, error: String(error) }));
+            """,
+            FAST_PAGINATION_DELAY_MS,
+        )
+
+        if not payload or not payload.get("ok"):
+            message = payload.get("error") if isinstance(payload, dict) else payload
+            raise RuntimeError(f"Fast extraction point-histories failed: {message}")
+        return payload.get("items", [])
 
     def _wait_for_any_locator(self, driver, locators, timeout: float = 5.0) -> bool:
         """Wait until any locator in list becomes visible."""
