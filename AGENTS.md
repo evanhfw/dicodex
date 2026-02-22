@@ -26,7 +26,7 @@ The system scrapes data from Dicoding Coding Camp using Selenium and presents it
 
 ### Infrastructure
 - **Containerization**: Docker + Docker Compose
-- **Monitoring**: Prometheus + Grafana + cAdvisor + Redis Exporter
+- **Monitoring**: Discord webhooks (system health reports)
 - **Reverse Proxy**: Nginx (in production)
 
 ## Project Structure
@@ -54,11 +54,6 @@ protype-dashboard/
 │   ├── output/             # Scraped JSON data storage
 │   └── pyproject.toml      # Python dependencies (uv)
 │
-├── monitoring/             # Monitoring configuration
-│   ├── prometheus/         # Prometheus config & alerts
-│   ├── grafana/            # Grafana provisioning & dashboards
-│   └── alertmanager/       # Alertmanager config
-│
 ├── diCodex/                # Legacy/Standalone scraping scripts (reference only)
 ├── docker-compose.yml      # Main Docker Compose config
 ├── docker-compose.dev.yml  # Development Docker Compose config
@@ -78,7 +73,6 @@ docker-compose -f docker-compose.dev.yml up
 - Frontend: http://localhost:8080
 - Backend API: Accessible via http://localhost:8080/api (proxied)
 - Selenium VNC: http://localhost:7900 (password: secret)
-- Grafana: http://localhost:3001
 
 ### Local Development
 
@@ -134,6 +128,5 @@ uv run uvicorn app.main:app --reload --port 3000
 3. Test with `docker-compose up` to verify scraping flow.
 
 ### Monitoring
-- **Prometheus**: Config at `monitoring/prometheus/prometheus.yml`.
-- **Grafana**: Dashboards at `monitoring/grafana/dashboards/`.
-- **Alerts**: Rules at `monitoring/prometheus/alert_rules.yml`.
+- System health (CPU, RAM, Disk, Uptime) is reported to Discord via `backend/app/services/monitoring.py`.
+- Configure `DISCORD_MONITOR_WEBHOOK_URL` and `MONITOR_INTERVAL` environment variables.

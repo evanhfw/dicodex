@@ -10,7 +10,6 @@ from arq import create_pool
 from arq.connections import RedisSettings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.api.routes import router
 
@@ -75,9 +74,6 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(router, prefix="/api")
-
-# Prometheus metrics (exposes /metrics endpoint)
-Instrumentator().instrument(app).expose(app)
 
 
 @app.get("/")

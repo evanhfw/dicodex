@@ -90,7 +90,6 @@ async def scrape_task(ctx: dict, email: str, password: str) -> dict:
     ARQ task: run the Dicoding scraper.
 
     Selenium is blocking, so we offload to a thread via asyncio.to_thread.
-    Instrumented with Prometheus metrics for monitoring.
     """
     from app.services.scraper import ScraperService
 
