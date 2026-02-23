@@ -15,9 +15,6 @@ except RuntimeError:
 
 from arq.worker import run_worker  # noqa: E402
 from app.worker import WorkerSettings  # noqa: E402
-from app.metrics_server import start_metrics_server  # noqa: E402
 
 if __name__ == "__main__":
-    # Start Prometheus metrics server on :9101 in background thread
-    start_metrics_server(port=9101)
     run_worker(WorkerSettings)
