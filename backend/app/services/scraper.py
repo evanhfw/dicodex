@@ -157,6 +157,13 @@ class ScraperService:
     def _build_driver(self) -> webdriver.Remote:
         """Build Selenium Remote WebDriver for Docker container"""
         options = webdriver.ChromeOptions()
+        options.page_load_strategy = "eager"
+        options.add_experimental_option(
+            "prefs",
+            {
+                "profile.managed_default_content_settings.images": 2,
+            },
+        )
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--headless=new")
@@ -447,6 +454,7 @@ class ScraperService:
             raise NoSuchElementException("No student blocks found")
 
         students = [self._parse_student(block) for block in blocks]
+        total_students = len(students)
         fast_daily_by_student: list[list[dict]] | None = None
         fast_point_by_student: list[dict] | None = None
 
@@ -464,12 +472,30 @@ class ScraperService:
         except Exception:
             fast_point_by_student = None
 
-        total_students = len(students)
+        if (
+            fast_daily_by_student is None
+            or not isinstance(fast_daily_by_student, list)
+            or len(fast_daily_by_student) != total_students
+            or any(not isinstance(items, list) for items in fast_daily_by_student)
+        ):
+            fast_daily_by_student = None
+
+        if (
+            fast_point_by_student is None
+            or not isinstance(fast_point_by_student, list)
+            or len(fast_point_by_student) != total_students
+            or any(not isinstance(items, dict) for items in fast_point_by_student)
+        ):
+            fast_point_by_student = None
+
         # Extract additional data for each student
         for idx in range(total_students):
             if progress_callback:
-                # Map student processing to 25% - 95% range
-                percent = 35 + int((idx / total_students) * 60)
+                # Map student processing to 35% - 95% range.
+                if total_students <= 1:
+                    percent = 95
+                else:
+                    percent = 35 + int((idx / (total_students - 1)) * 60)
                 student_name = students[idx]["profile"]["name"]
                 progress_callback(
                     f"Processing student {idx + 1}/{total_students}: {student_name}",
