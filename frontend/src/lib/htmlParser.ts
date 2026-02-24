@@ -1,4 +1,4 @@
-import { ParsedStudent, Course, mapStatus } from '@/data/parsedData';
+import { ParsedStudent, Course, Attendance, mapStatus } from '@/data/parsedData';
 
 export interface ParseResult {
   success: boolean;
@@ -174,11 +174,27 @@ export const parseStudentHTML = (htmlString: string): ParseResult => {
         });
       });
 
+      // Extract attendances from data-event-name elements
+      const attendances: Attendance[] = [];
+      const attendanceItems = container.querySelectorAll('[data-element="item-status"][data-event-name]');
+      attendanceItems.forEach((item) => {
+        const event = item.getAttribute('data-event-name') || '';
+        const statusLabel = item.querySelector('[data-element="item-status-label"]');
+        const attStatus = statusLabel?.textContent?.trim() || '';
+        if (event) {
+          attendances.push({
+            event,
+            status: attStatus as Attendance['status'],
+          });
+        }
+      });
+
       // Add student to list
       students.push({
         name: studentName,
         status: mapStatus(status),
         courses,
+        attendances: attendances.length > 0 ? attendances : undefined,
         imageUrl,
         profile: {
           university: '',

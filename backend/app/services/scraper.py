@@ -442,6 +442,7 @@ class ScraperService:
         mentor = self._extract_mentor_from_dom(driver)
 
         # Click show all buttons
+        self._click_all_buttons_by_keyword(driver, "show all attendances")
         show_all_courses_clicked = self._click_all_buttons_by_keyword(driver, "show all courses")
         show_all_assignments_clicked = self._click_all_buttons_by_keyword(
             driver, "show all assignments"

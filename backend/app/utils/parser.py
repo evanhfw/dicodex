@@ -94,6 +94,15 @@ class DataTransformer:
                     "description": point.get("description", ""),
                     "points": points_val,
                 })
+
+            # Transform attendances
+            attendances_data = progress.get("attendances", {})
+            attendances = []
+            for att in attendances_data.get("items", []):
+                attendances.append({
+                    "event": att.get("event", ""),
+                    "status": att.get("status", ""),
+                })
             
             # Build student object
             student = {
@@ -103,7 +112,7 @@ class DataTransformer:
                 "assignments": assignments,
                 "daily_checkins": daily_checkins,
                 "point_histories": point_histories,
-                # Optional: include additional data if needed
+                "attendances": attendances,
                 "profile": {
                     "university": profile.get("university", ""),
                     "major": profile.get("major", ""),

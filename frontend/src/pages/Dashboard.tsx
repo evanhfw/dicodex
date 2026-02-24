@@ -10,6 +10,7 @@ import AllStudentsView from "@/components/dashboard/AllStudentsView";
 import CourseProgressTable from "@/components/dashboard/CourseProgressTable";
 import AssignmentOverview from "@/components/dashboard/AssignmentOverview";
 import DailyCheckinOverview from "@/components/dashboard/DailyCheckinOverview";
+import AttendanceOverview from "@/components/dashboard/AttendanceOverview";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const Dashboard = () => {
@@ -119,10 +120,13 @@ const Dashboard = () => {
         {/* 4. Assignment Overview */}
         <AssignmentOverview students={studentData.students} />
 
-        {/* 5. Daily Check-in Overview */}
+        {/* 5. Attendance Overview */}
+        <AttendanceOverview students={studentData.students} />
+
+        {/* 6. Daily Check-in Overview */}
         <DailyCheckinOverview students={studentData.students} />
 
-        {/* 6. All Students View */}
+        {/* 7. All Students View */}
         <AllStudentsView students={studentData.students} />
       </main>
     </div>

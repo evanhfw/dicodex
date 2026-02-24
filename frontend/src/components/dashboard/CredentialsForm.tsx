@@ -351,6 +351,10 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
             description: String(ph.description || ''),
             points: Number(ph.points || 0),
           })),
+          attendances: asList(s.attendances || (progress?.attendances as JsonMap)?.items).map((att) => ({
+            event: String(att.event || ''),
+            status: String(att.status || '') as 'Attending' | 'Absent' | 'Excused',
+          })),
           imageUrl: String((profile?.photo_url as string) || s.imageUrl || ''),
           profile: profile
           ? {
