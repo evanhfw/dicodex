@@ -1,0 +1,12 @@
+This project includes adapted scraper logic.
+
+Attribution:
+- Source repository: https://github.com/LightDani/diCodex
+- Source file basis: diCodex/main.py
+- Adapted file in this repository: backend/app/services/scraper.py
+- Original author: https://github.com/LightDani
+
+Adaptation scope:
+- Refactored from CLI script into service class for FastAPI + ARQ worker flow
+- Integrated with Docker Selenium remote driver configuration
+- Integrated with project-specific progress callbacks and output handling
