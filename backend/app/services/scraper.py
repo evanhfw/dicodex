@@ -216,6 +216,36 @@ class ScraperService:
         return rows
 
     @staticmethod
+    def _html_fragment_to_text(fragment: str) -> str:
+        no_tags = re.sub(r"<[^>]+>", " ", fragment or "", flags=re.S)
+        return ScraperService._normalize_space(html.unescape(no_tags))
+
+    @staticmethod
+    def _labeled_value(block_html: str, label: str) -> str:
+        escaped_label = re.escape(label)
+        patterns = [
+            (
+                rf"<p[^>]*>\s*{escaped_label}\s*</p>\s*</div>\s*"
+                r'<p[^>]*class="[^"]*pl-4[^"]*"[^>]*>(.*?)</p>'
+            ),
+            (
+                rf"<p[^>]*>\s*{escaped_label}\s*</p>\s*</div>\s*"
+                r'<ul[^>]*class="[^"]*pl-4[^"]*"[^>]*>\s*'
+                r"<li[^>]*>(.*?)</li>"
+            ),
+            (
+                rf"<p[^>]*>\s*{escaped_label}\s*</p>.*?"
+                r"<p[^>]*>(.*?)</p>"
+            ),
+        ]
+        for pattern in patterns:
+            match = re.search(pattern, block_html, flags=re.S)
+            if not match:
+                continue
+            return ScraperService._html_fragment_to_text(match.group(1))
+        return ""
+
+    @staticmethod
     def _student_blocks(page_html: str) -> list:
         marker = '<div class="container flex flex-col pb-8 border-b">'
         parts = page_html.split(marker)[1:]
@@ -447,6 +477,9 @@ class ScraperService:
         show_all_assignments_clicked = self._click_all_buttons_by_keyword(
             driver, "show all assignments"
         )
+        show_all_attendances_clicked = self._click_all_buttons_by_keyword(
+            driver, "show all attend"
+        )
 
         source = driver.page_source
         blocks = self._student_blocks(source)
@@ -456,8 +489,16 @@ class ScraperService:
 
         students = [self._parse_student(block) for block in blocks]
         total_students = len(students)
+        fast_attendance_by_student: list[dict] | None = None
         fast_daily_by_student: list[list[dict]] | None = None
         fast_point_by_student: list[dict] | None = None
+
+        try:
+            fast_attendance_by_student = self._extract_attendances_all_students_fast(
+                driver
+            )
+        except Exception:
+            fast_attendance_by_student = None
 
         if progress_callback:
             progress_callback("Collecting daily check-ins in bulk...", 25, 100)
@@ -489,6 +530,21 @@ class ScraperService:
         ):
             fast_point_by_student = None
 
+        if (
+            fast_attendance_by_student is None
+            or not isinstance(fast_attendance_by_student, list)
+            or len(fast_attendance_by_student) != total_students
+            or any(
+                not isinstance(items, dict)
+                for items in fast_attendance_by_student
+            )
+            or any(
+                not isinstance(items.get("items", []), list)
+                for items in fast_attendance_by_student
+            )
+        ):
+            fast_attendance_by_student = None
+
         # Extract additional data for each student
         for idx in range(total_students):
             if progress_callback:
@@ -502,6 +558,11 @@ class ScraperService:
                     f"Processing student {idx + 1}/{total_students}: {student_name}",
                     percent,
                     100,
+                )
+
+            if fast_attendance_by_student and idx < len(fast_attendance_by_student):
+                students[idx]["progress"]["attendances"] = (
+                    fast_attendance_by_student[idx]
                 )
 
             if fast_daily_by_student and idx < len(fast_daily_by_student):
@@ -527,6 +588,7 @@ class ScraperService:
                 "student_total": len(students),
                 "show_all_courses_clicked": show_all_courses_clicked,
                 "show_all_assignments_clicked": show_all_assignments_clicked,
+                "show_all_attendances_clicked": show_all_attendances_clicked,
             },
             "mentor": mentor,
             "students": students,
@@ -544,8 +606,7 @@ class ScraperService:
               name: text(document.querySelector(".sidebar-menu .text-xl")),
               mentor_code: text(document.querySelector(".sidebar-menu .text-id.uppercase")),
               group: text(document.querySelector("li .font-normal.text-black.pt-1.pl-5")),
-              nav_items: nav,
-              support_email: (document.querySelector("a[href^='mailto:']")?.getAttribute("href") || "").replace("mailto:", "")
+              nav_items: nav
             };
             """
         )
@@ -554,7 +615,6 @@ class ScraperService:
             "mentor_code": data.get("mentor_code", ""),
             "name": data.get("name", ""),
             "nav_items": data.get("nav_items", []),
-            "support_email": data.get("support_email", ""),
         }
 
     def _click_all_buttons_by_keyword(self, driver, keyword: str, max_clicks: int = 500) -> int:
@@ -915,22 +975,10 @@ class ScraperService:
                 r'<div class="inline-block text-xs font-medium[^>]*><p>([^<]+)</p></div>',
                 block_html,
             ),
-            "university": self._one(
-                r'<p class="text-sm text-gray-700">University</p></div><p class="font-normal text-black pl-4">([^<]+)</p>',
-                block_html,
-            ),
-            "major": self._one(
-                r'<p class="text-sm text-gray-700">Major</p></div><p class="font-normal text-black pl-4">([^<]+)</p>',
-                block_html,
-            ),
-            "facilitator": self._one(
-                r'<p class="text-sm text-gray-700">Facilitator</p></div><p class="font-normal text-black pl-4 break-words">([^<]+)</p>',
-                block_html,
-            ),
-            "lecturer": self._one(
-                r'<p class="text-sm text-gray-700">Lecturer</p></div><p class="font-normal text-black pl-4(?: break-words)?">([^<]+)</p>',
-                block_html,
-            ),
+            "university": self._labeled_value(block_html, "University"),
+            "major": self._labeled_value(block_html, "Major"),
+            "facilitator": self._labeled_value(block_html, "Facilitator"),
+            "lecturer": self._labeled_value(block_html, "Lecturer"),
         }
 
         # Extract attendances
@@ -947,6 +995,9 @@ class ScraperService:
         attendance_last_updated = self._one(
             r'data-element="attendance-last-update">Last updated: ([^<]+)<',
             attendance_section,
+        )
+        attendance_fallback = self._one(
+            r'data-element="attendance-none">\s*([^<]+)\s*<', attendance_section
         )
 
         # Extract courses
@@ -1011,6 +1062,7 @@ class ScraperService:
                 "attendances": {
                     "last_updated": attendance_last_updated,
                     "items": attendances,
+                    "fallback_text_if_empty": attendance_fallback,
                 },
                 "course_progress": {
                     "last_updated": course_last_updated,
@@ -1026,6 +1078,92 @@ class ScraperService:
                 },
             },
         }
+
+    def _extract_attendances_all_students_fast(self, driver) -> list[dict]:
+        """Extract attendance section for all students in one browser call."""
+        payload = driver.execute_script(
+            r"""
+            const text = (el) => (el?.textContent || "").replace(/\s+/g, " ").trim();
+            const cards = Array.from(
+              document.querySelectorAll("div.container.flex.flex-col.pb-8.border-b")
+            );
+
+            return cards.map((card) => {
+              const section =
+                card.querySelector("section.attendances") ||
+                card.querySelector("section.attendance");
+              const scope = section || card;
+              const lastUpdatedRaw = text(
+                scope.querySelector("[data-element='attendance-last-update']")
+              );
+              const fallbackText =
+                text(scope.querySelector("[data-element='attendance-none']")) ||
+                text(scope.querySelector("p.text-sm.text-gray-700"));
+
+              const seen = new Set();
+              const items = [];
+              for (const row of Array.from(scope.querySelectorAll("[data-event-name]"))) {
+                const event = (row.getAttribute("data-event-name") || "").trim();
+                const status = text(
+                  row.querySelector("[data-element='item-status-label']")
+                );
+                const key = `${event}||${status}`;
+                if (seen.has(key)) {
+                  continue;
+                }
+                seen.add(key);
+                items.push({ event, status });
+              }
+
+              return {
+                last_updated: lastUpdatedRaw.replace(/^Last updated:\s*/i, ""),
+                fallback_text_if_empty: fallbackText,
+                items,
+              };
+            });
+            """
+        )
+        if not isinstance(payload, list):
+            raise RuntimeError("Fast extraction attendances failed: invalid payload")
+
+        normalized_payload = []
+        for section in payload:
+            if not isinstance(section, dict):
+                normalized_payload.append(
+                    {
+                        "last_updated": "",
+                        "items": [],
+                        "fallback_text_if_empty": "",
+                    }
+                )
+                continue
+
+            rows = section.get("items", [])
+            normalized_rows = []
+            if isinstance(rows, list):
+                for row in rows:
+                    if not isinstance(row, dict):
+                        continue
+                    normalized_rows.append(
+                        {
+                            "event": self._normalize_space(str(row.get("event", ""))),
+                            "status": self._normalize_space(str(row.get("status", ""))),
+                        }
+                    )
+
+            normalized_payload.append(
+                {
+                    "last_updated": self._normalize_space(
+                        str(section.get("last_updated", ""))
+                    ),
+                    "items": normalized_rows,
+                    "fallback_text_if_empty": self._normalize_space(
+                        str(section.get("fallback_text_if_empty", ""))
+                    ),
+                }
+            )
+
+        return normalized_payload
 
     def _extract_daily_checkins_all_pages(self, driver, student_index: int) -> list:
         """Extract daily check-ins with pagination"""
