@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
-import { ParsedStudent, ParsedStudentStatus, AttendanceStatus, AttendanceEventStats, getAttendanceStats } from "@/data/parsedData";
+import { ParsedStudent, AttendanceStatus, AttendanceEventStats, getAttendanceStats } from "@/data/parsedData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   CalendarCheck,
   CheckCircle2,
@@ -102,15 +101,15 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
   }, [stats, sortField, sortDirection]);
 
   const studentsByStatus = useMemo(() => {
-    if (!expandedEvent) return new Map<AttendanceStatus, { name: string; status: ParsedStudentStatus | null }[]>();
-    const map = new Map<AttendanceStatus, { name: string; status: ParsedStudentStatus | null }[]>();
+    if (!expandedEvent) return new Map<AttendanceStatus, { name: string }[]>();
+    const map = new Map<AttendanceStatus, { name: string }[]>();
     for (const s of STATUS_ORDER) map.set(s, []);
 
     students.forEach(student => {
       const att = (student.attendances || []).find(a => a.event === expandedEvent);
       if (att) {
         const list = map.get(att.status) || [];
-        list.push({ name: student.name, status: student.status });
+        list.push({ name: student.name });
         map.set(att.status, list);
       }
     });
@@ -142,13 +141,6 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
       )}
     </button>
   );
-
-  const studentStatusBadgeStyles: Record<string, string> = {
-    "Special Attention": "bg-status-red/15 text-status-red border-status-red/30",
-    "Lagging": "bg-status-yellow/15 text-status-yellow border-status-yellow/30",
-    "Ideal": "bg-status-green/15 text-status-green border-status-green/30",
-    "Ahead": "bg-status-blue/15 text-status-blue border-status-blue/30",
-  };
 
   const totalEvents = stats.length;
   const avgAttendanceRate = totalEvents > 0
@@ -265,7 +257,6 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
                             {isExpanded && (
                               <ExpandedEventDetail
                                 studentsByStatus={studentsByStatus}
-                                studentStatusBadgeStyles={studentStatusBadgeStyles}
                               />
                             )}
                           </div>
@@ -323,10 +314,8 @@ function SegmentedBar({ event }: { event: AttendanceEventStats }) {
 
 function ExpandedEventDetail({
   studentsByStatus,
-  studentStatusBadgeStyles,
 }: {
-  studentsByStatus: Map<AttendanceStatus, { name: string; status: ParsedStudentStatus | null }[]>;
-  studentStatusBadgeStyles: Record<string, string>;
+  studentsByStatus: Map<AttendanceStatus, { name: string }[]>;
 }) {
   const nonEmptyStatuses = STATUS_ORDER.filter(s => (studentsByStatus.get(s)?.length ?? 0) > 0);
   const allPresent = nonEmptyStatuses.length === 1 && nonEmptyStatuses[0] === "Attending";
@@ -382,22 +371,12 @@ function ExpandedEventDetail({
             {activeList.map((student, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between rounded-md border bg-card px-3 py-2 shadow-sm"
+                className="flex items-center gap-2 rounded-md border bg-card px-3 py-2 shadow-sm"
               >
-                <div className="flex items-center gap-2 min-w-0">
-                  <ActiveIcon className={cn("h-3.5 w-3.5 shrink-0", activeConfig.colorClass)} />
-                  <span className="text-sm font-medium text-card-foreground truncate">
-                    {student.name}
-                  </span>
-                </div>
-                {student.status && (
-                  <Badge
-                    variant="outline"
-                    className={cn("shrink-0 text-[10px] px-1.5 py-0 ml-2", studentStatusBadgeStyles[student.status] || "")}
-                  >
-                    {student.status}
-                  </Badge>
-                )}
+                <ActiveIcon className={cn("h-3.5 w-3.5 shrink-0", activeConfig.colorClass)} />
+                <span className="text-sm font-medium text-card-foreground truncate">
+                  {student.name}
+                </span>
               </div>
             ))}
           </div>
