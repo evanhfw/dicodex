@@ -22,7 +22,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Users, Search, ChevronDown, GraduationCap, BookOpen, ExternalLink, CalendarCheck } from "lucide-react";
+import { Users, Search, ChevronDown, GraduationCap, BookOpen, ExternalLink, CalendarCheck, CheckCircle2, XCircle, Clock, VideoOff, ArrowLeftRight } from "lucide-react";
+import type { AttendanceStatus } from "@/data/parsedData";
 import { cn } from "@/lib/utils";
 
 interface AllStudentsViewProps {
@@ -43,6 +44,14 @@ const statusPriority: Record<ParsedStudentStatus, number> = {
   "Lagging": 2,
   "Ideal": 3,
   "Ahead": 4,
+};
+
+const attendanceIconMap: Record<AttendanceStatus, { icon: React.ComponentType<{ className?: string }>; colorClass: string; bgClass: string }> = {
+  Attending: { icon: CheckCircle2, colorClass: "text-status-green", bgClass: "bg-status-green/15" },
+  Late: { icon: Clock, colorClass: "text-status-yellow", bgClass: "bg-status-yellow/15" },
+  Absent: { icon: XCircle, colorClass: "text-status-red", bgClass: "bg-status-red/15" },
+  Replaced: { icon: ArrowLeftRight, colorClass: "text-status-blue", bgClass: "bg-status-blue/15" },
+  "Off Cam": { icon: VideoOff, colorClass: "text-status-orange", bgClass: "bg-status-orange/15" },
 };
 
 const getInitials = (name: string): string => {
@@ -441,6 +450,42 @@ const AllStudentsView = ({ students }: AllStudentsViewProps) => {
                                 </p>
                               </div>
                             ))}
+                          </div>
+                        )}
+
+                        {/* Attendances Checklist */}
+                        {student.attendances && student.attendances.length > 0 && (
+                          <div className="pb-2">
+                            <div className="mb-2 px-3 py-1 text-xs font-medium text-muted-foreground">
+                              Attendances ({student.attendances.filter(a => a.status !== "Absent").length}/{student.attendances.length} present)
+                            </div>
+                            {student.attendances.map((att, attIdx) => {
+                              const cfg = attendanceIconMap[att.status] || attendanceIconMap.Absent;
+                              const Icon = cfg.icon;
+                              return (
+                                <div key={attIdx} className="flex items-center gap-2 rounded-md px-3 py-1.5">
+                                  <span className={cn(
+                                    "flex h-4 w-4 shrink-0 items-center justify-center rounded-full",
+                                    cfg.bgClass, cfg.colorClass
+                                  )}>
+                                    <Icon className="h-2.5 w-2.5" />
+                                  </span>
+                                  <p className={cn(
+                                    "text-xs truncate flex-1",
+                                    att.status === "Attending"
+                                      ? "text-muted-foreground"
+                                      : "text-card-foreground font-medium"
+                                  )}>
+                                    {att.event}
+                                  </p>
+                                  {att.status !== "Attending" && (
+                                    <span className={cn("text-[10px] font-medium shrink-0", cfg.colorClass)}>
+                                      {att.status}
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })}
                           </div>
                         )}
 

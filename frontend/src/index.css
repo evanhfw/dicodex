@@ -41,6 +41,7 @@
     --status-yellow: 40 96% 53%;
     --status-green: 152 60% 42%;
     --status-blue: 211 70% 50%;
+    --status-orange: 24 90% 50%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -85,6 +86,7 @@
     --status-yellow: 40 96% 58%;
     --status-green: 152 60% 50%;
     --status-blue: 211 70% 58%;
+    --status-orange: 24 90% 56%;
 
     --sidebar-background: 220 15% 10%;
     --sidebar-foreground: 0 0% 95%;
