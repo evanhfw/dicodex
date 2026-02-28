@@ -13,7 +13,7 @@ type SortField = "name" | "averageProgress" | "completionRate" | "totalEnrolled"
 type SortDirection = "asc" | "desc";
 
 const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
-  const [sortField, setSortField] = useState<SortField>("averageProgress");
+  const [sortField, setSortField] = useState<SortField>("completionRate");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
   const [studentSortDirection, setStudentSortDirection] = useState<'asc' | 'desc'>('asc');
