@@ -16,7 +16,7 @@ const CourseProgressTable = ({ students }: CourseProgressTableProps) => {
   const [sortField, setSortField] = useState<SortField>("completionRate");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
-  const [studentSortDirection, setStudentSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [studentSortDirection, setStudentSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const courseStats = useMemo(() => getCourseStats(students), [students]);
 
