@@ -330,6 +330,11 @@ function ExpandedEventDetail({
 }) {
   const nonEmptyStatuses = STATUS_ORDER.filter(s => (studentsByStatus.get(s)?.length ?? 0) > 0);
   const allPresent = nonEmptyStatuses.length === 1 && nonEmptyStatuses[0] === "Attending";
+  const [activeTab, setActiveTab] = useState<AttendanceStatus>(nonEmptyStatuses[0] ?? "Attending");
+
+  const activeConfig = ATTENDANCE_STATUS_CONFIG[activeTab];
+  const ActiveIcon = activeConfig.icon;
+  const activeList = studentsByStatus.get(activeTab) || [];
 
   return (
     <div className="border-t-2 border-muted bg-muted/20 p-4">
@@ -339,41 +344,63 @@ function ExpandedEventDetail({
           All students attending!
         </div>
       ) : (
-        <div className="space-y-4">
-          {nonEmptyStatuses.map(statusKey => {
-            const config = ATTENDANCE_STATUS_CONFIG[statusKey];
-            const list = studentsByStatus.get(statusKey) || [];
-            const Icon = config.icon;
+        <div>
+          {/* Status tabs */}
+          <div className="flex gap-1 mb-3 border-b border-border pb-2 overflow-x-auto">
+            {nonEmptyStatuses.map(statusKey => {
+              const config = ATTENDANCE_STATUS_CONFIG[statusKey];
+              const count = studentsByStatus.get(statusKey)?.length ?? 0;
+              const Icon = config.icon;
+              const isActive = activeTab === statusKey;
 
-            return (
-              <div key={statusKey}>
-                <h4 className={cn("text-sm font-semibold mb-2 flex items-center gap-2", config.colorClass)}>
-                  <Icon className="h-4 w-4" />
-                  {config.label} ({list.length})
-                </h4>
-                <div className="flex flex-wrap gap-1.5 max-h-[200px] overflow-y-auto pr-1">
-                  {list.map((student, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-1.5 rounded-md border bg-card px-2.5 py-1.5 shadow-sm"
-                    >
-                      <span className="text-sm font-medium text-card-foreground whitespace-nowrap">
-                        {student.name}
-                      </span>
-                      {student.status && (
-                        <Badge
-                          variant="outline"
-                          className={cn("shrink-0 text-[10px] px-1.5 py-0", studentStatusBadgeStyles[student.status] || "")}
-                        >
-                          {student.status}
-                        </Badge>
-                      )}
-                    </div>
-                  ))}
+              return (
+                <button
+                  key={statusKey}
+                  onClick={(e) => { e.stopPropagation(); setActiveTab(statusKey); }}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
+                    isActive
+                      ? cn("bg-card border shadow-sm", config.colorClass)
+                      : "text-muted-foreground hover:text-foreground hover:bg-card/50"
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {config.label}
+                  <span className={cn(
+                    "rounded-full px-1.5 py-0.5 text-[10px] leading-none font-semibold",
+                    isActive ? cn(config.bgClass) : "bg-muted"
+                  )}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Student list for active tab */}
+          <div className="space-y-1 max-h-[250px] overflow-y-auto pr-1">
+            {activeList.map((student, idx) => (
+              <div
+                key={idx}
+                className="flex items-center justify-between rounded-md border bg-card px-3 py-2 shadow-sm"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <ActiveIcon className={cn("h-3.5 w-3.5 shrink-0", activeConfig.colorClass)} />
+                  <span className="text-sm font-medium text-card-foreground truncate">
+                    {student.name}
+                  </span>
                 </div>
+                {student.status && (
+                  <Badge
+                    variant="outline"
+                    className={cn("shrink-0 text-[10px] px-1.5 py-0 ml-2", studentStatusBadgeStyles[student.status] || "")}
+                  >
+                    {student.status}
+                  </Badge>
+                )}
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       )}
     </div>
