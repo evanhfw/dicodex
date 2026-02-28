@@ -10,7 +10,7 @@ export type CourseStatus = "Completed" | "In Progress" | "Not Started";
 
 export type AssignmentStatus = "Completed" | "Uncompleted";
 
-export type AttendanceStatus = "Attending" | "Absent" | "Excused";
+export type AttendanceStatus = "Attending" | "Late" | "Absent" | "Replaced" | "Off Cam";
 
 export interface Attendance {
   event: string;
@@ -259,11 +259,25 @@ export const getAssignmentStats = (students: ParsedStudent[]) => {
   }));
 };
 
-export const getAttendanceStats = (students: ParsedStudent[]) => {
+export interface AttendanceEventStats {
+  event: string;
+  totalStudents: number;
+  attending: number;
+  late: number;
+  absent: number;
+  replaced: number;
+  offCam: number;
+  attendanceRate: number;
+}
+
+export const getAttendanceStats = (students: ParsedStudent[]): AttendanceEventStats[] => {
   const eventMap = new Map<string, {
     totalStudents: number;
     attending: number;
+    late: number;
     absent: number;
+    replaced: number;
+    offCam: number;
   }>();
 
   students.forEach(student => {
@@ -272,16 +286,22 @@ export const getAttendanceStats = (students: ParsedStudent[]) => {
         eventMap.set(att.event, {
           totalStudents: 0,
           attending: 0,
+          late: 0,
           absent: 0,
+          replaced: 0,
+          offCam: 0,
         });
       }
 
       const stats = eventMap.get(att.event)!;
       stats.totalStudents++;
-      if (att.status === 'Attending') {
-        stats.attending++;
-      } else {
-        stats.absent++;
+      switch (att.status) {
+        case 'Attending': stats.attending++; break;
+        case 'Late': stats.late++; break;
+        case 'Absent': stats.absent++; break;
+        case 'Replaced': stats.replaced++; break;
+        case 'Off Cam': stats.offCam++; break;
+        default: stats.absent++; break;
       }
     });
   });
@@ -290,7 +310,7 @@ export const getAttendanceStats = (students: ParsedStudent[]) => {
     event,
     ...stats,
     attendanceRate: stats.totalStudents > 0
-      ? Math.round((stats.attending / stats.totalStudents) * 100)
+      ? Math.round(((stats.totalStudents - stats.absent) / stats.totalStudents) * 100)
       : 0,
   }));
 };
