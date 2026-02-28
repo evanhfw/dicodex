@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useStudentData } from '@/contexts/StudentDataContext';
 import { Loader2, Shield, CheckCircle2 } from 'lucide-react';
+import type { AttendanceStatus } from '@/data/parsedData';
 
 interface CredentialsFormProps {
   onScrapeSuccess?: () => void;
@@ -353,7 +354,7 @@ export const CredentialsForm = ({ onScrapeSuccess }: CredentialsFormProps) => {
           })),
           attendances: asList(s.attendances || (progress?.attendances as JsonMap)?.items).map((att) => ({
             event: String(att.event || ''),
-            status: String(att.status || '') as 'Attending' | 'Absent' | 'Excused',
+            status: String(att.status || '') as AttendanceStatus,
           })),
           imageUrl: String((profile?.photo_url as string) || s.imageUrl || ''),
           profile: profile

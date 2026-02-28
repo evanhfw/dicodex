@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
-import { ParsedStudent, ParsedStudentStatus, getAssignmentStats } from "@/data/parsedData";
+import { ParsedStudent, getAssignmentStats } from "@/data/parsedData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ClipboardList, CheckCircle2, XCircle, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -41,32 +40,18 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
     return sorted;
   }, [stats, sortField, sortDirection]);
 
-  // Students who haven't completed the expanded assignment
-  const uncompletedStudents = useMemo(() => {
-    if (!expandedAssignment) return [];
-    return students
-      .filter(s => {
-        const a = (s.assignments || []).find(a => a.name === expandedAssignment);
-        return a && a.status !== "Completed";
-      })
-      .map(s => ({
-        name: s.name,
-        status: s.status,
-      }));
-  }, [expandedAssignment, students]);
-
-  // Students who have completed the expanded assignment
-  const completedStudents = useMemo(() => {
-    if (!expandedAssignment) return [];
-    return students
-      .filter(s => {
-        const a = (s.assignments || []).find(a => a.name === expandedAssignment);
-        return a && a.status === "Completed";
-      })
-      .map(s => ({
-        name: s.name,
-        status: s.status,
-      }));
+  const studentsByAssignmentStatus = useMemo(() => {
+    if (!expandedAssignment) return { completed: [] as string[], uncompleted: [] as string[] };
+    const completed: string[] = [];
+    const uncompleted: string[] = [];
+    students.forEach(s => {
+      const a = (s.assignments || []).find(a => a.name === expandedAssignment);
+      if (a) {
+        if (a.status === "Completed") completed.push(s.name);
+        else uncompleted.push(s.name);
+      }
+    });
+    return { completed, uncompleted };
   }, [expandedAssignment, students]);
 
   if (stats.length === 0) return null;
@@ -94,13 +79,6 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
       )}
     </button>
   );
-
-  const statusBadgeStyles: Record<string, string> = {
-    "Special Attention": "bg-status-red/15 text-status-red border-status-red/30",
-    "Lagging": "bg-status-yellow/15 text-status-yellow border-status-yellow/30",
-    "Ideal": "bg-status-green/15 text-status-green border-status-green/30",
-    "Ahead": "bg-status-blue/15 text-status-blue border-status-blue/30",
-  };
 
   return (
     <Card>
@@ -198,78 +176,10 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
                         >
                           <div className="overflow-hidden">
                             {isExpanded && (
-                              <div className="border-t-2 border-muted bg-muted/20 p-4 flex flex-col md:flex-row gap-6">
-                                {/* Uncompleted Students */}
-                                <div className="flex-1">
-                                  <h4 className="text-sm font-semibold text-status-red mb-3 flex items-center gap-2">
-                                    <XCircle className="h-4 w-4" />
-                                    Uncompleted ({uncompletedStudents.length})
-                                  </h4>
-
-                                  {uncompletedStudents.length === 0 ? (
-                                    <div className="flex items-center justify-center gap-2 py-4 text-sm text-status-green border rounded-md bg-card/50">
-                                      <CheckCircle2 className="h-4 w-4" />
-                                      All clear!
-                                    </div>
-                                  ) : (
-                                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-                                      {uncompletedStudents.map((student, idx) => (
-                                        <div
-                                          key={`uncompleted-${idx}`}
-                                          className="flex items-center justify-between rounded-md border bg-card p-2.5 shadow-sm"
-                                        >
-                                          <span className="text-sm font-medium text-card-foreground truncate">
-                                            {student.name}
-                                          </span>
-                                          {student.status && (
-                                            <Badge
-                                              variant="outline"
-                                              className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
-                                            >
-                                              {student.status}
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-
-                                {/* Completed Students */}
-                                <div className="flex-1">
-                                  <h4 className="text-sm font-semibold text-status-green mb-3 flex items-center gap-2">
-                                    <CheckCircle2 className="h-4 w-4" />
-                                    Completed ({completedStudents.length})
-                                  </h4>
-
-                                  {completedStudents.length === 0 ? (
-                                    <div className="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground border rounded-md bg-card/50">
-                                      No students have completed this yet.
-                                    </div>
-                                  ) : (
-                                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-                                      {completedStudents.map((student, idx) => (
-                                        <div
-                                          key={`completed-${idx}`}
-                                          className="flex items-center justify-between rounded-md border bg-card p-2.5 shadow-sm"
-                                        >
-                                          <span className="text-sm font-medium text-card-foreground truncate">
-                                            {student.name}
-                                          </span>
-                                          {student.status && (
-                                            <Badge
-                                              variant="outline"
-                                              className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
-                                            >
-                                              {student.status}
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
+                              <AssignmentExpandedDetail
+                                completed={studentsByAssignmentStatus.completed}
+                                uncompleted={studentsByAssignmentStatus.uncompleted}
+                              />
                             )}
                           </div>
                         </div>
@@ -302,5 +212,105 @@ const AssignmentOverview = ({ students }: AssignmentOverviewProps) => {
     </Card>
   );
 };
+
+type AssignmentTab = "uncompleted" | "completed";
+
+const ASSIGNMENT_TAB_CONFIG: Record<AssignmentTab, {
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  colorClass: string;
+  bgClass: string;
+}> = {
+  uncompleted: {
+    label: "Uncompleted",
+    icon: XCircle,
+    colorClass: "text-status-red",
+    bgClass: "bg-status-red/15 text-status-red",
+  },
+  completed: {
+    label: "Completed",
+    icon: CheckCircle2,
+    colorClass: "text-status-green",
+    bgClass: "bg-status-green/15 text-status-green",
+  },
+};
+
+function AssignmentExpandedDetail({
+  completed,
+  uncompleted,
+}: {
+  completed: string[];
+  uncompleted: string[];
+}) {
+  const [activeTab, setActiveTab] = useState<AssignmentTab>(
+    uncompleted.length > 0 ? "uncompleted" : "completed"
+  );
+  const allCompleted = uncompleted.length === 0;
+
+  const tabOrder: AssignmentTab[] = ["uncompleted", "completed"];
+  const lists: Record<AssignmentTab, string[]> = { completed, uncompleted };
+  const activeConfig = ASSIGNMENT_TAB_CONFIG[activeTab];
+  const ActiveIcon = activeConfig.icon;
+  const activeList = lists[activeTab];
+
+  return (
+    <div className="border-t-2 border-muted bg-muted/20 p-4">
+      {allCompleted ? (
+        <div className="flex items-center justify-center gap-2 py-4 text-sm text-status-green border rounded-md bg-card/50">
+          <CheckCircle2 className="h-4 w-4" />
+          All students completed!
+        </div>
+      ) : (
+        <div>
+          <div className="flex gap-1 mb-3 border-b border-border pb-2">
+            {tabOrder.map(tabKey => {
+              const config = ASSIGNMENT_TAB_CONFIG[tabKey];
+              const count = lists[tabKey].length;
+              if (count === 0) return null;
+              const Icon = config.icon;
+              const isActive = activeTab === tabKey;
+
+              return (
+                <button
+                  key={tabKey}
+                  onClick={(e) => { e.stopPropagation(); setActiveTab(tabKey); }}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
+                    isActive
+                      ? cn("bg-card border shadow-sm", config.colorClass)
+                      : "text-muted-foreground hover:text-foreground hover:bg-card/50"
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {config.label}
+                  <span className={cn(
+                    "rounded-full px-1.5 py-0.5 text-[10px] leading-none font-semibold",
+                    isActive ? config.bgClass : "bg-muted"
+                  )}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="space-y-1 max-h-[250px] overflow-y-auto pr-1">
+            {activeList.map((name, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-2 rounded-md border bg-card px-3 py-2 shadow-sm"
+              >
+                <ActiveIcon className={cn("h-3.5 w-3.5 shrink-0", activeConfig.colorClass)} />
+                <span className="text-sm font-medium text-card-foreground truncate">
+                  {name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default AssignmentOverview;

@@ -1,8 +1,15 @@
 import { useState, useMemo } from "react";
-import { ParsedStudent, ParsedStudentStatus, getAttendanceStats } from "@/data/parsedData";
+import { ParsedStudent, AttendanceStatus, AttendanceEventStats, getAttendanceStats } from "@/data/parsedData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CalendarCheck, CheckCircle2, XCircle, ChevronDown } from "lucide-react";
+import {
+  CalendarCheck,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  VideoOff,
+  ArrowLeftRight,
+  ChevronDown,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AttendanceOverviewProps {
@@ -11,6 +18,58 @@ interface AttendanceOverviewProps {
 
 type SortField = "event" | "attendanceRate" | "attending" | "absent";
 type SortDirection = "asc" | "desc";
+
+const ATTENDANCE_STATUS_CONFIG: Record<AttendanceStatus, {
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  colorClass: string;
+  bgClass: string;
+  barClass: string;
+  statKey: keyof Pick<AttendanceEventStats, "attending" | "late" | "absent" | "replaced" | "offCam">;
+}> = {
+  Attending: {
+    label: "Attending",
+    icon: CheckCircle2,
+    colorClass: "text-status-green",
+    bgClass: "bg-status-green/15 text-status-green border-status-green/30",
+    barClass: "bg-status-green",
+    statKey: "attending",
+  },
+  Late: {
+    label: "Late",
+    icon: Clock,
+    colorClass: "text-status-yellow",
+    bgClass: "bg-status-yellow/15 text-status-yellow border-status-yellow/30",
+    barClass: "bg-status-yellow",
+    statKey: "late",
+  },
+  "Off Cam": {
+    label: "Off Cam",
+    icon: VideoOff,
+    colorClass: "text-status-orange",
+    bgClass: "bg-status-orange/15 text-status-orange border-status-orange/30",
+    barClass: "bg-status-orange",
+    statKey: "offCam",
+  },
+  Replaced: {
+    label: "Replaced",
+    icon: ArrowLeftRight,
+    colorClass: "text-status-blue",
+    bgClass: "bg-status-blue/15 text-status-blue border-status-blue/30",
+    barClass: "bg-status-blue",
+    statKey: "replaced",
+  },
+  Absent: {
+    label: "Absent",
+    icon: XCircle,
+    colorClass: "text-status-red",
+    bgClass: "bg-status-red/15 text-status-red border-status-red/30",
+    barClass: "bg-status-red",
+    statKey: "absent",
+  },
+};
+
+const STATUS_ORDER: AttendanceStatus[] = ["Attending", "Late", "Off Cam", "Replaced", "Absent"];
 
 const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
   const [sortField, setSortField] = useState<SortField>("event");
@@ -41,24 +100,20 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
     return sorted;
   }, [stats, sortField, sortDirection]);
 
-  const absentStudents = useMemo(() => {
-    if (!expandedEvent) return [];
-    return students
-      .filter(s => {
-        const att = (s.attendances || []).find(a => a.event === expandedEvent);
-        return att && att.status !== "Attending";
-      })
-      .map(s => ({ name: s.name, status: s.status }));
-  }, [expandedEvent, students]);
+  const studentsByStatus = useMemo(() => {
+    if (!expandedEvent) return new Map<AttendanceStatus, { name: string }[]>();
+    const map = new Map<AttendanceStatus, { name: string }[]>();
+    for (const s of STATUS_ORDER) map.set(s, []);
 
-  const attendingStudents = useMemo(() => {
-    if (!expandedEvent) return [];
-    return students
-      .filter(s => {
-        const att = (s.attendances || []).find(a => a.event === expandedEvent);
-        return att && att.status === "Attending";
-      })
-      .map(s => ({ name: s.name, status: s.status }));
+    students.forEach(student => {
+      const att = (student.attendances || []).find(a => a.event === expandedEvent);
+      if (att) {
+        const list = map.get(att.status) || [];
+        list.push({ name: student.name });
+        map.set(att.status, list);
+      }
+    });
+    return map;
   }, [expandedEvent, students]);
 
   if (stats.length === 0) return null;
@@ -87,13 +142,6 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
     </button>
   );
 
-  const statusBadgeStyles: Record<string, string> = {
-    "Special Attention": "bg-status-red/15 text-status-red border-status-red/30",
-    "Lagging": "bg-status-yellow/15 text-status-yellow border-status-yellow/30",
-    "Ideal": "bg-status-green/15 text-status-green border-status-green/30",
-    "Ahead": "bg-status-blue/15 text-status-blue border-status-blue/30",
-  };
-
   const totalEvents = stats.length;
   const avgAttendanceRate = totalEvents > 0
     ? Math.round(stats.reduce((sum, s) => sum + s.attendanceRate, 0) / totalEvents)
@@ -109,7 +157,6 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {/* Summary KPIs */}
         <div className="mb-6 grid grid-cols-3 gap-4">
           <div className="rounded-lg border bg-card p-3 text-center">
             <div className="text-2xl font-bold text-card-foreground">{totalEvents}</div>
@@ -138,10 +185,10 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
                   <SortButton field="event">Event</SortButton>
                 </th>
                 <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">
-                  <SortButton field="attendanceRate">Attendance</SortButton>
+                  <SortButton field="attendanceRate">Rate</SortButton>
                 </th>
                 <th className="pb-3 text-center text-xs font-medium whitespace-nowrap">
-                  <SortButton field="attending">Status</SortButton>
+                  <SortButton field="attending">Breakdown</SortButton>
                 </th>
               </tr>
             </thead>
@@ -174,34 +221,26 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
                       </td>
                       <td className="py-3">
                         <div className="flex items-center justify-center gap-2">
-                          <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
-                            <div
-                              className={cn(
-                                "h-full rounded-full transition-all",
-                                event.attendanceRate === 100
-                                  ? "bg-status-green"
-                                  : event.attendanceRate >= 70
-                                  ? "bg-status-yellow"
-                                  : "bg-status-red"
-                              )}
-                              style={{ width: `${event.attendanceRate}%` }}
-                            />
-                          </div>
+                          <SegmentedBar event={event} />
                           <span className="w-10 text-right text-xs font-medium text-muted-foreground">
                             {event.attendanceRate}%
                           </span>
                         </div>
                       </td>
                       <td className="py-3">
-                        <div className="flex items-center justify-center gap-2">
-                          <div className="flex items-center gap-1 text-xs text-status-green">
-                            <CheckCircle2 className="h-3 w-3" />
-                            <span>{event.attending}</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-xs text-status-red">
-                            <XCircle className="h-3 w-3" />
-                            <span>{event.absent}</span>
-                          </div>
+                        <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                          {STATUS_ORDER.map(statusKey => {
+                            const config = ATTENDANCE_STATUS_CONFIG[statusKey];
+                            const count = event[config.statKey];
+                            if (count === 0) return null;
+                            const Icon = config.icon;
+                            return (
+                              <div key={statusKey} className={cn("flex items-center gap-0.5 text-xs", config.colorClass)} title={config.label}>
+                                <Icon className="h-3 w-3" />
+                                <span>{count}</span>
+                              </div>
+                            );
+                          })}
                         </div>
                       </td>
                     </tr>
@@ -216,78 +255,9 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
                         >
                           <div className="overflow-hidden">
                             {isExpanded && (
-                              <div className="border-t-2 border-muted bg-muted/20 p-4 flex flex-col md:flex-row gap-6">
-                                {/* Absent Students */}
-                                <div className="flex-1">
-                                  <h4 className="text-sm font-semibold text-status-red mb-3 flex items-center gap-2">
-                                    <XCircle className="h-4 w-4" />
-                                    Absent ({absentStudents.length})
-                                  </h4>
-
-                                  {absentStudents.length === 0 ? (
-                                    <div className="flex items-center justify-center gap-2 py-4 text-sm text-status-green border rounded-md bg-card/50">
-                                      <CheckCircle2 className="h-4 w-4" />
-                                      All present!
-                                    </div>
-                                  ) : (
-                                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-                                      {absentStudents.map((student, idx) => (
-                                        <div
-                                          key={`absent-${idx}`}
-                                          className="flex items-center justify-between rounded-md border bg-card p-2.5 shadow-sm"
-                                        >
-                                          <span className="text-sm font-medium text-card-foreground truncate">
-                                            {student.name}
-                                          </span>
-                                          {student.status && (
-                                            <Badge
-                                              variant="outline"
-                                              className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
-                                            >
-                                              {student.status}
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-
-                                {/* Attending Students */}
-                                <div className="flex-1">
-                                  <h4 className="text-sm font-semibold text-status-green mb-3 flex items-center gap-2">
-                                    <CheckCircle2 className="h-4 w-4" />
-                                    Attending ({attendingStudents.length})
-                                  </h4>
-
-                                  {attendingStudents.length === 0 ? (
-                                    <div className="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground border rounded-md bg-card/50">
-                                      No students attended this event.
-                                    </div>
-                                  ) : (
-                                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-                                      {attendingStudents.map((student, idx) => (
-                                        <div
-                                          key={`attending-${idx}`}
-                                          className="flex items-center justify-between rounded-md border bg-card p-2.5 shadow-sm"
-                                        >
-                                          <span className="text-sm font-medium text-card-foreground truncate">
-                                            {student.name}
-                                          </span>
-                                          {student.status && (
-                                            <Badge
-                                              variant="outline"
-                                              className={cn("shrink-0 text-xs", statusBadgeStyles[student.status] || "")}
-                                            >
-                                              {student.status}
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
+                              <ExpandedEventDetail
+                                studentsByStatus={studentsByStatus}
+                              />
                             )}
                           </div>
                         </div>
@@ -300,19 +270,120 @@ const AttendanceOverview = ({ students }: AttendanceOverviewProps) => {
           </table>
         </div>
 
-        <div className="mt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 className="h-3 w-3 text-status-green" />
-            <span>Attending</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <XCircle className="h-3 w-3 text-status-red" />
-            <span>Absent</span>
-          </div>
+        <div className="mt-4 flex items-center justify-center gap-4 flex-wrap text-xs text-muted-foreground">
+          {STATUS_ORDER.map(statusKey => {
+            const config = ATTENDANCE_STATUS_CONFIG[statusKey];
+            const Icon = config.icon;
+            return (
+              <div key={statusKey} className="flex items-center gap-1.5">
+                <Icon className={cn("h-3 w-3", config.colorClass)} />
+                <span>{config.label}</span>
+              </div>
+            );
+          })}
         </div>
       </CardContent>
     </Card>
   );
 };
+
+function SegmentedBar({ event }: { event: AttendanceEventStats }) {
+  if (event.totalStudents === 0) return null;
+
+  const segments = STATUS_ORDER
+    .map(statusKey => {
+      const config = ATTENDANCE_STATUS_CONFIG[statusKey];
+      const count = event[config.statKey];
+      const pct = (count / event.totalStudents) * 100;
+      return { statusKey, pct, barClass: config.barClass };
+    })
+    .filter(s => s.pct > 0);
+
+  return (
+    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary flex">
+      {segments.map(({ statusKey, pct, barClass }) => (
+        <div
+          key={statusKey}
+          className={cn("h-full transition-all first:rounded-l-full last:rounded-r-full", barClass)}
+          style={{ width: `${pct}%` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ExpandedEventDetail({
+  studentsByStatus,
+}: {
+  studentsByStatus: Map<AttendanceStatus, { name: string }[]>;
+}) {
+  const nonEmptyStatuses = STATUS_ORDER.filter(s => (studentsByStatus.get(s)?.length ?? 0) > 0);
+  const allPresent = nonEmptyStatuses.length === 1 && nonEmptyStatuses[0] === "Attending";
+  const [activeTab, setActiveTab] = useState<AttendanceStatus>(nonEmptyStatuses[0] ?? "Attending");
+
+  const activeConfig = ATTENDANCE_STATUS_CONFIG[activeTab];
+  const ActiveIcon = activeConfig.icon;
+  const activeList = studentsByStatus.get(activeTab) || [];
+
+  return (
+    <div className="border-t-2 border-muted bg-muted/20 p-4">
+      {allPresent ? (
+        <div className="flex items-center justify-center gap-2 py-4 text-sm text-status-green border rounded-md bg-card/50">
+          <CheckCircle2 className="h-4 w-4" />
+          All students attending!
+        </div>
+      ) : (
+        <div>
+          {/* Status tabs */}
+          <div className="flex gap-1 mb-3 border-b border-border pb-2 overflow-x-auto">
+            {nonEmptyStatuses.map(statusKey => {
+              const config = ATTENDANCE_STATUS_CONFIG[statusKey];
+              const count = studentsByStatus.get(statusKey)?.length ?? 0;
+              const Icon = config.icon;
+              const isActive = activeTab === statusKey;
+
+              return (
+                <button
+                  key={statusKey}
+                  onClick={(e) => { e.stopPropagation(); setActiveTab(statusKey); }}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
+                    isActive
+                      ? cn("bg-card border shadow-sm", config.colorClass)
+                      : "text-muted-foreground hover:text-foreground hover:bg-card/50"
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {config.label}
+                  <span className={cn(
+                    "rounded-full px-1.5 py-0.5 text-[10px] leading-none font-semibold",
+                    isActive ? cn(config.bgClass) : "bg-muted"
+                  )}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Student list for active tab */}
+          <div className="space-y-1 max-h-[250px] overflow-y-auto pr-1">
+            {activeList.map((student, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-2 rounded-md border bg-card px-3 py-2 shadow-sm"
+              >
+                <ActiveIcon className={cn("h-3.5 w-3.5 shrink-0", activeConfig.colorClass)} />
+                <span className="text-sm font-medium text-card-foreground truncate">
+                  {student.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default AttendanceOverview;
